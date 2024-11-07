@@ -1,0 +1,2 @@
+add_subdirectory(radio_hal)
+add_subdirectory(uart_hal)

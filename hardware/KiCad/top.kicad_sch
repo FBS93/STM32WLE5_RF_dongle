@@ -1,0 +1,332 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "f6ecf9ae-fff3-4e1b-81a5-4b38a800847c")
+	(paper "A4")
+	(lib_symbols)
+	(wire
+		(pts
+			(xy 138.43 95.25) (xy 158.75 95.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2947bce7-7f86-4953-94ec-4f877373d377")
+	)
+	(wire
+		(pts
+			(xy 138.43 102.87) (xy 158.75 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "788946ba-6d3f-4c2e-9f2b-d266d45e6aaa")
+	)
+	(wire
+		(pts
+			(xy 138.43 99.06) (xy 158.75 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9aa561d6-7de0-4923-b384-e126e46972d7")
+	)
+	(wire
+		(pts
+			(xy 138.43 73.66) (xy 158.75 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d35720e0-e15a-4039-b326-308f00804d3b")
+	)
+	(wire
+		(pts
+			(xy 138.43 91.44) (xy 158.75 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e006e706-e4d5-4c68-bfa3-6c7fc045db05")
+	)
+	(wire
+		(pts
+			(xy 138.43 106.68) (xy 158.75 106.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eba5495f-6e0b-4818-8776-8b4f2939341c")
+	)
+	(wire
+		(pts
+			(xy 138.43 69.85) (xy 158.75 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f26edbf8-770e-40e3-9d0d-484af0b1690c")
+	)
+	(sheet
+		(at 158.75 64.77)
+		(size 31.75 15.24)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "abe19db7-5872-4b87-a323-a9010b49e940")
+		(property "Sheetname" "USB_interface_and_power"
+			(at 158.75 64.0584 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "USB_interface_and_power.kicad_sch"
+			(at 158.75 80.5946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "USB_interface_tx" output
+			(at 158.75 69.85 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "230d9dda-c955-4c5a-bd01-95564adf569c")
+		)
+		(pin "USB_interface_rx" input
+			(at 158.75 73.66 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "3549a7d1-8501-46c1-a84d-63d8f3847de3")
+		)
+		(instances
+			(project "STM32WLE5_RF_dongle"
+				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 158.75 86.36)
+		(size 49.53 25.4)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "ad9ae5b5-cf8f-4e68-8205-54438ed41a0f")
+		(property "Sheetname" "RF_front_end"
+			(at 158.75 85.6484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "RF_front_end.kicad_sch"
+			(at 158.75 112.3446 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "VR_PA" input
+			(at 158.75 91.44 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "c8b28075-3c5a-45d3-a164-f210f9652e68")
+		)
+		(pin "RFO_HP" input
+			(at 158.75 95.25 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "b4b8437b-64de-4989-bb20-463c4c3ed082")
+		)
+		(pin "RFI_P" input
+			(at 158.75 99.06 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "d685bbad-2c2e-40c1-a314-f725d375f583")
+		)
+		(pin "RFI_N" input
+			(at 158.75 102.87 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "43d0dfbe-01e4-42b9-846b-e9d41c1fc73f")
+		)
+		(pin "RF_SWITCH_CTRL" input
+			(at 158.75 106.68 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "8b4ef4d3-63af-47c6-b904-fadf0238274e")
+		)
+		(instances
+			(project "STM32WLE5_RF_dongle"
+				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 86.36 64.77)
+		(size 52.07 46.99)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "dc0ccc95-6b5c-40d3-9374-41354a9b55b7")
+		(property "Sheetname" "MCU"
+			(at 86.36 64.0584 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "MCU.kicad_sch"
+			(at 86.36 112.3446 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "RFO_HP" output
+			(at 138.43 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "ccbd7092-e926-4aea-84a4-0c44a040c5c7")
+		)
+		(pin "VR_PA" output
+			(at 138.43 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "6eda6b32-03e2-4608-9593-59d1421ad017")
+		)
+		(pin "RFI_P" output
+			(at 138.43 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "4659d0c5-a30b-4639-bf07-d9dcb8cf06c2")
+		)
+		(pin "RFI_N" output
+			(at 138.43 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "d332a726-c823-418a-a0e7-07c9420be82b")
+		)
+		(pin "RF_SWITCH_CTRL" output
+			(at 138.43 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "949d3c87-dbdc-4558-82bc-87381060a18f")
+		)
+		(pin "USART2_tx" output
+			(at 138.43 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "20c6bf3c-02db-471e-b14d-4f0f6786f03b")
+		)
+		(pin "USART2_rx" input
+			(at 138.43 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "0d237f2b-5dd3-4b95-bf03-b6d8dc6b8009")
+		)
+		(instances
+			(project "STM32WLE5_RF_dongle"
+				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b"
+					(page "3")
+				)
+			)
+		)
+	)
+)

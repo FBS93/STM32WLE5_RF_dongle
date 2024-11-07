@@ -1,0 +1,26 @@
+{
+    "name": "STM32WLE5_RF_dongle",
+    "dockerFile": "Dockerfile",
+    "runArgs": [
+        // Full access to host resources and devices.
+        "--privileged"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                // Default shell set to bash
+                "terminal.integrated.defaultProfile.linux": "bash"
+            },
+            "extensions": [
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools",
+                "marus25.cortex-debug@1.5.1",
+                "ms-python.python",
+                "battlebas.kivy-vscode",
+                "GitHub.copilot",
+                "mhutchie.git-graph",
+                "spencerwmiles.vscode-task-buttons"
+            ]
+        }
+    }
+}

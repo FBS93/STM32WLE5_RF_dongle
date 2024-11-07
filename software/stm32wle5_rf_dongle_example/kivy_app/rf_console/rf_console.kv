@@ -1,0 +1,74 @@
+#:kivy 2.3.0
+#:include scrollable_log_window/scrollable_log_window.kv
+#:include popup_config/popup_config.kv
+#:include popup_device_selection/popup_device_selection.kv
+
+RFConsole:
+    orientation: 'vertical'
+    padding: 10
+
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 0.2
+        Rectangle:
+            size: self.size
+
+    AnchorLayout:
+        anchor_x: 'right'
+        anchor_y: 'top'
+        
+
+        RelativeLayout:
+            size_hint_y: 0.75
+
+            canvas:           
+                Color:
+                    rgba: 0, 0, 0, 1
+                Rectangle:
+                    size: self.width - 4, self.height - 4
+                    pos: 2, 2
+
+
+            ScrollableLogWindow:
+                id: ScrollableLogWindow
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: 0.25
+        padding: 10
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            Button:
+                text: "Set config"
+                font_size: dp(10)
+                on_press: root._set_config_button_callback()
+
+            Button:
+                text: "Set default FSK config"
+                font_size: dp(10)
+                on_press: root._set_default_FSK_config_button_callback()
+            
+            Button:
+                text: "Set default LoRa config"
+                font_size: dp(10)
+                on_press: root._set_default_LoRa_config_button_callback()
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            TextInput:
+                id: message_input
+                hint_text: "Type your message here"
+                multiline: True
+            
+            Button:
+                text: "Send"
+                font_size: dp(12)
+                size_hint_x: 0.25
+                on_press: root._send_button_callback()
+            
+
+

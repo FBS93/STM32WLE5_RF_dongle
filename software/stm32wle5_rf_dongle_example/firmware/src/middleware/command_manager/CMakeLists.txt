@@ -1,0 +1,2 @@
+add_library(command_manager src/command_manager.c)
+target_include_directories(command_manager PUBLIC inc)

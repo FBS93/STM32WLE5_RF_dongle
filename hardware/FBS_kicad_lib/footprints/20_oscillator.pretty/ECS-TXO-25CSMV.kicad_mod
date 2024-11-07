@@ -1,0 +1,237 @@
+(footprint "ECS-TXO-25CSMV"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -2.1 0)
+		(layer "F.SilkS")
+		(uuid "194ff145-f6b5-4d10-979f-b06b40e2eac3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "ECS-TXO-25CSMV"
+		(at 1.4 2.3 0)
+		(layer "F.Fab")
+		(uuid "4063f6be-cbc5-4563-9deb-a8983ed2eed7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9fce2e5c-2219-4e06-b8b1-cc553b5358b6")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f1827415-69f7-4658-a06d-0abc1a9cc4e1")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "c4142e90-eb57-4d46-8264-0237e0df4b85")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -0.221 -1)
+		(end 0.221 -1)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "ce5f1a7a-6449-43ca-aae5-e494fb6dc891")
+	)
+	(fp_line
+		(start -0.221 1)
+		(end 0.221 1)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "99a15e92-ed60-49ac-aa84-37e125403362")
+	)
+	(fp_circle
+		(center -1.9 0.85)
+		(end -1.8 0.85)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "cc892e8f-ee00-42f4-a58f-4dccaef81ce1")
+	)
+	(fp_line
+		(start -1.625 -1.375)
+		(end 1.625 -1.375)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "88fbaeba-07e8-40c2-8b4c-45f49a91a65f")
+	)
+	(fp_line
+		(start -1.625 1.375)
+		(end -1.625 -1.375)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "9fdadaf4-79cf-4f25-b14c-56c00ec780f3")
+	)
+	(fp_line
+		(start 1.625 -1.375)
+		(end 1.625 1.375)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "74eae3d2-e6ca-4fb4-90e0-b775a4bc1b55")
+	)
+	(fp_line
+		(start 1.625 1.375)
+		(end -1.625 1.375)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "8d85598a-7315-42c6-af60-f835087fe399")
+	)
+	(fp_line
+		(start -1.25 -1)
+		(end 1.25 -1)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "328fb49b-bac4-413d-91b2-d7ec08b31347")
+	)
+	(fp_line
+		(start -1.25 1)
+		(end -1.25 -1)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "2bf68abb-3e50-4b24-b000-1821b16f83fb")
+	)
+	(fp_line
+		(start 1.25 -1)
+		(end 1.25 1)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "abe3a69d-85c9-47de-9195-463c9188b9bf")
+	)
+	(fp_line
+		(start 1.25 1)
+		(end -1.25 1)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "d7ed72b5-0ac5-4e75-b11c-6400c55aceb7")
+	)
+	(fp_circle
+		(center -1.9 0.85)
+		(end -1.8 0.85)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.Fab")
+		(uuid "5a8a90cf-fafc-4d0a-9559-a989a5db2f3e")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 7.4 0.1 0)
+		(layer "F.Fab")
+		(uuid "e9a556dc-df2c-4ac5-b3fb-74789d5198a0")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -0.925 0.725 180)
+		(size 0.9 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(solder_paste_margin_ratio -0.1)
+		(uuid "43aa707d-502b-401e-928e-ba15daeafb30")
+	)
+	(pad "2" smd rect
+		(at 0.925 0.725 180)
+		(size 0.9 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(solder_paste_margin_ratio -0.1)
+		(uuid "8e147868-8ad9-4891-a54b-a6b3a166b136")
+	)
+	(pad "3" smd rect
+		(at 0.925 -0.725 180)
+		(size 0.9 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(solder_paste_margin_ratio -0.1)
+		(uuid "1b0844af-a8f8-48e4-9df7-89367407f828")
+	)
+	(pad "4" smd rect
+		(at -0.925 -0.725 180)
+		(size 0.9 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(solder_paste_margin_ratio -0.1)
+		(uuid "d0604b06-2764-4353-abcb-aebab35300e0")
+	)
+	(model "${FBS_KICAD_LIB}/3d_models/20_oscillator/ECS-TXO-25CSMV.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 0 0)
+		)
+	)
+)

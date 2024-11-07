@@ -1,0 +1,17 @@
+#:kivy 2.3.0
+
+<ScrollableLogWindow>:
+    ScrollView:
+        id: log_scroll
+        do_scroll_x: False  
+        do_scroll_y: True   
+        
+        GridLayout:
+            id: log_container
+            cols: 1 
+            rows: None  # Automatically adjust rows based on content
+            spacing: 5  
+            padding: 5  
+            size_hint_y: None  
+            height: self.minimum_height 
+

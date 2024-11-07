@@ -1,0 +1,202 @@
+{
+    "folders": [
+        {
+            "name": "STM32WLE5_RF_dongle",
+            "path": "..",
+        },
+    ],
+    "settings": {
+        "cmake.sourceDirectory": "/workspaces/STM32WLE5_RF_dongle/software/stm32wle5_rf_dongle_example/firmware",
+        "workbench.tree.indent": 16,
+        "workbench.tree.expandMode": "doubleClick",
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true,
+        "git.autofetch": true,
+        "cmake.options.statusBarVisibility": "hidden",
+        "debug.showInStatusBar": "never",
+        "cmake.options.advanced": {
+            "configurePreset": {
+                "statusBarVisibility": "inherit",
+                "inheritDefault": "visible"
+            },
+            "build": {
+                "statusBarVisibility": "inherit",
+                "inheritDefault": "hidden",
+            },
+            "launch": {
+                "statusBarVisibility": "inherit",
+                "inheritDefault": "hidden"
+            },
+            "debug": {
+                "statusBarVisibility": "inherit",
+                "inheritDefault": "hidden"
+            }
+        },
+        "VsCodeTaskButtons.showCounter": false,
+        "VsCodeTaskButtons.tasks": [
+            {
+                "label": "🛠 C",
+                "tasks": [
+                    {
+                        "label": "🔨 Build",
+                        "task": "C_Build"
+                    },
+                    {
+                        "label": "🐞 Debug",
+                        "task": "C_Debug"
+                    },
+                    {
+                        "label": "⚡ Flash",
+                        "task": "C_Flash"
+                    },
+                    {
+                        "label": "🧹 Clean",
+                        "task": "C_Clean"
+                    }
+                ],
+                "tooltip": "Firmware"
+            },
+            {
+                "label": "🐍 Python",
+                "tasks": [
+                    {
+                        "label": "▶ Run",
+                        "task": "P_Run"
+                    },
+                    {
+                        "label": "🐞 Debug",
+                        "task": "P_Debug"
+                    },
+                    {
+                        "label": "🧹 Clean",
+                        "task": "P_Clean"
+                    }
+                ],
+                "tooltip": "Kivy app"
+            },
+            {
+                "label": "🧰 Toolbox",
+                "tasks": [
+                    {
+                        "label": "⚙️ STM32CubeMX",
+                        "task": "STM32CubeMX"
+                    },
+                    {
+                        "label": "⚡ KiCad",
+                        "task": "KiCad"
+                    }
+                ],
+                "tooltip": "Software tools used in the project"
+            }
+        ],
+        "files.associations": {
+            "lora_radio.h": "c",
+            "lora_radio_private_defs.h": "c",
+            "stddef.h": "c"
+        }
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "options": {
+            "env": {
+                "SCRIPTS_PATH": "/workspaces/STM32WLE5_RF_dongle/.vscode/tasks"
+            },
+        },
+        "tasks": [
+            {
+                "label": "C_Build",
+                "type": "shell",
+                "command": "${SCRIPTS_PATH}/c_build.sh",
+                "args": [
+                    "${command:cmake.activeConfigurePresetName}"
+                ]
+            },
+            {
+                "label": "C_Debug",
+                "type": "shell",
+                "command": "${command:workbench.action.debug.selectandstart}"
+            },
+            {
+                "label": "C_Flash",
+                "type": "shell",
+                "command": "${SCRIPTS_PATH}/c_flash.sh",
+                "args": [
+                    "${command:cmake.activeConfigurePresetName}"
+                ]
+            },
+            {
+                "label": "C_Clean",
+                "type": "shell",
+                "command": "${SCRIPTS_PATH}/c_clean.sh"
+            },
+            {
+                "label": "P_Run",
+                "type": "shell",
+                "command": "${SCRIPTS_PATH}/p_run.sh"
+            },
+            {
+                "label": "P_Debug",
+                "type": "shell",
+                "command": "${command:workbench.action.debug.selectandstart}"
+            },
+            {
+                "label": "P_Clean",
+                "type": "shell",
+                "command": "${SCRIPTS_PATH}/p_clean.sh"
+            },
+            {
+                "label": "STM32CubeMX",
+                "type": "shell",
+                "command": "${SCRIPTS_PATH}/run_stm32cubemx.sh"
+            },
+            {
+                "label": "KiCad",
+                "type": "shell",
+                "command": "${SCRIPTS_PATH}/run_kicad.sh"
+            }
+        ]
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "STM32WLE5 firmware debug",
+                "cwd": "${workspaceFolder}",
+                "type": "cortex-debug",
+                "executable": "/workspaces/STM32WLE5_RF_dongle/software/stm32wle5_rf_dongle_example/firmware/build/${command:cmake.activeConfigurePresetName}/STM32WLE5_RF_dongle.elf",
+                "request": "launch",
+                "preLaunchTask": "C_Build",
+                "servertype": "stlink",
+                /* run_ST_debugger.sh is a workaround to launch the ST-LINK_gdbserver with sudo to grant 
+                 * r/w permissions to the STLink USB devices from within the container without needing 
+                 * to add udev rules on the host. Another option is to set the "stlinkPath" file to
+                 * "/opt/st/stm32cubeclt_1.16.0/STLink-gdb-server/bin/ST-LINK_gdbserver" and add the
+                 * udev rules found in the directory .devcontainer/assets/ST/stlink_udev_rules to the
+                 * host /etc/udev/rules.d/ directory. Also apply the following commands on the host
+                 * to reload the rules and apply changes:
+                 *
+                 *     sudo udevadm control --reload-rules
+                 *     sudo udevadm trigger
+                 */
+                "stlinkPath": "/workspaces/STM32WLE5_RF_dongle/.vscode/tasks/run_ST_debugger.sh",
+                "stm32cubeprogrammer": "/opt/st/stm32cubeclt_1.16.0/STM32CubeProgrammer/bin/",
+                "device": "STM32WLE5C8U6",
+                "interface": "swd",
+                "serialNumber": "", // Set ST_Link ID if you use multiple at the same time
+                "runToEntryPoint": "main",
+                "svdFile": "/opt/st/stm32cubeclt_1.16.0/STMicroelectronics_CMSIS_SVD/STM32WLE5_CM4.svd",
+                "serverArgs": [
+                    "-m",
+                    "0"
+                ] //Do not reset the MCU when connecting the debugger
+            },
+            {
+                "name": "STM32WLE5 Kivy app debug",
+                "type": "debugpy",
+                "request": "launch",
+                "program": "/workspaces/STM32WLE5_RF_dongle/software/stm32wle5_rf_dongle_example/kivy_app/main.py",
+                "console": "integratedTerminal"
+            }
+        ]
+    }
+}

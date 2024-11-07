@@ -1,0 +1,36 @@
+#:kivy 2.3.0
+
+<PopupDeviceSelection>:
+    title: 'Select Device'
+    size_hint: 0.8, 0.5
+    auto_dismiss: False
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+
+        Label:
+            text: 'Please select a device from the list:'
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Spinner:
+            id: device_spinner
+            text: 'Select Device'
+            size_hint_y: None
+            height: dp(40)
+            values: root.devices
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(10)
+
+            Button:
+                text: 'Apply'
+                on_release: root._apply_button_callback()
+
+            Button:
+                text: 'Cancel'
+                on_release: root._cancel_button_callback()

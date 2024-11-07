@@ -1,0 +1,404 @@
+#:kivy 2.3.0
+
+<PopupConfig>:
+    title: 'Set Config'
+    separator_height: 0 
+    auto_dismiss: False
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(2)
+        spacing: dp(5)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(2)
+            spacing: dp(5)
+
+            # -------------------- TX Configuration (Left) --------------------
+            BoxLayout:
+                orientation: 'vertical'
+                padding: dp(2)
+                spacing: dp(5)
+
+                Label:
+                    text: 'TX Configuration'
+                    font_size: dp(13)
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                
+                Label:
+                    text: ''
+
+                # TX Modem
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Modem'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    Spinner:
+                        id: tx_modem
+                        size_hint_x: 0.4
+                        text: 'Select Modem'
+                        font_size: dp(10)
+                        values: ['FSK', 'LoRa']
+
+                # TX Channel
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Channel (Hz)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: tx_channel
+                        size_hint_x: 0.4
+                        hint_text: 'Hz'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # TX Bandwidth
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Bandwidth (LoRa)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    Spinner:
+                        id: tx_bandwidth
+                        size_hint_x: 0.4
+                        text: 'Select Bandwidth'
+                        font_size: dp(10)
+                        values: ['125 kHz', '250 kHz', '500 kHz']
+
+                # TX Data Rate
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Data Rate (bps)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: tx_data_rate
+                        size_hint_x: 0.4
+                        hint_text: 'bps'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # TX Code Rate
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Code Rate'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    Spinner:
+                        id: tx_code_rate
+                        size_hint_x: 0.4
+                        text: 'Select Code Rate'
+                        font_size: dp(10)
+                        values: ['4/5', '4/6', '4/7', '4/8']
+
+                # TX Preamble Length
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Preamble Length'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: tx_preamble_len
+                        size_hint_x: 0.4
+                        hint_text: 'Length'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # TX Fixed Length
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Fixed Length'
+                        font_size: dp(10)
+                        size_hint_x: 0.7
+                    Switch:
+                        id: tx_fixed_len
+                        size_hint_x: 0.4
+                        active: False
+
+                # TX CRC ON
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX CRC ON'
+                        font_size: dp(10)
+                        size_hint_x: 0.7
+                    Switch:
+                        id: tx_crc_on
+                        size_hint_x: 0.4
+                        active: False
+
+                # TX IQ Inverted
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX IQ Inverted'
+                        font_size: dp(10)
+                        size_hint_x: 0.7
+                    Switch:
+                        id: tx_iq_inverted
+                        size_hint_x: 0.4
+                        active: False
+
+                # TX Power
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Power (dBm)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: tx_power
+                        size_hint_x: 0.4
+                        hint_text: 'dBm'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # TX Frequency Deviation
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Frequency Deviation (Hz)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: tx_fdev
+                        size_hint_x: 0.4
+                        hint_text: 'Hz'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # TX Timeout
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'TX Timeout (ms)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: tx_timeout
+                        size_hint_x: 0.4
+                        hint_text: 'ms'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+            # -------------------- RX Configuration (Right) --------------------
+            BoxLayout:
+                orientation: 'vertical'
+                padding: dp(2)
+                spacing: dp(5)
+
+                Label:
+                    text: 'RX Configuration'
+                    font_size: dp(13)
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                
+                Label:
+                    text: ''
+
+                # RX Modem
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Modem'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    Spinner:
+                        id: rx_modem
+                        size_hint_x: 0.4
+                        text: 'Select Modem'
+                        font_size: dp(10)
+                        values: ['FSK', 'LoRa']
+
+                # RX Channel
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Channel (Hz)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: rx_channel
+                        size_hint_x: 0.4
+                        hint_text: 'Hz'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # RX Bandwidth LoRa
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Bandwidth (LoRa)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    Spinner:
+                        id: rx_bandwidth_lora
+                        size_hint_x: 0.4
+                        text: 'Select Bandwidth'
+                        font_size: dp(10)
+                        values: ['125 kHz', '250 kHz', '500 kHz']
+                
+                # RX Bandwidth LoRa
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Bandwidth (FSK)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: rx_bandwidth_fsk
+                        size_hint_x: 0.4
+                        hint_text: 'Hz'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # RX Data Rate
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Data Rate (bps)'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: rx_data_rate
+                        size_hint_x: 0.4
+                        hint_text: 'bps'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # RX Code Rate
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Code Rate'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    Spinner:
+                        id: rx_code_rate
+                        size_hint_x: 0.4
+                        text: 'Select Code Rate'
+                        font_size: dp(10)
+                        values: ['4/5', '4/6', '4/7', '4/8']
+
+                # RX Preamble Length
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Preamble Length'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: rx_preamble_len
+                        size_hint_x: 0.4
+                        hint_text: 'Length'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                # RX Fixed Length
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Fixed Length'
+                        font_size: dp(10)
+                        size_hint_x: 0.7
+                    Switch:
+                        id: rx_fixed_len
+                        size_hint_x: 0.4
+                        active: False
+
+                # RX CRC ON
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX CRC ON'
+                        font_size: dp(10)
+                        size_hint_x: 0.7
+                    Switch:
+                        id: rx_crc_on
+                        size_hint_x: 0.4
+                        active: False
+
+                # RX IQ Inverted
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX IQ Inverted'
+                        font_size: dp(10)
+                        size_hint_x: 0.7
+                    Switch:
+                        id: rx_iq_inverted
+                        size_hint_x: 0.4
+                        active: False
+
+                # RX Payload Length
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    Label:
+                        text: 'RX Payload Length'
+                        font_size: dp(10)
+                        size_hint_x: 0.6
+                    TextInput:
+                        id: rx_payload_len
+                        size_hint_x: 0.4
+                        hint_text: 'Length'
+                        font_size: dp(10)
+                        input_filter: 'int'
+
+                Label:
+                    text: ''
+
+        # -------------------- Buttons Apply and Cancel (Bottom Right) --------------------
+        RelativeLayout:
+            size_hint_y: 0.05
+
+            AnchorLayout:
+                anchor_x: 'right'
+                anchor_y: 'center'
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_x: 0.4
+
+                    Button:
+                        text: 'Apply'
+                        font_size: dp(10)
+                        on_release: root._apply_button_callback()
+
+                    Button:
+                        text: 'Cancel'
+                        font_size: dp(10)
+                        on_release: root._cancel_button_callback()
