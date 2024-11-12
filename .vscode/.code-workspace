@@ -12,6 +12,7 @@
         "editor.tabSize": 2,
         "editor.formatOnSave": true,
         "git.autofetch": true,
+        "git-graph.showStatusBarItem": false,
         "cmake.options.statusBarVisibility": "hidden",
         "debug.showInStatusBar": "never",
         "cmake.options.advanced": {
@@ -160,7 +161,7 @@
         "version": "0.2.0",
         "configurations": [
             {
-                "name": "STM32WLE5 firmware debug",
+                "name": "STM32WLE5C8U6 firmware debug",
                 "cwd": "${workspaceFolder}",
                 "type": "cortex-debug",
                 "executable": "/workspaces/STM32WLE5_RF_dongle/software/stm32wle5_rf_dongle_example/firmware/build/${command:cmake.activeConfigurePresetName}/STM32WLE5_RF_dongle.elf",
@@ -191,7 +192,7 @@
                 ] //Do not reset the MCU when connecting the debugger
             },
             {
-                "name": "STM32WLE5 Kivy app debug",
+                "name": "Kivy app debug",
                 "type": "debugpy",
                 "request": "launch",
                 "program": "/workspaces/STM32WLE5_RF_dongle/software/stm32wle5_rf_dongle_example/kivy_app/main.py",

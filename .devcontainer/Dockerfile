@@ -23,7 +23,6 @@ RUN apt-get update && apt-get install -y \
     libgles2-mesa \
     libgl1-mesa-dri \
     mesa-utils \
-    x11-apps \
     usbutils \
     libsdl2-dev \
     libsdl2-image-dev \
@@ -136,6 +135,3 @@ COPY assets/KiCad/kicad_default_conf/ /home/fbs/.config/kicad/8.0/
 # Update .bashrc with necessary exports and aliases
 RUN echo 'export PATH=$PATH:~/.local/bin/' >> ~/.bashrc
 RUN echo "alias STM32CubeMX='/usr/local/STMicroelectronics/STM32Cube/STM32CubeMX/STM32CubeMX'" >> ~/.bashrc
-
-# Configure DISPLAY environment variable for X11 forwarding
-ENV DISPLAY=host.docker.internal:0
