@@ -1,6 +1,8 @@
 {
     "name": "STM32WLE5_RF_dongle",
-    "dockerFile": "Dockerfile",
+    "image": "fbs093/stm32wle5_rf_dongle:v0.0",
+    // Using a pre-built image, so comment de next line
+    //"dockerFile": "Dockerfile", 
     "runArgs": [
         // Full access to host resources and devices.
         "--privileged"
