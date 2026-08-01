@@ -45,17 +45,24 @@ if [ ! -e "${LOG_SERIAL_DEVICE}" ]; then
     exit 1
 fi
 
+SERIAL_DEVICE="\$(/usr/bin/readlink -f -- "${LOG_SERIAL_DEVICE}")"
 echo "USB serial device configured: ${LOG_SERIAL_DEVICE}."
 
 # Reuse the existing logging server when healthy and matching the device and port.
 if /usr/bin/ss -ltn | /usr/bin/grep ":$LOG_PORT" >/dev/null && \
    /usr/bin/pgrep -f "python3 ${REMOTE_SCRIPT} ${LOG_SERIAL_DEVICE} ${LOG_PORT} ${LOG_BAUD_RATE}" >/dev/null; then
-    if bash -c "exec 9<>/dev/tcp/127.0.0.1/$LOG_PORT" 2>/dev/null; then
-        exec 9>&-
-        exec 9<&-
-        echo "✅ Logging server already listening on port $LOG_PORT."
-        exit 0
-    fi
+    for pid in \$(/usr/bin/pgrep -f "python3 ${REMOTE_SCRIPT} ${LOG_SERIAL_DEVICE} ${LOG_PORT} ${LOG_BAUD_RATE}"); do
+        for fd in /proc/\${pid}/fd/*; do
+            if [ "\$(/usr/bin/readlink -f -- "\${fd}" 2>/dev/null)" = "\${SERIAL_DEVICE}" ]; then
+                if bash -c "exec 9<>/dev/tcp/127.0.0.1/$LOG_PORT" 2>/dev/null; then
+                    exec 9>&-
+                    exec 9<&-
+                    echo "✅ Logging server already listening on port $LOG_PORT."
+                    exit 0
+                fi
+            fi
+        done
+    done
 fi
 
 # Stop stale instances before starting a fresh one.

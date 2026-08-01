@@ -111,8 +111,8 @@ SECTIONS
   } >FLASH
 
   /**
-   * Start address in FLASH of the initial values for .data 
-   * (used by startup code to initialize variables in RAM). 
+   * Start address in FLASH of the initial values for .data
+   * (used by startup code to initialize variables in RAM).
    */
   _sidata = LOADADDR(.data);
 
@@ -125,7 +125,7 @@ SECTIONS
     *(.data*) /* .data* sections. */
     _edata = .; /* End address symbol of .data. */
   } >RAM AT> FLASH
-  
+
   /* Uninitialized global/static variables placed in RAM (initialized to 0 by startup). */
   . = ALIGN(4);
   .bss :
@@ -149,5 +149,3 @@ SECTIONS
     . = . + _min_stack_size; /* Reserve minimum stack size. */
   } >RAM
 }
-
-

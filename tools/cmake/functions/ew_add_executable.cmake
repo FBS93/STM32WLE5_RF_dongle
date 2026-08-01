@@ -38,7 +38,7 @@ function(ew_add_executable)
     foreach(sf IN LISTS EW_STARTUP_FILES)
         target_sources(${target_name} PRIVATE "${sf}")
     endforeach()
-    
+
     # Add all linker scripts if any.
     foreach(ld IN LISTS EW_LINKER_FILES)
         target_link_options(${target_name} PRIVATE "-T${ld}")

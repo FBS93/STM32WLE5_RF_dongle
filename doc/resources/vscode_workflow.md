@@ -9,7 +9,7 @@ The available VS Code functions are organized by domain. Each function is listed
 The repository exposes these functions through three VS Code entry point types:
 - Tasks defined in [tasks.json](../../.vscode/tasks.json).
 - Launch configurations defined in [launch.json](../../.vscode/launch.json).
-- Task buttons configured in [settings.json](../../.vscode/settings.json), grouped as workbench and software toolboxes.
+- Task buttons configured in [settings.json](../../.vscode/settings.json), grouped as workbench, software and hardware toolboxes.
 
 ## Workbench
 
@@ -17,7 +17,7 @@ The repository exposes these functions through three VS Code entry point types:
 |---|---|---|---|
 | Raspberry Pi SSH access | `connect_rpi_ssh` task, `🔗 Connect Raspberry Pi (SSH)` task button | Opens an SSH session to the Raspberry Pi used by the repository workflow. | [Raspberry Pi setup](raspberry_pi_setup.md) |
 | OpenCode web GUI | `run_opencode_web_gui` task, `🌐 OpenCode web GUI` task button | Opens the OpenCode web interface for repository AI workflows on port `4096`. | [AI-assisted development workflow](ai_assisted_development_workflow.md) |
-| PulseView web | `run_pulseview_web` task, `📈 Run PulseView web` task button | Starts the remote PulseView web visualization workflow on the Raspberry Pi and prints the browser URL. | [Embedded target remote logic analyzer](../development_methodology/resources/embedded_target_remote_logic_analyzer.md) |
+| PulseView web | `run_pulseview_web` task, `📈 PulseView web GUI` task button | Starts the remote PulseView web visualization workflow on the Raspberry Pi and prints the browser URL. | [Embedded target remote logic analyzer](../development_methodology/resources/embedded_target_remote_logic_analyzer.md) |
 | Logic analyzer capture sync | `sync_logic_analyzer_captures` task, `📥 Sync logic analyzer captures` task button | Mirrors `LOGIC_ANALYZER_ARTIFACTS_DIR` from the workspace to the same relative path under `/tmp/` on the Raspberry Pi. | [Embedded target remote logic analyzer](../development_methodology/resources/embedded_target_remote_logic_analyzer.md) |
 | Third-party sync | `run_third_party_sync` task, `🔄 Sync third-party repositories` task button | Runs the local third-party synchronization workflow. | [Third-party sync workflow](third_party_sync_workflow.md), [third_party_sync tool](../../tools/third_party_sync/third_party_sync.md) |
 | Documentation generation | `run_docgen` task, `📄 Generate documentation` task button | Generates static repository documentation in the configured `DOCGEN_OUTPUT` path. | [docgen tool](../../tools/docgen/docgen.md) |
@@ -38,6 +38,15 @@ The repository exposes these functions through three VS Code entry point types:
 | Host debug | `Host` launch configuration | Launches host-side debugging for the active CMake launch target. | |
 | Target debug | `Target STM32F103C8Tx (launch/attach)` launch configurations, `run_target_gdb_server` task | Launches or attaches a remote debug session on the target platform. | [Embedded target remote debugging](../development_methodology/software_domain/resources/embedded_target_remote_debugging.md) |
 | Target logging | `run_target_logging_server` task, `📃 Enable target logging` task button | Starts the remote logging workflow for the target platform. | [Embedded target remote logging](../development_methodology/software_domain/resources/embedded_target_remote_logging.md) |
+
+## Hardware domain
+
+| Function | VS Code entry point | Purpose | Reference |
+|---|---|---|---|
+| Open KiCad | `open_kicad` task, `⚡ Open KiCad` task button | Opens KiCad against the persistent runtime paths prepared by the devcontainer. | [KiCad workflow](../development_methodology/hardware_domain/resources/kicad_workflow.md) |
+| Save KiCad state | `save_kicad_state` task, `💾 Save KiCad state` task button | Captures the current KiCad runtime state into the versioned repository state. | [KiCad workflow](../development_methodology/hardware_domain/resources/kicad_workflow.md), [kicad_state tool](../../tools/kicad_state/kicad_state.md) |
+| Restore KiCad state | `restore_kicad_state` task, `♻️ Restore KiCad state` task button | Force-restores the current KiCad runtime state from the versioned repository state when one is available. | [KiCad workflow](../development_methodology/hardware_domain/resources/kicad_workflow.md), [kicad_state tool](../../tools/kicad_state/kicad_state.md) |
+| Clean KiCad runtime state | `clean_kicad_runtime_state` task, `🧹 Clean KiCad runtime state` task button | Removes the current contents of the KiCad configuration and documents runtime paths. | [KiCad workflow](../development_methodology/hardware_domain/resources/kicad_workflow.md) |
 
 ## Expected extensions
 

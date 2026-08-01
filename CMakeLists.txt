@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-set(CMAKE_C_STANDARD 11) 
+set(CMAKE_C_STANDARD 11)
 project(embedded_workbench C ASM)
 
 # ******************************************************************************
@@ -33,7 +33,7 @@ option(ECF_TEST "Build Embedded C Framework tests" OFF)
 
 if(ECF_TEST)
     # Enable CTest.
-    enable_testing() 
+    enable_testing()
 
     # Add ECF custom cmake functions related to test and mock.
     include(sw/ecf/tools/cmake/functions/ecf_test.cmake)
@@ -53,7 +53,7 @@ option(EDF_EXAMPLE_FUZZ "Build the EDF fuzz example application" OFF)
 # ******************************************************************************
 # ECF configuration.
 #
-# These variables can be overridden using `set(...)` before adding ECF through 
+# These variables can be overridden using `set(...)` before adding ECF through
 # CMake.
 #
 # Example:

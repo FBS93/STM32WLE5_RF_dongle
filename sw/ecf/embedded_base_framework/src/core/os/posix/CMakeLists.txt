@@ -1,6 +1,6 @@
-target_sources(ebf 
+target_sources(ebf
     PRIVATE src/ebf_core.c)
-target_include_directories(ebf 
+target_include_directories(ebf
     PRIVATE inc)
 target_link_libraries(ebf
   PRIVATE eaf

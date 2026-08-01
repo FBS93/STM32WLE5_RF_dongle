@@ -5,5 +5,5 @@ target_sources(ebf PRIVATE
 target_link_libraries(ebf
     PRIVATE eaf
     PRIVATE emf)
-target_include_directories(ebf 
+target_include_directories(ebf
     PUBLIC inc)

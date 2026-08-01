@@ -1,7 +1,7 @@
-# CMake Weak Symbol Oddities  
-**Posted Aug 6, 2023**  
-By Jeff Longo  
-8 min read  
+# CMake Weak Symbol Oddities
+**Posted Aug 6, 2023**
+By Jeff Longo
+8 min read
 
 ## CMake for STM32!
 
@@ -88,30 +88,30 @@ It puts you in an infinite loop. This explained what was going on, but why did m
 
 The answer has to do with libraries. In CMake, large projects are typically organized by creating directory structures containing libraries which can be transitively linked, allowing dependencies to propagate upward. This helps to avoid an enormous root `CMakeLists.txt` containing every dependency. In my project, I organized the structure as follows:
 
-- Libraries are created for the STM32Cube libraries  
-- A library is created for the BSP, which links in the STM32Cube libraries  
-- The root CMake project defines the application and links in the BSP  
+- Libraries are created for the STM32Cube libraries
+- A library is created for the BSP, which links in the STM32Cube libraries
+- The root CMake project defines the application and links in the BSP
 
 Given that I’m working with a microcontroller, a static library (which is CMake’s default for add_library) for the upper levels seemed like a reasonable choice. Here is where the issue lies. Let’s look at how the linker links a program:
 
-- Linker arguments are evaluated left to right  
-- Leftmost libraries are linked first, the order does matter!  
-- The linker maintains a symbol table  
-- A symbol is a function or a variable  
-- The symbol table tracks what symbols have been seen so far that object files and libraries being linked export  
-- The symbol table tracks undefined symbols that object files and libraries request to import  
+- Linker arguments are evaluated left to right
+- Leftmost libraries are linked first, the order does matter!
+- The linker maintains a symbol table
+- A symbol is a function or a variable
+- The symbol table tracks what symbols have been seen so far that object files and libraries being linked export
+- The symbol table tracks undefined symbols that object files and libraries request to import
 
 When an object file is encountered:
 
-- Its exported symbols are added to the symbol table  
-- If any symbol with the same name already exists, a multiple definition error is thrown  
-- Any symbols that are on the undefined list that were just added are removed from the undefined list  
-- Any referenced symbols that the object imports are added to the undefined list if they aren’t already in the symbol table  
+- Its exported symbols are added to the symbol table
+- If any symbol with the same name already exists, a multiple definition error is thrown
+- Any symbols that are on the undefined list that were just added are removed from the undefined list
+- Any referenced symbols that the object imports are added to the undefined list if they aren’t already in the symbol table
 
 When a library is encountered (a static library is simply an uncompressed grouping of object files):
 
-- If a symbol on the undefined list is exported by an object in the library, that object is linked as described above, otherwise the object is skipped  
-- If any object is included in the link, the library is rescanned to check if any of the requested imports by the objects included in the link can be found in the library  
+- If a symbol on the undefined list is exported by an object in the library, that object is linked as described above, otherwise the object is skipped
+- If any object is included in the link, the library is rescanned to check if any of the requested imports by the objects included in the link can be found in the library
 
 Once all objects are linked, the linker checks if the undefined list is empty. If it’s not, throw an undefined reference error.
 
@@ -121,9 +121,9 @@ Once all objects are linked, the linker checks if the undefined list is empty. I
 
 In summation, the cause of my issue was:
 
-- The static library for the STM32Cube library exports the weak interrupt handlers  
-- The static library for the BSP attempts to provide strong implementations for the handlers, but these implementations are ignored due to the linker already having these symbols in the symbol table  
-- The executable is linked with the default handlers  
+- The static library for the STM32Cube library exports the weak interrupt handlers
+- The static library for the BSP attempts to provide strong implementations for the handlers, but these implementations are ignored due to the linker already having these symbols in the symbol table
+- The executable is linked with the default handlers
 
 This behavior can be exemplified using our previous example code [above](#weak-symbols) and the following CMake script:
 

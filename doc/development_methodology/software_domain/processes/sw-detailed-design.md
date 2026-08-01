@@ -27,11 +27,11 @@ Define software detailed design from software requirements and software architec
 
 Software detailed designs shall be derived from software architecture and software requirements.
 
-Software requirements shall be used only as complementary input when the software architecture does not fully define the required behavior. 
+Software requirements shall be used only as complementary input when the software architecture does not fully define the required behavior.
 
 Software detailed designs shall not define direct traceability to software requirements.
 
-All software architecture elements shall be traced to one or more software units. Each software architecture element may be refined into one or more software units (1:1 or 1:N) depending on the software detailed design needs. 
+All software architecture elements shall be traced to one or more software units. Each software architecture element may be refined into one or more software units (1:1 or 1:N) depending on the software detailed design needs.
 
 In cases where a software component is refined into multiple software units (1:N), it is recommended to group the corresponding software units under a common folder named the same as the software component.
 
