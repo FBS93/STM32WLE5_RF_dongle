@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+configured_branches=()
+runs_ci=0
+workspace_root="$(git rev-parse --show-toplevel)"
+
+# Validate required environment variables.
+if [ -z "${CI_BRANCHES-}" ]; then
+    echo "❌ Error: CI_BRANCHES must list at least one remote branch."
+    exit 1
+fi
+
+read -r -a configured_branches <<< "${CI_BRANCHES}"
+
+if [ "${#configured_branches[@]}" -eq 0 ]; then
+    echo "❌ Error: CI_BRANCHES must list at least one remote branch."
+    exit 1
+fi
+
+# Parse standard input.
+while read -r local_ref local_oid remote_ref remote_oid; do
+    if [ -z "${local_ref}" ] || [ -z "${local_oid}" ] || [ -z "${remote_ref}" ] || [ -z "${remote_oid}" ]; then
+        echo "❌ Error: malformed pre-push reference update."
+        exit 1
+    fi
+
+    # Git uses an all-zero local object ID for a ref deletion; deletions do not
+    # introduce code that needs CI validation.
+    if [ -z "$(printf '%s' "${local_oid}" | tr -d '0')" ]; then
+        continue
+    fi
+
+    for branch in "${configured_branches[@]}"; do
+        if [ "${remote_ref}" = "refs/heads/${branch}" ]; then
+            runs_ci=1
+            break
+        fi
+    done
+done
+
+if [ "${runs_ci}" -eq 0 ]; then
+    echo "Pre-push: no non-deletion update targets a branch in CI_BRANCHES; CI skipped."
+    exit 0
+fi
+
+echo "Pre-push: configured branch update detected; running CI..."
+"${workspace_root}/.vscode/tasks/run_configured_ci.sh" "${workspace_root}"

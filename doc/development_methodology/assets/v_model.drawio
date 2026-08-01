@@ -1,0 +1,46 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2">
+  <diagram name="Página-1" id="LWEO1btp8nF1brp4g0Yv">
+    <mxGraphModel dx="1426" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ez_s-m6W8uq9Sedmb101-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Specifications" vertex="1">
+          <mxGeometry height="80" width="550" x="130" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="System domain" vertex="1">
+          <mxGeometry height="170" width="550" x="130" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Enginnering domains" vertex="1">
+          <mxGeometry height="170" width="550" x="130" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-11" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;textDirection=ltr;fontSize=10;" value="specs-definition" vertex="1">
+          <mxGeometry height="60" width="120" x="150" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-13" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;flipV=0;fontSize=10;" value="sys-requirements" vertex="1">
+          <mxGeometry height="60" width="120" x="180" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-14" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;fontSize=10;" value="sys-architecture" vertex="1">
+          <mxGeometry height="60" width="120" x="210" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-15" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;" value="&lt;font size=&quot;1&quot;&gt;...&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-16" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;" value="&lt;font size=&quot;1&quot;&gt;...&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="270" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-17" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-18" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="&lt;font size=&quot;1&quot;&gt;...&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="450" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-19" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=10;" value="sys-integration-test" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="ez_s-m6W8uq9Sedmb101-20" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=10;" value="sys-qualification-test" vertex="1">
+          <mxGeometry height="60" width="120" x="510" y="140" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

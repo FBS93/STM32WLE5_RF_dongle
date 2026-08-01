@@ -1,0 +1,32 @@
+{% macro render(entries) -%}
+  <ul>
+  {%- for entry in entries %}
+    <li>
+    {%- if entry.children is defined %}
+      {% set directory_id = "directory-" ~ entry.path %}
+      <div class="directory-tree" data-nav-path="{{ entry.path }}">
+        <button class="directory-toggle" type="button" aria-controls="{{ directory_id }}" aria-expanded="{{ 'true' if is_navigation_ancestor(current_page, entry.path) else 'false' }}"><span aria-hidden="true">&#x25b6;</span><span class="visually-hidden">Toggle {{ entry.name }}</span></button>
+        <a{% if current_page == entry.destination %} aria-current="page"{% endif %} href="{{ href_between(current_page, entry.destination) }}">{{ entry.name }}/</a>
+        <ul id="{{ directory_id }}"{% if not is_navigation_ancestor(current_page, entry.path) %} hidden{% endif %}>{{ render(entry.children) }}</ul>
+      </div>
+    {%- else %}
+      <a{% if entry.kind is defined %} class="{{ entry.kind }}"{% endif %}{% if current_page == entry.destination %} aria-current="page"{% endif %} href="{{ href_between(current_page, entry.destination) }}">{{ entry.name }}</a>
+    {%- endif %}
+    </li>
+  {%- endfor %}
+  </ul>
+{%- endmacro %}
+<section class="documentation-navigation" aria-labelledby="documentation-heading">
+  <h2 id="documentation-heading">Documentation</h2>
+  {{ render(navigation) }}
+</section>
+{% if test_results_navigation %}
+  <nav class="test-results-navigation" aria-label="Test results navigation">
+    <h2>Test results</h2>
+    <ul>
+    {% for result in test_results_navigation %}
+      <li><a{% if current_page == result.destination %} aria-current="page"{% endif %} href="{{ href_between(current_page, result.destination) }}">{{ result.label }}</a></li>
+    {% endfor %}
+    </ul>
+  </nav>
+{% endif %}

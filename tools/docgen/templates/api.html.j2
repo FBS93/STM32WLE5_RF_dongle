@@ -1,0 +1,10 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  <section class="api-wrapper" aria-labelledby="api-title">
+    <h1 id="api-title">API: {{ path }}</h1>
+    <p><a href="{{ raw_source_href }}">Open raw source view</a> · <a href="{{ doxygen_href }}">Open API in Doxygen</a></p>
+    <iframe class="api-frame" src="{{ doxygen_href }}" title="Doxygen API documentation for {{ path }}">
+      <p>Doxygen API content could not be embedded. <a href="{{ doxygen_href }}">Open API in Doxygen</a>.</p>
+    </iframe>
+  </section>
+{% endblock %}

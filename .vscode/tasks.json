@@ -1,0 +1,152 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "env": {
+      "TASKS_PATH": "${workspaceFolder}/.vscode/tasks"
+    }
+  },
+  "inputs": [
+    {
+      "id": "releaseVersion",
+      "type": "promptString",
+      "description": "Release version (vX.Y.Z)"
+    }
+  ],
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "${TASKS_PATH}/build.sh",
+      "args": [
+        "${command:cmake.buildTargetName}",
+        "${command:cmake.activeConfigurePresetName}",
+        "${config:cmake.sourceDirectory}",
+        "${workspaceFolder}/.vscode"
+      ],
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "${TASKS_PATH}/clean.sh",
+      "args": [
+        "${command:cmake.activeConfigurePresetName}",
+        "${config:cmake.sourceDirectory}"
+      ],
+    },
+    {
+      "label": "connect_rpi_ssh",
+      "type": "shell",
+      "command": "${TASKS_PATH}/connect_rpi_ssh.sh"
+    },
+    {
+      "label": "sync_logic_analyzer_captures",
+      "type": "shell",
+      "command": "${TASKS_PATH}/sync_logic_analyzer_captures.sh",
+      "args": [
+        "${workspaceFolder}"
+      ]
+    },
+    {
+      "label": "run_pulseview_web",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_pulseview_web.sh"
+    },
+    {
+      "label": "run_target_gdb_server",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_target_gdb_server.sh"
+    },
+    {
+      "label": "run_target_logging_server",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_target_logging_server.sh"
+    },
+    {
+      "label": "run_opencode_web_gui",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_opencode_web_gui.sh"
+    },
+    {
+      "label": "run_third_party_sync",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_third_party_sync.sh",
+      "args": [
+        "${workspaceFolder}"
+      ]
+    },
+    {
+      "label": "run_docgen",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_docgen.sh",
+      "args": [
+        "${workspaceFolder}",
+        "${workspaceFolderBasename}"
+      ]
+    },
+    {
+      "label": "validate_release",
+      "type": "shell",
+      "command": "${TASKS_PATH}/validate_release.sh",
+      "args": [
+        "${workspaceFolder}",
+        "${workspaceFolderBasename}",
+        "${input:releaseVersion}"
+      ]
+    },
+    {
+      "label": "run_release",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_release.sh",
+      "args": [
+        "${workspaceFolder}",
+        "${workspaceFolderBasename}",
+        "${input:releaseVersion}"
+      ]
+    },
+    {
+      "label": "format",
+      "type": "shell",
+      "command": "${TASKS_PATH}/format.sh",
+      "args": [
+        "${workspaceFolder}/sw",
+        "${workspaceFolder}"
+      ]
+    },
+    {
+      "label": "lint",
+      "type": "shell",
+      "command": "${TASKS_PATH}/lint.sh",
+      "args": [
+        "${workspaceFolder}",
+        "${command:cmake.activeConfigurePresetName}"
+      ]
+    },
+    {
+      "label": "run_ci",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_ci.sh",
+      "args": [
+        "${workspaceFolder}",
+        "${command:cmake.activeConfigurePresetName}"
+      ]
+    },
+    {
+      "label": "run_fuzz",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_fuzz.sh",
+      "args": [
+        "${command:cmake.buildTargetName}",
+        "${config:cmake.sourceDirectory}"
+      ]
+    },
+    {
+      "label": "run_fuzz_coverage",
+      "type": "shell",
+      "command": "${TASKS_PATH}/run_fuzz_coverage.sh",
+      "args": [
+        "${command:cmake.buildTargetName}",
+        "${config:cmake.sourceDirectory}"
+      ]
+    }
+  ]
+}

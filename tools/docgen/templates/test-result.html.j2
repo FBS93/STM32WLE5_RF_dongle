@@ -1,0 +1,7 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  <section class="test-results">
+    <h1>{{ test_result.label }}</h1>
+    <pre class="test-result-log"><code class="language-plaintext">{{ test_result.content }}</code></pre>
+  </section>
+{% endblock %}

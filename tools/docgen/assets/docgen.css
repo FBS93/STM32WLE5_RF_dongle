@@ -1,0 +1,236 @@
+body {
+  margin: 0;
+  color: #222;
+  background: #fff;
+  font: 15px system-ui, sans-serif;
+}
+
+:root { --sidebar-width: 290px; }
+
+a { color: #07599b; }
+a:focus-visible, button:focus-visible {
+  outline: 3px solid #07599b;
+  outline-offset: 2px;
+}
+
+#layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 10px minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#sidebar {
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 1.25rem;
+  overflow-y: auto;
+  background: #f8fafc;
+  border-right: 1px solid #d9e0e7;
+}
+
+.project-title {
+  margin: 0;
+  color: #162c3f;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+.project-title-link { color: inherit; text-decoration: none; }
+.project-title-link:hover { color: #07599b; }
+.documentation-navigation, .test-results-navigation {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #d9e0e7;
+}
+.documentation-navigation h2, .test-results-navigation h2 {
+  margin: 0 0 .65rem;
+  color: #526273;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+#sidebar a:not(.project-title-link) {
+  border-radius: .2rem;
+  text-decoration: none;
+}
+#sidebar a:not(.project-title-link):hover {
+  background: #e8f1f8;
+  color: #063f6d;
+}
+
+#sidebar-resizer {
+  cursor: col-resize;
+  background: #eee;
+  touch-action: none;
+}
+
+#sidebar-resizer:focus-visible { outline: 3px solid #07599b; outline-offset: -3px; }
+#sidebar-resizer:hover, #sidebar-resizer:focus-visible { background: #cfe5f5; }
+
+main {
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+main > * {
+  max-width: 1100px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#sidebar ul { margin: 0; padding-left: 1.15rem; list-style: none; }
+#sidebar li { margin: .22rem 0; }
+.directory-tree { font-weight: 600; }
+.directory-tree > ul { margin-top: .22rem; font-weight: 400; }
+.directory-toggle {
+  width: 1.25rem;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  background: transparent;
+  border: 0;
+}
+.directory-toggle > span[aria-hidden="true"] { display: inline-block; transition: transform .15s ease; }
+.directory-toggle[aria-expanded="true"] > span[aria-hidden="true"] { transform: rotate(90deg); }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.directory-list { padding-left: 1.25rem; }
+#sidebar a[aria-current="page"] {
+  color: #063f6d;
+  font-weight: 600;
+  text-decoration-thickness: 2px;
+}
+.test-results-navigation ul { padding-left: 1.15rem; list-style: none; }
+
+pre {
+  padding: 1rem;
+  overflow: auto;
+  line-height: 1.4;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+/* Local Highlight.js token colours apply to raw and fenced Markdown source. */
+.raw-source .hljs-comment, .raw-source .hljs-quote,
+.markdown-content .hljs-comment, .markdown-content .hljs-quote { color: #3f5f7f; }
+.raw-source .hljs-keyword, .raw-source .hljs-selector-tag,
+.markdown-content .hljs-keyword, .markdown-content .hljs-selector-tag { color: #8a1db5; }
+.raw-source .hljs-string, .raw-source .hljs-attr,
+.markdown-content .hljs-string, .markdown-content .hljs-attr { color: #007a3d; }
+.raw-source .hljs-type, .raw-source .hljs-built_in,
+.markdown-content .hljs-type, .markdown-content .hljs-built_in { color: #007a8a; }
+.raw-source .hljs-number, .raw-source .hljs-literal,
+.markdown-content .hljs-number, .markdown-content .hljs-literal { color: #c24100; }
+.raw-source .hljs-title, .raw-source .hljs-function,
+.markdown-content .hljs-title, .markdown-content .hljs-function { color: #0068c9; }
+.raw-source .hljs-meta, .markdown-content .hljs-meta { color: #8a5100; }
+
+/* Test logs remain raw text and scroll independently when lines are wide. */
+.test-results .test-result-log {
+  max-width: 100%;
+  overflow: auto;
+  white-space: pre;
+}
+
+.markdown-content ul, .markdown-content ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+.markdown-content ul { list-style: disc; }
+.markdown-content ol { list-style: decimal; }
+.markdown-content li { margin: .25rem 0; }
+.markdown-content ul ul { list-style-type: circle; }
+.markdown-content ul ul ul { list-style-type: square; }
+.markdown-content ol ol { list-style-type: lower-alpha; }
+.markdown-content ol ol ol { list-style-type: lower-roman; }
+.markdown-content li > ul, .markdown-content li > ol {
+  margin-top: .25rem;
+  margin-bottom: .25rem;
+}
+.markdown-content .markdown-table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.markdown-content .markdown-table-wrapper > table {
+  margin-right: auto;
+  margin-left: auto;
+  border-collapse: collapse;
+}
+.markdown-content th, .markdown-content td {
+  padding: .5rem;
+  border: 1px solid #bbb;
+}
+.markdown-content th { background: #f5f5f5; }
+.markdown-content .markdown-image-block { text-align: center; }
+.markdown-content .mermaid-diagram {
+  max-width: 100%;
+  overflow-x: auto;
+  text-align: center;
+}
+.markdown-content .mermaid-diagram > svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+code { font-family: ui-monospace, SFMono-Regular, monospace; }
+img, video { max-width: 100%; height: auto; }
+.meta { color: #666; font-size: .9em; }
+.warning { padding: .5rem 1rem; background: #fff8e6; border-left: 4px solid #d88a00; }
+.generation-report {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #526273;
+}
+.generation-report dl { display: grid; grid-template-columns: max-content 1fr; gap: .35rem 1rem; }
+.generation-report dt { font-weight: 700; }
+.generation-report dd { margin: 0; }
+.api-page main { overflow: hidden; }
+.api-wrapper {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  max-width: none;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.api-frame {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid #bbb;
+}
+
+@media (max-width: 720px) {
+  #layout { display: block; height: auto; overflow: visible; }
+  #sidebar {
+    border-right: 0;
+    border-bottom: 1px solid #ddd;
+    overflow-y: visible;
+  }
+  #sidebar-resizer { display: none; }
+  main, .api-page main { padding: 1rem; overflow-y: visible; }
+  .api-wrapper { display: block; height: auto; }
+  .api-frame { height: 75dvh; min-height: 30rem; }
+}

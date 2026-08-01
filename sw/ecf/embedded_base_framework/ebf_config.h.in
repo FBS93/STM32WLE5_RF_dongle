@@ -1,0 +1,106 @@
+/*******************************************************************************
+ * @brief Embedded base framework configuration.
+ *
+ * @copyright
+ * Copyright (c) 2026 FBS93.
+ * See the LICENSE file of this project for license details.
+ * This notice shall be retained in all copies or substantial portions
+ * of the software.
+ *
+ * @warning
+ * This software is provided "as is", without any express or implied warranty.
+ * The user assumes all responsibility for its use and any consequences.
+ ******************************************************************************/
+
+#ifndef EBF_CONFIG_H
+#define EBF_CONFIG_H
+
+/*******************************************************************************
+ * INCLUDES
+ ******************************************************************************/
+
+/* -----------------------------------------------------------------------------
+ * System library headers
+ * -------------------------------------------------------------------------- */
+
+/* -----------------------------------------------------------------------------
+ * External library headers
+ * -------------------------------------------------------------------------- */
+
+/* -----------------------------------------------------------------------------
+ * Project-specific headers
+ * -------------------------------------------------------------------------- */
+
+/*******************************************************************************
+ * PUBLIC MACROS
+ ******************************************************************************/
+
+/** @defgroup EBF_CORE_VALUES
+ *  @brief Possible EBF core options.
+ *  @{
+ */
+#define EBF_CORE_BAREMETAL 0U
+#define EBF_CORE_RTOS 1U
+#define EBF_CORE_OS 2U
+/** @} */
+
+/**
+ * @brief Target core.
+ */
+#define EBF_CORE @EBF_CORE@
+
+#if ((EBF_CORE != EBF_CORE_BAREMETAL) && \
+     (EBF_CORE != EBF_CORE_RTOS) &&      \
+     (EBF_CORE != EBF_CORE_OS))
+#error EBF_CORE defined incorrectly.
+#endif
+
+/** @defgroup EBF_PORT_VALUES
+ *  @brief Possible EBF port options.
+ *  @{
+ */
+#define EBF_PORT_ARM_CORTEX_M 0U
+#define EBF_PORT_FREERTOS 100U
+#define EBF_PORT_POSIX_NON_PREEMPTIVE 200U
+#define EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ 201U
+#define EBF_PORT_POSIX_PREEMPTIVE 202U
+/** @} */
+
+/**
+ * @brief Target port.
+ */
+#define EBF_PORT @EBF_PORT@
+
+#if (EBF_CORE == EBF_CORE_BAREMETAL)
+#if (EBF_PORT != EBF_PORT_ARM_CORTEX_M)
+#error EBF_PORT defined incorrectly.
+#endif
+#endif
+
+#if (EBF_CORE == EBF_CORE_RTOS)
+#if (EBF_PORT != EBF_PORT_FREERTOS)
+#error EBF_PORT defined incorrectly.
+#endif
+#endif
+
+#if (EBF_CORE == EBF_CORE_OS)
+#if ((EBF_PORT != EBF_PORT_POSIX_NON_PREEMPTIVE) && \
+     (EBF_PORT != EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ) && \
+     (EBF_PORT != EBF_PORT_POSIX_PREEMPTIVE))
+#error EBF_PORT defined incorrectly.
+#endif
+#endif
+
+/*******************************************************************************
+ * PUBLIC TYPEDEFS
+ ******************************************************************************/
+
+/*******************************************************************************
+ * PUBLIC VARIABLES
+ ******************************************************************************/
+
+/*******************************************************************************
+ * PUBLIC FUNCTIONS
+ ******************************************************************************/
+
+#endif /* EBF_CONFIG_H */

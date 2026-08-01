@@ -1,0 +1,52 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2">
+  <diagram name="Página-1" id="4nHicnTfd8LCuisjPO6F">
+    <mxGraphModel dx="1426" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#DAE8FC;" value="&lt;div style=&quot;line-height: 127%;&quot;&gt;Platform-dependent&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="280" width="120" x="680" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#D5E8D4;" value="&lt;div style=&quot;line-height: 150%;&quot;&gt;Platform-agnostic&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="480" x="180" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#FFF2CC;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="120" width="620" x="40" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#FFF2CC;strokeWidth=1;" value="&lt;div style=&quot;line-height: 127%;&quot;&gt;Multi-platform&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="280" width="120" x="40" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="EPF" vertex="1">
+          <mxGeometry height="220" width="80" x="700" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="EBF" vertex="1">
+          <mxGeometry height="80" width="440" x="200" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="EAF" vertex="1">
+          <mxGeometry height="80" width="80" x="560" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="EDF" vertex="1">
+          <mxGeometry height="220" width="80" x="60" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="EMF" vertex="1">
+          <mxGeometry height="80" width="80" x="440" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="ETF" vertex="1">
+          <mxGeometry height="80" width="80" x="320" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="EFF" vertex="1">
+          <mxGeometry height="80" width="80" x="200" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CDCDCD;strokeColor=#CDCDCD;fontColor=#333333;" value="Platform" vertex="1">
+          <mxGeometry height="120" width="760" x="40" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="EDF Test" vertex="1">
+          <mxGeometry height="50" width="60" x="70" y="375" as="geometry" />
+        </mxCell>
+        <mxCell id="pVw1DpRb2yNkKjsRUwIu-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCE9F;strokeColor=#FFCE9F;" value="User code" vertex="1">
+          <mxGeometry height="120" width="760" x="40" y="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,83 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Host",
+      "type": "cppdbg",
+      "request": "launch",
+      "MIMode": "gdb",
+      "cwd": "${workspaceFolder}",
+      "program": "${command:cmake.launchTargetPath}",
+      "stopAtEntry": true,
+      "debuginfod": {
+        // Workaround for https://github.com/microsoft/vscode/issues/316682.
+        // Requires ms-vscode.cpptools >= 1.33.0, which supports disabling debuginfod.
+        "enabled": false
+      }
+    },
+    {
+      "name": "Target STM32F103C8Tx (launch)",
+      "type": "cortex-debug",
+      "request": "launch",
+      "gdbPath": "arm-none-eabi-gdb",
+      "servertype": "external",
+      "gdbTarget": "${env:RPI_HOST}:${env:GDB_PORT}",
+      "interface": "swd",
+      "preLaunchTask": "run_target_gdb_server",
+      "preLaunchCommands": [
+        // Increase GDB remote timeout to avoid disconnects on slow or remote targets
+        "set remotetimeout 60",
+        // Automatically retry TCP connections if the remote GDB server is temporarily unavailable
+        "set tcp auto-retry on"
+      ],
+      "overrideRestartCommands": [
+        // Use a generic reset+halt sequence on restart for GDB servers compatibility
+        "monitor reset",
+        "monitor halt"
+      ],
+      "overrideResetCommands": [
+        // Use a generic reset+halt sequence on reset for GDB servers compatibility
+        "monitor reset",
+        "monitor halt"
+      ],
+      "device": "STM32F103C8",
+      "svdFile": "${env:SVD_FILE}",
+      "runToEntryPoint": "main",
+      "cwd": "${workspaceFolder}",
+      "executable": "${command:cmake.launchTargetPath}"
+    },
+    {
+      "name": "Target STM32F103C8Tx (attach)",
+      "type": "cortex-debug",
+      "request": "attach",
+      "gdbPath": "arm-none-eabi-gdb",
+      "servertype": "external",
+      "interface": "swd",
+      "gdbTarget": "${env:RPI_HOST}:${env:GDB_PORT}",
+      "preLaunchTask": "run_target_gdb_server",
+      "preAttachCommands": [
+        // Increase GDB remote timeout to avoid disconnects on slow or remote targets
+        "set remotetimeout 60",
+        // Automatically retry TCP connections if the remote GDB server is temporarily unavailable
+        "set tcp auto-retry on",
+        // Halt the CPU before starting the debug session
+        "monitor halt"
+      ],
+      "overrideRestartCommands": [
+        // Use a generic reset+halt sequence on restart for GDB servers compatibility
+        "monitor reset",
+        "monitor halt"
+      ],
+      "overrideResetCommands": [
+        // Use a generic reset+halt sequence on reset for GDB servers compatibility
+        "monitor reset",
+        "monitor halt"
+      ],
+      "device": "STM32F103C8",
+      "svdFile": "${env:SVD_FILE}",
+      "runToEntryPoint": "main",
+      "cwd": "${workspaceFolder}",
+      "executable": "${command:cmake.launchTargetPath}"
+    }
+  ]
+}

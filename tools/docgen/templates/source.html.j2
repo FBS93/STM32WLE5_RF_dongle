@@ -1,0 +1,20 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  {% if is_binary %}
+    <h1>{{ path }}</h1>
+    <p>This binary file is available as an asset.</p>
+    <p><a href="{{ asset_href }}">Open or download the original file</a></p>
+  {% elif markdown_content %}
+    <section class="markdown-content">{{ markdown_content }}</section>
+  {% elif markdown_content is not none %}
+    <h1>{{ path }}</h1>
+    <p class="meta">This Markdown file is empty.</p>
+  {% else %}
+    <h1>{{ path }}</h1>
+    <pre class="raw-source"><code class="language-{{ raw_language }}">{{ text }}</code></pre>
+  {% endif %}
+  {% if related_api %}
+    <h2>API</h2>
+    <p><a href="{{ related_api.href }}">{{ related_api.name }}</a></p>
+  {% endif %}
+{% endblock %}

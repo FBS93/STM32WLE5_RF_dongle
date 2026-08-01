@@ -1,0 +1,11 @@
+---
+Checks: >
+  -*,
+  clang-analyzer-*,
+  bugprone-*,
+  portability-*,
+  -bugprone-easily-swappable-parameters
+
+FormatStyle: none
+WarningsAsErrors: '*'
+...
