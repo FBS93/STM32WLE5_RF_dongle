@@ -22,7 +22,7 @@ fi
 #   -f interface/stlink.cfg \
 #   -f target/stm32f1x.cfg \
 #   -c \"bindto 0.0.0.0\" \
-#   -c \"gdb_port ${GDB_PORT}\""  
+#   -c \"gdb_port ${GDB_PORT}\""
 #
 # --- SEGGER J-Link ---
 GDB_SERVER_RUN_CMD="JLinkGDBServer \

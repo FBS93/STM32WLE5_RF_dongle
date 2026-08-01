@@ -32,14 +32,14 @@ Variables declared with the `volatile` keyword shall include in their documentat
 ```c
 /**
  * @brief ...
- *  
+ *
  * volatile_use: hardware_interaction
  */
 volatile uint8_t var1;
 
 /**
  * @brief ...
- *  
+ *
  * volatile_use: asynchronous_interaction
  */
 volatile uint8_t var2;
@@ -69,7 +69,7 @@ Unlike `volatile`, the use of `const` does not require a dedicated justification
 
 When `const` is used with pointer types to protect the data referenced by the pointer, the `const` qualifier shall be placed before the base type (e.g. `const uint8_t * buffer`) to ensure a consistent declaration style across the codebase.
 
-The use of `const` to protect pass-by-value parameters or ordinary local variables is **not permitted**. This restriction is not due to any negative functional effects, but rather to maintain consistency across the codebase. Allowing `const` in these cases would make its usage arbitrary or require applying it systematically to nearly all local variables, which would reduce clarity and add unnecessary verbosity without providing actual protection or benefit. 
+The use of `const` to protect pass-by-value parameters or ordinary local variables is **not permitted**. This restriction is not due to any negative functional effects, but rather to maintain consistency across the codebase. Allowing `const` in these cases would make its usage arbitrary or require applying it systematically to nearly all local variables, which would reduce clarity and add unnecessary verbosity without providing actual protection or benefit.
 
 Discarding a `const` qualifier by typecast is normally not permitted. However, it is allowed within framework or library internal code when const is used only to enforce a read-only contract in the public API and the underlying object is not actually defined as const and not located in read-only memory. In such cases, the cast shall be explicit and accompanied by the following comment:
 
@@ -93,8 +93,8 @@ const uint16_t lookupTable[256] = { /* ... */ };
  * @param[in] length Number of bytes to process.
  * @param[out] checksum Pointer to store the calculated checksum.
  */
-void calculateChecksum(const uint8_t * data_in, 
-                       uint16_t length, 
+void calculateChecksum(const uint8_t * data_in,
+                       uint16_t length,
                        uint16_t * checksum);
 
 void internal_update(const MyObject * obj)
@@ -120,7 +120,7 @@ Each file shall include only the headers it directly depends on. Dependencies sh
 ### Naming conventions
 ---
 
-Global variables and functions shall include a module-specific prefix followed by an underscore and the variable or function name, using lowerCamelCase format. 
+Global variables and functions shall include a module-specific prefix followed by an underscore and the variable or function name, using lowerCamelCase format.
 
 Optionally, a library prefix (as short as possible) followed by an underscore may precede the module-specific prefix when needed to indicate the library of origin.
 
@@ -136,7 +136,7 @@ Examples: `libName_moduleName_typeName_t`, `moduleName_typeName_t`
 
 ---
 
-Global enumerators shall include a module-specific prefix followed by the enumerator name, using UPPER_CASE format. 
+Global enumerators shall include a module-specific prefix followed by the enumerator name, using UPPER_CASE format.
 
 Optionally, a library prefix (as short as possible) may precede the module-specific prefix when needed to indicate the library of origin.
 
@@ -144,15 +144,15 @@ Examples: `LIB_NAME_MODULE_NAME_ENUMERATOR_NAME`, `MODULE_NAME_ENUMERATOR_NAME`
 
 ---
 
-Global macros shall include a module-specific prefix followed by the macro name, using UPPER_CASE format. 
+Global macros shall include a module-specific prefix followed by the macro name, using UPPER_CASE format.
 
-Optionally, a library prefix (as short as possible) may precede the module-specific prefix when needed to indicate the library of origin. 
+Optionally, a library prefix (as short as possible) may precede the module-specific prefix when needed to indicate the library of origin.
 
 Examples:  `LIB_NAME_MODULE_NAME_MACRO_NAME`, `MODULE_NAME_MACRO_NAME`
 
 ---
 
-Module-scope variables and functions shall use lowerCamelCase format. 
+Module-scope variables and functions shall use lowerCamelCase format.
 
 Examples: `variableName`, `functionName`
 
@@ -176,7 +176,7 @@ Example: `MACRO_NAME`
 
 ---
 
-Function-scope variables shall use the snake_case naming convention.  
+Function-scope variables shall use the snake_case naming convention.
 
 Example: `variable_name`
 
@@ -375,7 +375,7 @@ The following template shall be used for `.S` files
 ```asm
 /*******************************************************************************
  * @brief <Brief description of the file purpose>
- * 
+ *
  * <Detailed description if needed>
  *
  * @copyright
@@ -474,7 +474,7 @@ Multi-line documentation, used to document `struct` or `enum` members, shall use
 /**< ...
      ... */
 ```
-                                            
+
 ---
 
 Single-line code comments shall use the following format:

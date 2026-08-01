@@ -82,10 +82,10 @@ function(ecf_create_mock_from_file header_path mock_directory_path)
 
   # Create the mock library
   add_library(${mock_name} ${mock_src})
-  target_include_directories(${mock_name} 
+  target_include_directories(${mock_name}
     PUBLIC ${header_folder}
     PUBLIC ${mock_directory_abs}/mock/${mock_name}/inc)
-  target_link_libraries(${mock_name} 
+  target_link_libraries(${mock_name}
     PUBLIC eff
     PRIVATE ${ARGN})
 endfunction()
@@ -193,10 +193,10 @@ function(ecf_create_mock_from_dir mock_lib_name headers_dir mock_directory_path)
 
   # Create the mock library
   add_library(${mock_lib_name} ${mock_sources})
-  target_include_directories(${mock_lib_name} 
+  target_include_directories(${mock_lib_name}
     PUBLIC ${headers_dir_abs}
     PUBLIC ${mock_directory_abs}/mock/${mock_lib_name}/inc)
-  target_link_libraries(${mock_lib_name} 
-    PUBLIC eff 
+  target_link_libraries(${mock_lib_name}
+    PUBLIC eff
     PRIVATE ${ARGN})
 endfunction()

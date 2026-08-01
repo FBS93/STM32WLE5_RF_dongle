@@ -34,7 +34,7 @@ In addition to the [Software test definition](../resources/software_test_definit
 - Use the software implementation only as the element under test.
 - Be defined only for software detailed design functions whose logic or algorithmic behavior justifies isolated validation for early error detection.
 - Have a unique and well-defined objective. Multiple tests may be defined when required to validate different aspects of the same software detailed design.
-- Be implemented in C using [Embedded Test Framework (ETF)](../../../../sw/ecf/embedded_test_framework/doc/etf.md). 
+- Be implemented in C using [Embedded Test Framework (ETF)](../../../../sw/ecf/embedded_test_framework/doc/etf.md).
   - The [Embedded Middleware Framework (EMF)](../../../../sw/ecf/embedded_middleware_framework/doc/emf.md) software unit tests shall be used as a reference for how to use the [Embedded Test Framework (ETF)](../../../../sw/ecf/embedded_test_framework/doc/etf.md).
 
 #### Active object unit test

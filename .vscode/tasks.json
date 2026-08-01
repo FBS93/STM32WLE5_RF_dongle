@@ -147,6 +147,26 @@
         "${command:cmake.buildTargetName}",
         "${config:cmake.sourceDirectory}"
       ]
+    },
+    {
+      "label": "open_kicad",
+      "type": "shell",
+      "command": "${TASKS_PATH}/open_kicad.sh"
+    },
+    {
+      "label": "save_kicad_state",
+      "type": "shell",
+      "command": "${TASKS_PATH}/save_kicad_state.sh"
+    },
+    {
+      "label": "restore_kicad_state",
+      "type": "shell",
+      "command": "${TASKS_PATH}/restore_kicad_state.sh"
+    },
+    {
+      "label": "clean_kicad_runtime_state",
+      "type": "shell",
+      "command": "${TASKS_PATH}/clean_kicad_runtime_state.sh"
     }
   ]
 }
