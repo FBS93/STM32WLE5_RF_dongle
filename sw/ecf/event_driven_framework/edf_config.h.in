@@ -1,0 +1,143 @@
+/*******************************************************************************
+ * @brief Event driven framework configuration.
+ *
+ * @copyright
+ * Copyright (c) 2026 FBS93.
+ * See the LICENSE file of this project for license details.
+ * This notice shall be retained in all copies or substantial portions
+ * of the software.
+ *
+ * @note
+ * This file is a derivative work based on:
+ * QP/C (c) Quantum Leaps, LLC.
+ *
+ * @warning
+ * This software is provided "as is", without any express or implied warranty.
+ * The user assumes all responsibility for its use and any consequences.
+ ******************************************************************************/
+
+#ifndef EDF_CONFIG_H
+#define EDF_CONFIG_H
+
+/*******************************************************************************
+ * INCLUDES
+ ******************************************************************************/
+
+/* -----------------------------------------------------------------------------
+ * System library headers
+ * -------------------------------------------------------------------------- */
+
+/* -----------------------------------------------------------------------------
+ * External library headers
+ * -------------------------------------------------------------------------- */
+
+/* -----------------------------------------------------------------------------
+ * Project-specific headers
+ * -------------------------------------------------------------------------- */
+
+/*******************************************************************************
+ * PUBLIC MACROS
+ ******************************************************************************/
+
+/**
+ * @brief Max num of signals: 1 = 2^8, 2 =2^16, 4 = 2^32.
+ */
+#define EDF_MAX_SIGNAL @EDF_MAX_SIGNAL@
+
+#if ((EDF_MAX_SIGNAL != 1U) && \
+     (EDF_MAX_SIGNAL != 2U) && \
+     (EDF_MAX_SIGNAL != 4U))
+#error EDF_MAX_SIGNAL defined incorrectly, expected 1U, 2U, or 4U.
+#endif
+
+/**
+ * @brief Event queue size: 1 = 2^8, 2 =2^16.
+ */
+#define EDF_EVENT_QUEUE_SIZE @EDF_EVENT_QUEUE_SIZE@
+
+#if (EDF_EVENT_QUEUE_SIZE > 2)
+#error EDF_EVENT_QUEUE_SIZE defined incorrectly, expected 1U or 2U.
+#endif
+
+/**
+ * @brief Max active objects: 1-64.
+ */
+#define EDF_MAX_ACTIVE_OBJECT @EDF_MAX_ACTIVE_OBJECT@
+
+#if (EDF_MAX_ACTIVE_OBJECT > 64U)
+#error EDF_MAX_ACTIVE_OBJECT exceeds the maximum of 64U.
+#endif
+
+/**
+ * @brief Max number of different tick rates for time events: 1-15.
+ */
+#define EDF_MAX_TICK_RATE @EDF_MAX_TICK_RATE@
+
+#if (EDF_MAX_TICK_RATE > 15U)
+#error EDF_MAX_TICK_RATE exceeds the maximum of 15U.
+#endif
+
+/**
+ * @brief Max number of ticks for a time event: 1 = 2^8, 2 = 2^16, 4 = 2^32.
+ */
+#define EDF_TIME_EVENT_MAX_TICK @EDF_TIME_EVENT_MAX_TICK@
+
+#if ((EDF_TIME_EVENT_MAX_TICK != 1U) && \
+     (EDF_TIME_EVENT_MAX_TICK != 2U) && \
+     (EDF_TIME_EVENT_MAX_TICK != 4U))
+#error EDF_TIME_EVENT_MAX_TICK defined incorrectly, expected 1U, 2U, or 4U.
+#endif
+
+/**
+ * @brief Max number of pools 1-15.
+ */
+#define EDF_MAX_POOL @EDF_MAX_POOL@
+
+#if (EDF_MAX_POOL > 15U)
+#error EDF_MAX_POOL exceeds the maximum of 15U.
+#endif
+
+/**
+ * @brief Max pool block size (Bytes): 1 = 2^8, 2 = 2^16, 4 = 2^32.
+ */
+#define EDF_POOL_BLOCK_SIZE @EDF_POOL_BLOCK_SIZE@
+
+#if ((EDF_POOL_BLOCK_SIZE != 1U) && \
+     (EDF_POOL_BLOCK_SIZE != 2U) && \
+     (EDF_POOL_BLOCK_SIZE != 4U))
+#error EDF_POOL_BLOCK_SIZE defined incorrectly, expected 1U, 2U, or 4U.
+#endif
+
+/**
+ * @brief Max number of blocks for each pool: 1 = 2^8, 2 = 2^16, 4 = 2^32.
+ */
+#define EDF_MAX_POOL_BLOCK @EDF_MAX_POOL_BLOCK@
+
+#if ((EDF_MAX_POOL_BLOCK != 1U) && \
+     (EDF_MAX_POOL_BLOCK != 2U) && \
+     (EDF_MAX_POOL_BLOCK != 4U))
+#error EDF_MAX_POOL_BLOCK defined incorrectly, expected 1U, 2U, or 4U.
+#endif
+
+/**
+ * @brief Max depth of state nesting in a HSM (including the top level).
+ */
+#define EDF_HSM_MAX_DEPTH @EDF_HSM_MAX_DEPTH@
+
+#if (EDF_HSM_MAX_DEPTH < 3)
+#error EDF_HSM_MAX_DEPTH defined incorrectly, shall be >= 3.
+#endif
+
+/*******************************************************************************
+ * PUBLIC TYPEDEFS
+ ******************************************************************************/
+
+/*******************************************************************************
+ * PUBLIC VARIABLES
+ ******************************************************************************/
+
+/*******************************************************************************
+ * PUBLIC FUNCTIONS
+ ******************************************************************************/
+
+#endif /* EDF_CONFIG_H */

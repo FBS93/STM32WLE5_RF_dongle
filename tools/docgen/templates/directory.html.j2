@@ -1,0 +1,15 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  <h1>{{ path }}/</h1>
+  <ul class="directory-list">
+  {% for entry in entries if entry.kind is not defined %}
+    <li>
+    {% if entry.children is defined %}
+      <a href="{{ href_between(current_page, entry.destination) }}">{{ entry.name }}/</a>
+    {% else %}
+      <a href="{{ href_between(current_page, entry.destination) }}">{{ entry.name }}</a>
+    {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+{% endblock %}

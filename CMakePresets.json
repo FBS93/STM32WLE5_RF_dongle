@@ -1,0 +1,123 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "ECF_TEST": "ON",
+        "EW_ENABLE_CLANG_TIDY": "OFF",
+        "CMAKE_C_FLAGS": "-Wall -Wextra -Wconversion -Werror",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "host",
+      "displayName": "Host (release)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/linux_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS_RELEASE": "-O2 -g2",
+        "EBF_CORE": "EBF_CORE_OS",
+        "EBF_PORT": "EBF_PORT_POSIX_NON_PREEMPTIVE"
+      }
+    },
+    {
+      "name": "host_debug",
+      "displayName": "Host (debug)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/linux_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3",
+        "EBF_CORE": "EBF_CORE_OS",
+        "EBF_PORT": "EBF_PORT_POSIX_NON_PREEMPTIVE"
+      }
+    },
+    {
+      "name": "host_hard_debug",
+      "displayName": "Host (hard debug)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/linux_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -save-temps=obj -P",
+        "EBF_CORE": "EBF_CORE_OS",
+        "EBF_PORT": "EBF_PORT_POSIX_NON_PREEMPTIVE"
+      }
+    },
+    {
+      "name": "host_fuzz",
+      "displayName": "Host (fuzz)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/linux_afl_clang_lto.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3",
+        "EDF_EXAMPLE_FUZZ": "ON",
+        "ECF_TEST": "OFF",
+        "EBF_CORE": "EBF_CORE_OS",
+        "EBF_PORT": "EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ"
+      }
+    },
+    {
+      "name": "host_fuzz_coverage",
+      "displayName": "Host (fuzz coverage)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/linux_clang.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -fprofile-instr-generate -fcoverage-mapping",
+        "CMAKE_EXE_LINKER_FLAGS": "-fprofile-instr-generate -fcoverage-mapping",
+        "EDF_EXAMPLE_FUZZ": "ON",
+        "ECF_TEST": "OFF",
+        "EBF_CORE": "EBF_CORE_OS",
+        "EBF_PORT": "EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ"
+      }
+    },
+    {
+      "name": "target_stm32f103c8tx",
+      "displayName": "Target STM32F103C8Tx (release)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/arm_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS_RELEASE": "-O2 -g2",
+        "EBF_CORE": "EBF_CORE_BAREMETAL",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "ECF_TARGET_PLATFORM": "stm32f103c8tx"
+      }
+    },
+    {
+      "name": "target_stm32f103c8tx_debug",
+      "displayName": "Target STM32F103C8Tx (debug)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/arm_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3",
+        "EBF_CORE": "EBF_CORE_BAREMETAL",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "ECF_TARGET_PLATFORM": "stm32f103c8tx"
+      }
+    },
+    {
+      "name": "target_stm32f103c8tx_hard_debug",
+      "displayName": "Target STM32F103C8Tx (hard debug)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/arm_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -save-temps=obj -P",
+        "EBF_CORE": "EBF_CORE_BAREMETAL",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "ECF_TARGET_PLATFORM": "stm32f103c8tx"
+      }
+    }
+  ]
+}

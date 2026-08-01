@@ -1,0 +1,25 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  {% if readme_content %}
+    <section class="markdown-content">{{ readme_content }}</section>
+  {% elif readme_path %}
+    <h1>Docgen</h1>
+    <p class="meta">{{ readme_path }} exists but contains no renderable content.</p>
+  {% else %}
+    <h1>Docgen</h1>
+    <p class="meta">No root README Markdown file was found; this is the Docgen fallback page.</p>
+  {% endif %}
+  <section class="generation-report" aria-labelledby="generation-report-title">
+    <h2 id="generation-report-title">Generation report</h2>
+    <p>{{ file_count }} files processed; {{ api_count }} API associations accepted.</p>
+    <h3>Generation metadata</h3>
+    <dl>
+      <dt>Project title</dt><dd>{{ project_title }}</dd>
+      <dt>Root README</dt><dd>{{ readme_path or "None" }}</dd>
+    </dl>
+    <h3>Warnings</h3>
+    <div class="warning"><ul>{% for warning in warnings %}<li>{{ warning }}</li>{% else %}<li>None</li>{% endfor %}</ul></div>
+    <h3>Excluded paths</h3>
+    <ul>{% for path, reason in excluded %}<li>{{ path }} - {{ reason }}</li>{% else %}<li>None</li>{% endfor %}</ul>
+  </section>
+{% endblock %}

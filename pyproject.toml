@@ -1,0 +1,20 @@
+[tool.ruff]
+line-length = 80
+indent-width = 2
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+  "E",  # pycodestyle errors
+  "F",  # pyflakes (real errors)
+  "I",  # import rules
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = false
+force-single-line = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

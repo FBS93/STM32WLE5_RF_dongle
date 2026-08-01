@@ -1,0 +1,33 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "EW-orchestrator",
+  "agent": {
+    "EW-orchestrator": {
+      "description": "Embedded Workbench orchestrator",
+      "mode": "primary",
+      "prompt": "{file:./AGENTS.md}",
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "bash": "allow",
+        "task": {
+          "*": "deny",
+          "EW-executor": "allow"
+        },
+        "skill": "allow"
+      }
+    },
+    "EW-executor": {
+      "description": "Embedded Workbench execution subagent",
+      "mode": "subagent",
+      "prompt": "You are the Embedded Workbench executor subagent. First load and follow the `embedded-workbench-executor` skill, then execute the delegated task. Never orchestrate, never delegate further, and always return the structured response required by that skill.",
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "bash": "allow",
+        "task": "deny",
+        "skill": "allow"
+      }
+    }
+  }
+}

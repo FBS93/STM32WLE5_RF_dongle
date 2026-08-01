@@ -1,84 +1,126 @@
-# Use the official Ubuntu 22.04 image as the base
-FROM ubuntu:22.04
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
-# Prevent interactive prompts during package installations
+# Defines target architecture to support multi-platform builds.
+ARG TARGETARCH
+
+# Prevent interactive prompts during package installations.
 ENV DEBIAN_FRONTEND=noninteractive
 
-################# Common Libraries and Packages #############################
-# Update package list and install general dependencies
+################################################################################
+# Common packages
+################################################################################
+
+# MBSE requires Graphviz's dot command for its local web viewer.
 RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    wget \
+    xz-utils \
+    sudo \
+    locales \
     python3 \
     python3-pip \
-    python3-setuptools \
     python3-dev \
+    python3-setuptools \
+    python-is-python3 \
+    graphviz \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+    
+# Install common Python tooling globally in the devcontainer so it is available
+# to the whole workspace without introducing an additional virtual environment
+# layer.  --break-system-packages is intentional here because this is a controlled
+# development container image rather than a shared host Python installation.
+RUN python -m pip install --break-system-packages \
+    Jinja2==3.1.6 \
+    jsonschema==4.26.0 \
+    markdown-it-py==4.0.0 \
+    mdit-py-plugins==0.5.0 \
+    pytest==9.1.1 \
+    ruff==0.15.20 \
+    mbse
+
+# Configure locale (UTF-8).
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+################################################################################
+# Software domain
+################################################################################
+
+# udev is required by VS Code Serial Monitor extension
+# https://github.com/microsoft/vscode-serial-monitor/issues/137#issuecomment-1804710798
+RUN apt-get update && apt-get install -y \
     build-essential \
-    git \
-    ffmpeg \
-    unzip \
-    xvfb \
-    libsdl2-ttf-2.0-0 \
-    libmtdev-dev \
-    xclip \
-    libgl1-mesa-glx \
-    libgles2-mesa \
-    libgl1-mesa-dri \
-    mesa-utils \
-    usbutils \
-    libsdl2-dev \
-    libsdl2-image-dev \
-    libsdl2-mixer-dev \
-    libsdl2-ttf-dev \
-    libportmidi-dev \
-    libswscale-dev \
-    libavformat-dev \
-    libavcodec-dev \
-    zlib1g-dev \
-    libgstreamer1.0-dev \
-    gstreamer1.0-plugins-base \
-    gstreamer1.0-plugins-good \
-    gstreamer1.0-plugins-bad \
-    gstreamer1.0-plugins-ugly \
-    gstreamer1.0-libav \
-    gstreamer1.0-tools \
-    gstreamer1.0-x \
-    gstreamer1.0-alsa \
-    build-essential \ 
+    automake \
+    bison \
     cmake \
-    openjdk-21-jre \
-    libusb-1.0-0-dev \
-    wget \
-    libssl-dev \
-    libcurl4-openssl-dev \
-    asciidoc \
-    sudo \
+    clang-18 \
+    clang-format \
+    clang-tidy \
+    doxygen \
+    flex \
+    gdb \
+    gcc-14-plugin-dev \
+    libstdc++-14-dev \
+    lld-18 \
+    llvm-18 \
+    llvm-18-dev \
+    udev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Create an alias for python3 as python
-RUN ln -s /usr/bin/python3 /usr/bin/python
+# Download and install AFL++ from the GitHub release tarball
+ARG AFLPP_VERSION=4.40c
+RUN set -eux; \
+    cd /tmp; \
+    curl -fsSLO "https://github.com/AFLplusplus/AFLplusplus/archive/refs/tags/v${AFLPP_VERSION}.tar.gz"; \
+    tar -xzf "v${AFLPP_VERSION}.tar.gz"; \
+    cd "AFLplusplus-${AFLPP_VERSION}"; \
+    make source-only LLVM_CONFIG=llvm-config-18; \
+    make install; \
+    rm -rf "/tmp/AFLplusplus-${AFLPP_VERSION}" "/tmp/v${AFLPP_VERSION}.tar.gz"
 
-# Install MegaTools
-WORKDIR /tmp
-RUN wget https://megatools.megous.com/builds/megatools-1.10.3.tar.gz && \
-    tar -xvf megatools-1.10.3.tar.gz
-WORKDIR /tmp/megatools-1.10.3
-RUN ./configure && \
-    make -j$(nproc) && \
-    make install && \
-    rm -rf /tmp/megatools-1.10.3.tar.gz /tmp/megatools-1.10.3
+# Download and install the upstream AFLplusplus/cov-analysis helper used by the
+# source-coverage VS Code task.  This script wraps LLVM source coverage replay
+# and report generation for AFL++ corpora.
+ARG COV_ANALYSIS_REF=v1.0
+RUN set -eux; \
+    curl -fsSL "https://raw.githubusercontent.com/AFLplusplus/cov-analysis/${COV_ANALYSIS_REF}/cov-analysis" \
+      -o /usr/local/bin/cov-analysis; \
+    chmod 0755 /usr/local/bin/cov-analysis
 
+# Download and install ARM GNU Toolchain.
+ARG ARM_GCC_VERSION=15.2.rel1
+RUN set -eux; \
+    arch="${TARGETARCH:-$(dpkg --print-architecture)}"; \
+    case "${arch}" in \
+      amd64) arm_gcc_arch="x86_64" ;; \
+      arm64) arm_gcc_arch="aarch64" ;; \
+      *) echo "Unsupported architecture for ARM GNU Toolchain: ${arch}"; exit 1 ;; \
+    esac; \
+    arm_gcc_archive="arm-gnu-toolchain-${ARM_GCC_VERSION}-${arm_gcc_arch}-arm-none-eabi.tar.xz"; \
+    wget "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_GCC_VERSION}/binrel/${arm_gcc_archive}"; \
+    tar -xf "${arm_gcc_archive}" -C /opt; \
+    ln -sfn "/opt/arm-gnu-toolchain-${ARM_GCC_VERSION}-${arm_gcc_arch}-arm-none-eabi" "/opt/arm-gnu-toolchain-arm-none-eabi"; \
+    rm "${arm_gcc_archive}"
 
-################# Kivy Installation #############################
-# Install Cython and Kivy (full installation)
-RUN pip install cython
-RUN pip install Kivy[full]==2.3.0
+# Add toolchain to PATH.
+ENV PATH="/opt/arm-gnu-toolchain-arm-none-eabi/bin:${PATH}"
 
-# Install additional libraries for app development
-RUN pip install pyserial
+# Install software-domain Python tooling globally in the devcontainer so it is
+# available to the whole workspace without introducing an additional virtual
+# environment layer.  --break-system-packages is intentional here because this
+# is a controlled development container image rather than a shared host Python
+# installation.
+RUN python -m pip install --break-system-packages \
+    cmakelang==0.6.13
 
-
-################# KiCad Installation #############################
-# Install necessary packages and add the PPA for KiCad
+################################################################################
+# Hardware domain
+################################################################################
+    
+# Install KiCad.
 RUN apt-get update && \
     apt-get install -y software-properties-common apt-utils && \
     add-apt-repository --yes ppa:kicad/kicad-8.0-releases && \
@@ -86,52 +128,22 @@ RUN apt-get update && \
     apt-get install -y --install-recommends kicad && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+################################################################################
+# AI support with OpenCode
+################################################################################
 
-################# C Embedded Software Environment #############################
-# Download STM32Cube CTL zip file and set license acceptance
-WORKDIR /tmp
-RUN /usr/local/bin/megadl https://mega.nz/file/qJ1AUajI#WoG7Ck_5MT9JdClJJZEZqjhBOGZ-t1JspkWK9FozZWw
-ENV LICENSE_ALREADY_ACCEPTED=1
+# xdg-open is required by OpenCode.
+RUN apt-get update && apt-get install -y \
+    xdg-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Unzip, install, and clean STM32Cube CTL files
-RUN unzip -o en.st-stm32cubeclt_1.16.0_21983_20240628_1741_amd64.deb_bundle.sh.zip && \
-    chmod +x st-stm32cubeclt_1.16.0_21983_20240628_1741_amd64.deb_bundle.sh && \
-    apt-get update && \
-    ./st-stm32cubeclt_1.16.0_21983_20240628_1741_amd64.deb_bundle.sh && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    rm -rf en.st-stm32cubeclt_1.16.0_21983_20240628_1741_amd64.deb_bundle.sh.zip
+# Switch to container user so AI tooling installs in the correct user paths.
+USER vscode
+ENV HOME=/home/vscode
 
-# Install STM32CubeMX
-RUN /usr/local/bin/megadl https://mega.nz/file/6AUSCZCS#XX5y5OA-NYerxH0ThHey89RUEUDdyNNDl6KjllWHYqE && \
-    unzip -o en.stm32cubemx-lin-v6-12-1.zip -d /root && \
-    printf "1\n1\n\n\n\nY\n\n" | /root/SetupSTM32CubeMX-6.12.1 -console && \
-    rm -rf en.stm32cubemx-lin-v6-12-1.zip /root/Readme.html /root/SetupSTM32CubeMX-6.12.1 /root/jre
+# Install OpenCode.
+RUN curl -fsSL https://opencode.ai/install | bash
 
-
-################# User Configuration #############################
-# Create a non-root user 'fbs' with password '1234', grant sudo access without password
-RUN useradd -m fbs && echo "fbs:1234" | chpasswd && adduser fbs sudo
-RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# Add user 'fbs' to plugdev and dialout groups for USB access
-RUN sudo usermod -aG plugdev fbs && sudo usermod -aG dialout fbs
-
-# Switch to 'fbs' user
-USER fbs
-
-# Preload STM32 MCU files to avoid repeated downloads to generate code with STM32CubeMX
-WORKDIR /home/fbs/
-RUN /usr/local/bin/megadl  https://mega.nz/file/SVElGY4C#QR2NXd1jwOedZNHIM6E2rJ-XiqGLjlQ2m0fLkAeCLmc && \
-    unzip -o STM32Cube.zip && \
-    rm -rf /home/fbs/STM32Cube.zip
-
-# Set default workdir
-WORKDIR /workspaces/STM32WLE5_RF_dongle
-
-# Copy KiCad's default configuration to avoid reconfiguring the entire Kicad environment on every container build
-RUN mkdir -p /home/fbs/.config/kicad/8.0/
-COPY assets/KiCad/kicad_default_conf/ /home/fbs/.config/kicad/8.0/
-
-# Update .bashrc with necessary exports and aliases
-RUN echo 'export PATH=$PATH:~/.local/bin/' >> ~/.bashrc
-RUN echo "alias STM32CubeMX='/usr/local/STMicroelectronics/STM32Cube/STM32CubeMX/STM32CubeMX'" >> ~/.bashrc
+# Create OpenCode state directory for vscode user.
+RUN mkdir -p /home/vscode/.local/state

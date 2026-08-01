@@ -1,0 +1,168 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "workbench.tree.indent": 16,
+    "workbench.tree.expandMode": "doubleClick",
+    "editor.autoIndent": "full",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools",
+        "editor.formatOnSave": true
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools",
+        "editor.formatOnSave": true
+    },
+    "[asm]": {
+        "editor.formatOnSave": false
+    },
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "\\.S$",
+                "cmd": "python3 ${workspaceFolder}/tools/asm_format/asm_format.py ${file}"
+            }
+        ]
+    },
+    "git.autofetch": true,
+    "git-graph.showStatusBarItem": false,
+    "cmake.ctestArgs": [
+        "--test-output-size-passed",
+        "0",
+        "--test-output-size-failed",
+        "0"
+    ],
+    "debug.showInStatusBar": "always",
+    "cmake.options.advanced": {
+        "variant": { //Debug, Release,...
+            "statusBarVisibility": "hidden",
+        },
+        "cpack": {
+            "statusBarVisibility": "hidden",
+        },
+        "workflow": {
+            "statusBarVisibility": "hidden",
+        },
+        "configurePreset": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "visible"
+        },
+        "buildPreset": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "hidden"
+        },
+        "folder": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "hidden"
+        },
+        "kit": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "hidden"
+        },
+        "build": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "hidden",
+        },
+        "launch": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "hidden"
+        },
+        "debug": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "hidden"
+        },
+        "launchTarget": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "visible"
+        },
+        "buildTarget": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "visible"
+        },
+    },
+    "VsCodeTaskButtons.showCounter": false,
+    "VsCodeTaskButtons.tasks": [
+        {
+            "label": "🧰 WB toolbox",
+            "tasks": [
+                {
+                    "label": "🔗 Connect Raspberry Pi (SSH)",
+                    "task": "connect_rpi_ssh"
+                },
+                {
+                    "label": "🌐 OpenCode web GUI",
+                    "task": "run_opencode_web_gui"
+                },
+                {
+                    "label": "📈 PulseView web GUI",
+                    "task": "run_pulseview_web"
+                },
+                {
+                    "label": "📥 Sync logic analyzer captures",
+                    "task": "sync_logic_analyzer_captures"
+                },
+                {
+                    "label": "🔄 Sync third-party repositories",
+                    "task": "run_third_party_sync"
+                },
+                {
+                    "label": "📄 Generate documentation",
+                    "task": "run_docgen"
+                },
+                {
+                    "label": "☑️ Validate release",
+                    "task": "validate_release"
+                },
+                {
+                    "label": "🚀 Release",
+                    "task": "run_release"
+                }
+            ],
+            "tooltip": "Workbench toolbox"
+        },
+        {
+            "label": "💻 SW toolbox",
+            "tasks": [
+                {
+                    "label": "🔨 Build",
+                    "task": "build"
+                },
+                {
+                    "label": "🧹 Clean",
+                    "task": "clean"
+                },
+                {
+                    "label": "📃 Enable target logging",
+                    "task": "run_target_logging_server"
+                },
+                {
+                    "label": "🧼 Format all source files",
+                    "task": "format",
+                },
+                {
+                    "label": "🔎 Run linter",
+                    "task": "lint"
+                },
+                {
+                    "label": "🚦 Run CI",
+                    "task": "run_ci"
+                },
+                {
+                    "label": "🧪 Run fuzzer",
+                    "task": "run_fuzz"
+                },
+                {
+                    "label": "📊 Run fuzzer coverage",
+                    "task": "run_fuzz_coverage"
+                }
+            ],
+            "tooltip": "Software toolbox"
+        },
+    ],
+    "files.associations": {
+        "*.c": "c",
+        "*.h": "c",
+    }
+}

@@ -1,0 +1,28 @@
+# This template is used and materialized by docgen.py; DO NOT EDIT IT.
+# The placeholders make input and output locations reproducible without embedding a project layout.
+PROJECT_NAME           = "@PROJECT_NAME@"
+OUTPUT_DIRECTORY       = @OUTPUT_DIRECTORY@
+INPUT                  = @INPUT_FILES@
+RECURSIVE              = NO
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_COLORSTYLE         = LIGHT
+GENERATE_TREEVIEW      = NO
+DISABLE_INDEX          = YES
+SEARCHENGINE           = NO
+GENERATE_LATEX         = NO
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+XML_PROGRAMLISTING     = NO
+QUIET                  = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+WARN_LOGFILE           = @WARNING_LOG@
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = @INPUT_DIRECTORY@
+EXTRACT_ALL            = YES
+JAVADOC_AUTOBRIEF      = YES
+OPTIMIZE_OUTPUT_FOR_C  = YES
+SEARCH_INCLUDES        = NO
+HAVE_DOT               = NO

@@ -1,0 +1,19 @@
+{
+  "$schema": "repos.schema.json",
+  "repositories": [
+    {
+      "id": "actions-template-sync",
+      "url": "https://github.com/AndreasAugustin/actions-template-sync",
+      "path": "third_party/AndreasAugustin/actions-template-sync",
+      "ref_type": "auto",
+      "ref": ""
+    },
+    {
+      "id": "aflplusplus",
+      "url": "https://github.com/AFLplusplus/AFLplusplus",
+      "path": "third_party/AFLplusplus/AFLplusplus",
+      "ref_type": "auto",
+      "ref": ""
+    }
+  ]
+}

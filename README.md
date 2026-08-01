@@ -1,5 +1,7 @@
 # SMT32WLE5_RF_dongle
 
+This project is developed using [Embedded Workbench](doc/ew.md).
+
 The **SMT32WLE5_RF_dongle** is a compact RF dongle designed for wireless communication via USB. Built around the STM32WLE5C8U6 microcontroller, it enables straightforward radio communication in the sub-GHz range of 150–960 MHz. Supports LoRa and (G)FSK modulations for both transmission and reception, as well as BPSK/(G)MSK for transmission only.
 
 ![SMT32WLE5_RF_dongle](.devcontainer/assets/images/SMT32WLE5_RF_dongle_3D_view.png)

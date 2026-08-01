@@ -1,0 +1,188 @@
+name: Third-party sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  build-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build repository matrix
+        id: build
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          manifest_path = Path("tools/third_party_sync/repos.json")
+          manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+          repositories = manifest_data.get("repositories", [])
+          matrix = {
+            "include": [
+              {
+                "id": repository["id"],
+                "path": repository["path"],
+              }
+              for repository in repositories
+            ]
+          }
+
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+            output.write(f"matrix={json.dumps(matrix)}\n")
+          PY
+
+  sync-repository:
+    runs-on: ubuntu-latest
+    needs: build-matrix
+    strategy:
+      fail-fast: true
+      matrix: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: third-party-sync-${{ matrix.id }}
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY_ID: ${{ matrix.id }}
+      REPOSITORY_PATH: ${{ matrix.path }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Skip when an open PR already exists
+        id: open_pr
+        run: |
+          pr_list_json="$(gh pr list --state open --json headRefName)"
+          export PR_LIST_JSON="$pr_list_json"
+          existing_branch="$(python3 - <<'PY'
+          import json
+          import os
+
+          repository_id = os.environ["REPOSITORY_ID"]
+          pr_list = json.loads(os.environ["PR_LIST_JSON"])
+
+          for pr_data in pr_list:
+            head_ref_name = pr_data["headRefName"]
+            if head_ref_name.startswith(f"chore/third-party-sync/{repository_id}-"):
+              print(head_ref_name)
+              break
+          PY
+          )"
+          if [ -n "$existing_branch" ]; then
+            printf 'skip=true\n' >> "$GITHUB_OUTPUT"
+            printf 'Existing open PR branch for %s: %s\n' "$REPOSITORY_ID" "$existing_branch"
+          else
+            printf 'skip=false\n' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Synchronize repository snapshot
+        if: steps.open_pr.outputs.skip != 'true'
+        run: |
+          python3 tools/third_party_sync/third_party_sync.py \
+            --repository-id "$REPOSITORY_ID" \
+            --manifest tools/third_party_sync/repos.json \
+            --lock tools/third_party_sync/repos.lock.json \
+            --workspace .
+
+      - name: Detect repository changes
+        if: steps.open_pr.outputs.skip != 'true'
+        id: changes
+        run: |
+          status_output="$(git status --porcelain -- "$REPOSITORY_PATH" "tools/third_party_sync/repos.lock.json")"
+          if [ -n "$status_output" ]; then
+            printf 'changed=true\n' >> "$GITHUB_OUTPUT"
+            printf 'Detected changes for %s\n' "$REPOSITORY_ID"
+          else
+            printf 'changed=false\n' >> "$GITHUB_OUTPUT"
+            printf 'No changes for %s\n' "$REPOSITORY_ID"
+          fi
+
+      - name: Build PR metadata
+        if: steps.changes.outputs.changed == 'true'
+        id: metadata
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          repository_id = os.environ["REPOSITORY_ID"]
+          lock_data = json.loads(Path("tools/third_party_sync/repos.lock.json").read_text(encoding="utf-8"))
+          lock_entry = lock_data["repositories"][repository_id]
+
+          source = lock_entry.get("source")
+          if source == "release":
+            target_label = lock_entry["resolved_release"]
+          elif source == "default_branch_head":
+            default_branch = lock_entry["default_branch"]
+            resolved_commit = lock_entry["resolved_commit"]
+            target_label = f"{default_branch}@{resolved_commit[:12]}"
+          else:
+            raise SystemExit(f"Unsupported lock source for {repository_id}: {source}")
+
+          sanitized_id = re.sub(r"[^a-zA-Z0-9._-]+", "-", repository_id).strip("-")
+          sanitized_target = re.sub(r"[^a-zA-Z0-9._-]+", "-", target_label).strip("-")
+          branch_name = f"chore/third-party-sync/{sanitized_id}-{sanitized_target}-{os.environ['GITHUB_RUN_ID']}"
+          title = f"chore(third-party-sync): update {repository_id} to {target_label}"
+          body = "\n".join([
+            "## Summary",
+            f"- Update `{repository_id}` to `{target_label}`.",
+            f"- Sync third-party content in `{os.environ['REPOSITORY_PATH']}`.",
+            "- Update `tools/third_party_sync/repos.lock.json` with the resolved snapshot metadata.",
+          ])
+
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+            output.write(f"branch_name={branch_name}\n")
+            output.write(f"target_label={target_label}\n")
+            output.write(f"title={title}\n")
+            output.write("body<<EOF\n")
+            output.write(body)
+            output.write("\nEOF\n")
+          PY
+
+      - name: Create branch, commit, push and PR
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git checkout -b "${{ steps.metadata.outputs.branch_name }}"
+          git add -- "$REPOSITORY_PATH" "tools/third_party_sync/repos.lock.json"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -m "${{ steps.metadata.outputs.title }}"
+          git push --set-upstream origin "${{ steps.metadata.outputs.branch_name }}"
+
+          cat > pr_body.txt <<'EOF'
+          ${{ steps.metadata.outputs.body }}
+          EOF
+
+          gh pr create \
+            --base main \
+            --head "${{ steps.metadata.outputs.branch_name }}" \
+            --title "${{ steps.metadata.outputs.title }}" \
+            --body-file pr_body.txt
+
+      - name: Cleanup branch on failure
+        if: failure() && steps.changes.outputs.changed == 'true'
+        run: |
+          if git ls-remote --exit-code --heads origin "${{ steps.metadata.outputs.branch_name }}"; then
+            git push origin --delete "${{ steps.metadata.outputs.branch_name }}"
+            echo "Deleted remote branch"
+          else
+            echo "Branch not found, nothing to delete"
+          fi

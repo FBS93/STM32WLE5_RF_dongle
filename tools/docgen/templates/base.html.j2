@@ -1,0 +1,70 @@
+{% set sidebar_minimum = 200 %}
+{% set sidebar_maximum = 520 %}
+<!doctype html>
+<html lang="en" data-sidebar-width-key="docgen.sidebar.width" data-sidebar-width-minimum="{{ sidebar_minimum }}" data-sidebar-width-maximum="{{ sidebar_maximum }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ title }}</title>
+    <script>
+      (() => {
+        "use strict";
+        const root = document.documentElement;
+        const minimum = Number(root.dataset.sidebarWidthMinimum);
+        const maximum = Number(root.dataset.sidebarWidthMaximum);
+        let saved = null;
+        try { saved = window.localStorage.getItem(root.dataset.sidebarWidthKey); } catch (_) { /* Storage is optional. */ }
+        const width = Number(saved);
+        if (Number.isFinite(width) && width >= minimum && width <= maximum) {
+          root.style.setProperty("--sidebar-width", `${width}px`);
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="{{ stylesheet_href }}">
+  </head>
+  <body{% if page_kind %} class="{{ page_kind }}"{% endif %}>
+    <div id="layout">
+      <aside id="sidebar" aria-label="Documentation navigation" tabindex="0">
+        <h1 class="project-title"><a class="project-title-link" href="{{ home_href }}">{{ project_title }}</a></h1>
+        {% include "navigation.html.j2" %}
+        <script>
+          (() => {
+            "use strict";
+            const treeKey = "docgen.navigation.open.";
+            const sidebarScrollKey = "docgen.sidebar.scroll";
+            function storage(name) {
+              try { return window[name]; } catch (_) { return null; }
+            }
+            function stored(key, area) {
+              try { return area ? area.getItem(key) : null; } catch (_) { return null; }
+            }
+            const session = storage("sessionStorage");
+            document.querySelectorAll(".directory-tree[data-nav-path]").forEach((directory) => {
+              const toggle = directory.querySelector(".directory-toggle");
+              const children = document.getElementById(toggle?.getAttribute("aria-controls"));
+              const value = stored(treeKey + directory.dataset.navPath, session);
+              if (toggle && children && (value === "open" || value === "closed")) {
+                const open = value === "open";
+                toggle.setAttribute("aria-expanded", String(open));
+                children.hidden = !open;
+              }
+            });
+            const sidebar = document.querySelector("#sidebar");
+            const savedScroll = stored(sidebarScrollKey, session);
+            const scrollTop = Number(savedScroll);
+            if (sidebar && savedScroll?.trim() && Number.isFinite(scrollTop) && scrollTop >= 0) {
+              sidebar.scrollTop = scrollTop;
+            }
+          })();
+        </script>
+      </aside>
+      <div id="sidebar-resizer" role="separator" aria-orientation="vertical" aria-label="Resize navigation panel" aria-valuemin="{{ sidebar_minimum }}" aria-valuemax="{{ sidebar_maximum }}" aria-valuenow="290" tabindex="0"></div>
+      <main aria-label="Documentation content" tabindex="0">{% block content %}{% endblock %}</main>
+    </div>
+    {% if raw_language or markdown_highlighting %}
+    <script src="{{ highlight_href }}" defer></script>
+    {% endif %}
+    <script src="{{ mermaid_href }}" defer></script>
+    <script src="{{ script_href }}" defer></script>
+  </body>
+</html>
