@@ -1,6 +1,6 @@
 add_library(time_mgr STATIC
   src/time_mgr.c)
-target_include_directories(time_mgr 
+target_include_directories(time_mgr
   PUBLIC inc)
 target_link_libraries(time_mgr
   PUBLIC edf # edf.h file is included in time_mgr.h file, so link needs to be public.

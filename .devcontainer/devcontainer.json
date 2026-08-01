@@ -1,7 +1,7 @@
 {
-  "name": "STM32WLE5_RF_dongle",
-  //"image": "fbs093/stm32wle5_rf_dongle:v0.0",
+  "name": "embedded_workbench",
   "dockerFile": "Dockerfile",
+  "postStartCommand": "bash .devcontainer/post_start.sh",
   "containerEnv": {
     "RPI_USER": "${localEnv:RPI_USER}", // Raspberry Pi SSH username.
     "RPI_HOST": "${localEnv:RPI_HOST}", // Raspberry Pi IP address.
@@ -22,13 +22,18 @@
     "CI_BRANCHES": "main", // Exact remote branch names, separated by spaces, that trigger CI on pre-push.
     "CI_PRESETS": "host target_stm32f103c8tx", // CMake presets, separated by spaces, applied in CI pipelines.
     "DOCGEN_OUTPUT": "${containerWorkspaceFolder}/build/docgen", // Directory where Docgen output is generated.
-    "RELEASE_REMOTE": "origin" // Git remote used by release operations.
+    "RELEASE_REMOTE": "origin", // Git remote used by release operations.
+    "KICAD_CONFIG_HOME": "/kicad-runtime/config", // Persistent KiCad config root stored in the devcontainer volume.
+    "KICAD_DOCUMENTS_HOME": "/kicad-runtime/documents", // Persistent KiCad documents root stored in the devcontainer volume.
+    "KICAD10_3RD_PARTY": "${containerWorkspaceFolder}/tools/kicad_state/3rdparty" // Project-local KiCad third party content tracked in the
   },
   // Enable the Git hooks located in the .githooks folder.
   "postCreateCommand": "git config --local core.hooksPath .githooks",
   "mounts": [
     // Load OpenCode state (including credentials and sessions) from host.
-    "source=${localEnv:HOME}/.local/share/opencode,target=/home/vscode/.local/share/opencode,type=bind"
+    "source=${localEnv:HOME}/.local/share/opencode,target=/home/vscode/.local/share/opencode,type=bind",
+    // Mount persistent KiCad runtime as a devcontainer volume named after the workspace folder.
+    "source=${localWorkspaceFolderBasename}_kicad_runtime,target=/kicad-runtime,type=volume"
   ],
   "customizations": {
     "vscode": {

@@ -111,7 +111,7 @@ The platform software design shall contain:
     - A description defining the memory region. The description shall include all necessary information to fully specify the memory region, written in a clear and concise manner.
     - The start address of the memory region.
     - The end address of the memory region.
-- Debug configuration: 
+- Debug configuration:
   - Definition of the debug interfaces used (e.g., SWD, JTAG, etc.).
 - [Embedded C Framework (ECF)](../../../../sw/ecf/doc/ecf.md) integration:
   - Integration strategy for [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md) stdin/stdout integration. Upstream elements shall define the interface used for this integration. If no further detail is specified by upstream elements, the default shall be:

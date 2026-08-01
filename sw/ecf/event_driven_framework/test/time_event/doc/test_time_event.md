@@ -7,8 +7,7 @@ The test instantiates a single active object (`timeMgr`) that:
   - `PERIODIC_TIMER_5_MS`
   - `PERIODIC_TIMER_100_MS`
   - `ONE_SHOT_TIMER_100_MS`
-- Handles them inside a flat HSM with a single state (`readyState`), where the counters  
-  `periodic_5ms_cnt`, `periodic_100ms_cnt` and `one_shot_100ms_cnt` are incremented upon reception.
+- Handles them inside a flat HSM with a single state (`readyState`), where the counters `periodic_5ms_cnt`, `periodic_100ms_cnt` and `one_shot_100ms_cnt` are incremented upon reception.
 
 A high-priority external timer is configured to generate a system tick. This tick is used both to drive the EDF time event subsystem via `EDF_timeEvent_tick()` and to trigger the test verification.
 

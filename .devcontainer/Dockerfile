@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
     graphviz \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-    
+
 # Install common Python tooling globally in the devcontainer so it is available
 # to the whole workspace without introducing an additional virtual environment
 # layer.  --break-system-packages is intentional here because this is a controlled
@@ -119,14 +119,15 @@ RUN python -m pip install --break-system-packages \
 ################################################################################
 # Hardware domain
 ################################################################################
-    
-# Install KiCad.
-RUN apt-get update && \
-    apt-get install -y software-properties-common apt-utils && \
-    add-apt-repository --yes ppa:kicad/kicad-8.0-releases && \
-    apt-get update && \
-    apt-get install -y --install-recommends kicad && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install KiCad
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    && add-apt-repository --yes ppa:kicad/kicad-10.0-releases \
+    && apt-get update && apt-get install -y --install-recommends \
+    kicad \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
 # AI support with OpenCode
@@ -145,5 +146,5 @@ ENV HOME=/home/vscode
 # Install OpenCode.
 RUN curl -fsSL https://opencode.ai/install | bash
 
-# Create OpenCode state directory for vscode user.
+# Create ~/.local/state as vscode so OpenCode has write permissions.
 RUN mkdir -p /home/vscode/.local/state
