@@ -1,3 +1,4 @@
 # Add project-specific files or folders here to exclude them from template sync.
 README.md
 LICENSE
+.devcontainer/devcontainer.json

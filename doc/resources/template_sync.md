@@ -14,8 +14,14 @@ Template sync needs `TEMPLATE_SYNC_PAT` only when it shall update GitHub Actions
 
 1. In GitHub, open the derived repository owner's `Settings > Developer settings > Personal access tokens > Tokens (classic)`.
 2. Select `Generate new token (classic)`.
-3. Select the `workflow` scope and generate the token.
-4. In the derived repository, open `Settings > Secrets and variables > Actions`.
-5. Create a repository secret named `TEMPLATE_SYNC_PAT` and save the generated token as its value.
+3. In `Note`, enter a descriptive name, for example: `Template sync workflow updates`.
+4. Select the expiration date.
+5. Select these scopes:
+  - `repo`
+  - `workflow`
+  - `read:org`
+6. Generate the token.
+7. In the derived repository, open `Settings > Secrets and variables > Actions`.
+8. Create a repository secret named `TEMPLATE_SYNC_PAT` and save the generated token as its value.
 
 If synchronization of GitHub Actions workflow files is not wanted, exclude them using [`.templatesyncignore`](../../.templatesyncignore).
