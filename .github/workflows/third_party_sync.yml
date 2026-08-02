@@ -92,6 +92,10 @@ jobs:
             printf 'skip=false\n' >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Install third-party sync dependencies
+        if: steps.open_pr.outputs.skip != 'true'
+        run: python3 -m pip install jsonschema==4.26.0
+
       - name: Synchronize repository snapshot
         if: steps.open_pr.outputs.skip != 'true'
         run: |
