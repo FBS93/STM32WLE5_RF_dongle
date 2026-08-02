@@ -30,7 +30,7 @@ Useful links:
 
 Once inside the devcontainer you will find the following folders:
 
-- `hardware/`: contains all the hardware design files of this project. You can find the full hardware design in a KiCad project format, including the schematic, PCB layout, and associated files. Additionally, the folder includes the KiCad libraries that were used for this design.
+- `hw/`: contains all the hardware design files of this project. You can find the full hardware design in a KiCad project format, including the schematic, PCB layout, and associated files. Additionally, the folder includes the KiCad libraries that were used for this design.
 
 - `software/stm32wle5_rf_dongle_example/`: contains an example firmware for the STM32WLE5C8U6 microcontroller, along with a Kivy-based desktop app to control the RF dongle.
 
