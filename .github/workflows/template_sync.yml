@@ -3,7 +3,7 @@ name: Template Sync
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 1 * *"
+    - cron: "0 0 * * *"
 
 jobs:
   repo-sync:
@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: actions-template-sync
         uses: AndreasAugustin/actions-template-sync@v2
@@ -26,3 +27,4 @@ jobs:
           source_repo_path: FBS93/embedded_workbench
           upstream_branch: main
           pr_labels: template_sync
+          target_gh_token: ${{ secrets.TEMPLATE_SYNC_PAT }}
