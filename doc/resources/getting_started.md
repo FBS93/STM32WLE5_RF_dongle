@@ -21,5 +21,8 @@ The host environment shall provide the following:
 4. Wait until the devcontainer build and startup process completes.
 5. Review project-specific settings exposed through [devcontainer.json](../../.devcontainer/devcontainer.json).
 6. Review template update behavior in [template_sync.md](template_sync.md) before changing template-owned files or adding project-specific exclusions to [.templatesyncignore](../../.templatesyncignore).
-7. See [vscode_workflow.md](vscode_workflow.md) for repository task entry points.
-8. Use the [AI-assisted development workflow](ai_assisted_development_workflow.md) and [V-model methodology](../development_methodology/development_methodology_overview.md) as the entry points for generating project-specific engineering work products.
+7. Apply the following GitHub repository configuration:
+  - `Settings > Actions > General > Workflow permissions > Read and write permissions`
+  - `Settings > Actions > General > Pull request workflows > Allow GitHub Actions to create and approve pull requests`
+8. See [vscode_workflow.md](vscode_workflow.md) for repository task entry points.
+9. Use the [AI-assisted development workflow](ai_assisted_development_workflow.md) and [V-model methodology](../development_methodology/development_methodology_overview.md) as the entry points for generating project-specific engineering work products.
