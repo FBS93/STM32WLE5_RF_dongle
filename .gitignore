@@ -4,3 +4,4 @@ __pycache__/
 
 # KiCad
 *.kicad_prl
+.history/
