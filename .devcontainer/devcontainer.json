@@ -1,5 +1,6 @@
 {
-  "name": "embedded_workbench",
+  "name": "STM32WLE5_RF_dongle",
+  //"image": "fbs093/stm32wle5_rf_dongle:v0.0",
   "dockerFile": "Dockerfile",
   "postStartCommand": "bash .devcontainer/post_start.sh",
   "containerEnv": {
