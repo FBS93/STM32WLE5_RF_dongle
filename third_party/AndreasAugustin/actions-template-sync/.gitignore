@@ -1,0 +1,6 @@
+.env
+tmp*
+TODO.md
+
+.venv/
+

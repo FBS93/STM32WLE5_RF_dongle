@@ -1,0 +1,53 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  call_shellcheck:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/shellcheck.yml
+  call_lint:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/lint.yml
+  call_test_all:
+    uses: ./.github/workflows/test_all.yml
+    secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write
+  call_release_please:
+    needs:
+      - call_shellcheck
+      - call_lint
+      - call_test_all
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: ./.github/workflows/release_please.yml
+  call_push_docker:
+    if: ${{ needs.call_release_please.outputs.release_created }}
+    needs:
+      - call_release_please
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/push_docker.yml
+    with:
+      tag: ${{ needs.call_release_please.outputs.tag_name }}
+    secrets: inherit
+  call_release_test_docker_images:
+    if: ${{ needs.call_release_please.outputs.release_created }}
+    needs:
+      - call_push_docker
+      - call_release_please
+    permissions:
+      packages: read
+    uses: ./.github/workflows/release_test_docker_images.yml
+    with:
+      tag: ${{ needs.call_release_please.outputs.tag_name }}
+    secrets: inherit

@@ -1,0 +1,99 @@
+name: push-docker
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: "The docker image tag"
+        required: true
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        description: "The dockerhub username"
+        required: true
+      DOCKERHUB_TOKEN:
+        description: "The dockerhub token"
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "The docker image tag"
+        required: true
+        type: string
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        variant: ["actions-template-sync"]
+        target: ["prod", "dev"]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Login to DockerHub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: |
+            andyaugustin/${{ matrix.variant }}
+            ghcr.io/andreasaugustin/${{ matrix.variant }}
+          tags: |
+            type=semver,pattern={{raw}},value=${{ inputs.tag }}${{ matrix.target == 'dev' && '-dev' || '' }}
+      - name: Build ${{ matrix.variant }}
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: ${{ matrix.target }}
+          load: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: install container test tools
+        run: |
+          echo "Install container tools"
+          curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 \
+            && chmod +x container-structure-test-linux-amd64 \
+            && sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+      - name: test docker image
+        run: |
+          echo "Run tests"
+          container-structure-test test \
+            --image andyaugustin/${{ matrix.variant }}:${{ inputs.tag }}${{ matrix.target == 'dev' && '-dev' || '' }}\
+            --config docker-test-config.yml
+          container-structure-test test \
+            --image ghcr.io/andreasaugustin/${{ matrix.variant }}:${{ inputs.tag }}${{ matrix.target == 'dev' && '-dev' || '' }}\
+            --config docker-test-config.yml
+      - name: push ${{ matrix.variant }}
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: ${{ matrix.target }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v5
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: andyAugustin/${{ matrix.variant }}
+          readme-filepath: ./docs/DOCKER.md
+          short-description: See https://github.com/${{ github.repository }} to have a look into the source code.

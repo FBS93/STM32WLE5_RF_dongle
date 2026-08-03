@@ -1,0 +1,27 @@
+name: actions-template-sync
+
+on:
+  # cronjob trigger At 00:00 on day-of-month 1. https://crontab.guru/every-month
+  schedule:
+    - cron: "0 0 1 * *"
+  # manual trigger
+  workflow_dispatch:
+
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # To use this repository's private action, you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: actions-template-sync
+        uses: AndreasAugustin/actions-template-sync@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_repo_path: AndreasAugustin/template
+          upstream_branch: main # defaults to main
+          pr_labels: chore,📚 template-sync,example
