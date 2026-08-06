@@ -117,7 +117,7 @@
 		(capping no)
 		(filling no)
 		(pcbplotparams
-			(layerselection 0x00000000_00000000_55555555_5755f5ff)
+			(layerselection 0x00000000_00000000_55555555_575575f7)
 			(plot_on_all_layers_selection 0x00000000_00000000_00000000_00000000)
 			(disableapertmacros no)
 			(usegerberextensions yes)
@@ -1607,7 +1607,7 @@
 				(pins "1" "5" "2" "4" "3")
 			)
 		)
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -2.1717 0.6731)
@@ -3636,7 +3636,7 @@
 				(pins "1" "5" "2" "4" "3")
 			)
 		)
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -2.1717 0.6731)
@@ -9154,7 +9154,7 @@
 				(pins "1" "5" "2" "4" "3")
 			)
 		)
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -2.1717 0.6731)
@@ -12491,7 +12491,7 @@
 				(pins "1" "5" "2" "4" "3")
 			)
 		)
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -2.1717 0.6731)
@@ -16084,6 +16084,16 @@
 		(path "/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7/90890d5c-2300-459f-b5c6-f10c0f03ea0d")
 		(sheetname "/top/MCU/")
 		(sheetfile "MCU.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "18" "47" "24" "26" "27" "45" "21" "20" "23" "22" "19" "38" "39"
+					"40" "37" "11" "44" "41" "49" "25" "48" "28" "29" "46" "7" "8" "9" "10"
+					"12" "13" "14" "15" "16" "17" "33" "34" "35" "36" "42" "43" "30" "31"
+					"1" "2" "3" "4" "5" "6" "32"
+				)
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -19123,30 +19133,9 @@
 		(layer "Edge.Cuts")
 		(uuid "5d9d4e5d-975e-43de-913e-8a623df0fa14")
 	)
-	(gr_text_box "With JLC04161H-3313 stackup\n\n50 Ohms, single ended (non coplanar), F.Cu (top) traces --> 0.1565mm width\n50 Ohms, differential pair (non coplanar), F.Cu (top) traces --> 0.4486mm width, 0.2mm spacing\n90 Ohms, differential pair (non coplanar), F.Cu (top) traces --> 0.1575mm width, 0.2mm spacing\n\n50 Ohms, single ended (non coplanar), B.Cu (bottom) traces --> 2.62mm width\n90 Ohms, differential pair (non coplanar), B.Cu (bottom) traces --> 0.7336mm width, 0.2mm spacing\n\nGeneral power traces --> 0.5mm width\nDevice specific power traces --> 0.2mm width\n\n0.56mm via diameter and 0.3mm via hole for generic vias\n0.7mm via diameter and 0.3mm via hole for general power vias"
-		(start 118.4375 72)
-		(end 130.9375 75.75)
-		(margins 0.1625 0.1625 0.1625 0.1625)
-		(layer "Cmts.User")
-		(uuid "a3fb373a-b98c-4ee8-a084-7499339808bc")
-		(effects
-			(font
-				(size 0.15 0.15)
-				(thickness 0.03)
-				(bold yes)
-			)
-			(justify left top)
-		)
-		(border yes)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(knockout no)
-	)
 	(gr_text_box "With PCBWay stackup: Thickness: 1.6MM Finished Outer Copper: 1OZ Inner Copper: 1OZ Inner layer Residual copper ratio: 70%\n\n50 Ohms, microstrip, F.Cu (top) traces --> 0.2896mm width\n90 Ohms, edge coupled microstrip, F.Cu (top) traces --> 0.2297mm width, 0.16mm spacing\n\nWith the selected stackup, 50 ohm differential impedance cannot be achieved using edge-coupled microstrip within PCBWay standard limits. If needed, route both traces as nominal 50 Ohm single-ended microstrips, keep them short and symmetric, and do not apply a controlled differential-pair constraint.\n\nUse B.Cu (bottom) for low-speed, non-impedance-controlled signals only.\n\nGeneral power traces --> 0.5mm width\nDevice specific power traces --> 0.2mm width\n\n0.56mm via diameter and 0.25mm via hole for generic vias\n0.7mm via diameter and 0.3mm via hole for general power vias"
-		(start 131.25 71.5)
-		(end 143.75 76)
+		(start 117.3 71.89)
+		(end 129.8 76.39)
 		(margins 0.1625 0.1625 0.1625 0.1625)
 		(layer "Cmts.User")
 		(uuid "6b103c07-fae2-4ab6-a57a-fae26b0c2a90")

@@ -1,20 +1,26 @@
 (kicad_sch
-	(version 20231120)
+	(version 20260306)
 	(generator "eeschema")
-	(generator_version "8.0")
+	(generator_version "10.0")
 	(uuid "eb252d78-534e-46dd-92f4-bb80bd008469")
 	(paper "A3")
 	(lib_symbols
 		(symbol "0_generic_component:C"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
 				(offset 0.254)
 			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "C"
 				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -24,6 +30,8 @@
 			)
 			(property "Value" "C"
 				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -33,62 +41,74 @@
 			)
 			(property "Footprint" ""
 				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Unpolarized capacitor"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "cap capacitor"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "C_*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "C_0_1"
 				(polyline
 					(pts
-						(xy -2.032 -0.762) (xy 2.032 -0.762)
+						(xy -2.032 0.762) (xy 2.032 0.762)
 					)
 					(stroke
 						(width 0.508)
@@ -100,7 +120,7 @@
 				)
 				(polyline
 					(pts
-						(xy -2.032 0.762) (xy 2.032 0.762)
+						(xy -2.032 -0.762) (xy 2.032 -0.762)
 					)
 					(stroke
 						(width 0.508)
@@ -115,7 +135,7 @@
 				(pin passive line
 					(at 0 3.81 270)
 					(length 2.794)
-					(name "~"
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -133,7 +153,7 @@
 				(pin passive line
 					(at 0 -3.81 90)
 					(length 2.794)
-					(name "~"
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -149,15 +169,22 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "0_generic_component:Conn_01x02_Pin"
 			(pin_names
-				(offset 1.016) hide)
+				(offset 1.016)
+				(hide yes)
+			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "J"
 				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -166,6 +193,8 @@
 			)
 			(property "Value" "Conn_01x02_Pin"
 				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -174,69 +203,91 @@
 			)
 			(property "Footprint" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Generic connector, single row, 01x02, script generated"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "connector"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "Connector*:*_1x??_*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "Conn_01x02_Pin_1_1"
-				(polyline
-					(pts
-						(xy 1.27 -2.54) (xy 0.8636 -2.54)
-					)
+				(rectangle
+					(start 0.8636 0.127)
+					(end 0 -0.127)
 					(stroke
 						(width 0.1524)
 						(type default)
 					)
 					(fill
-						(type none)
+						(type outline)
+					)
+				)
+				(rectangle
+					(start 0.8636 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type outline)
 					)
 				)
 				(polyline
@@ -251,26 +302,16 @@
 						(type none)
 					)
 				)
-				(rectangle
-					(start 0.8636 -2.413)
-					(end 0 -2.667)
+				(polyline
+					(pts
+						(xy 1.27 -2.54) (xy 0.8636 -2.54)
+					)
 					(stroke
 						(width 0.1524)
 						(type default)
 					)
 					(fill
-						(type outline)
-					)
-				)
-				(rectangle
-					(start 0.8636 0.127)
-					(end 0 -0.127)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type outline)
+						(type none)
 					)
 				)
 				(pin passive line
@@ -310,16 +351,25 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "0_generic_component:L"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
-				(offset 1.016) hide)
+				(offset 1.016)
+				(hide yes)
+			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "L"
 				(at -1.27 0 90)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -328,6 +378,8 @@
 			)
 			(property "Value" "L"
 				(at 1.905 0 90)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -336,86 +388,74 @@
 			)
 			(property "Footprint" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Inductor"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "inductor choke coil reactor magnetic"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "Choke_* *Coil* Inductor_* L_*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "L_0_1"
 				(arc
-					(start 0 -2.54)
-					(mid 0.6323 -1.905)
-					(end 0 -1.27)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(arc
-					(start 0 -1.27)
-					(mid 0.6323 -0.635)
-					(end 0 0)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(arc
-					(start 0 0)
-					(mid 0.6323 0.635)
+					(start 0 2.54)
+					(mid 0.6323 1.905)
 					(end 0 1.27)
 					(stroke
 						(width 0)
@@ -427,8 +467,32 @@
 				)
 				(arc
 					(start 0 1.27)
-					(mid 0.6323 1.905)
-					(end 0 2.54)
+					(mid 0.6323 0.635)
+					(end 0 0)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 0)
+					(mid 0.6323 -0.635)
+					(end 0 -1.27)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -1.27)
+					(mid 0.6323 -1.905)
+					(end 0 -2.54)
 					(stroke
 						(width 0)
 						(type default)
@@ -476,16 +540,25 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "0_generic_component:LED"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
-				(offset 1.016) hide)
+				(offset 1.016)
+				(hide yes)
+			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "D"
 				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -494,6 +567,8 @@
 			)
 			(property "Value" "LED"
 				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -502,65 +577,89 @@
 			)
 			(property "Footprint" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Light emitting diode"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "LED diode"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "LED* LED_SMD:* LED_THT:*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "LED_0_1"
 				(polyline
 					(pts
-						(xy -1.27 -1.27) (xy -1.27 1.27)
+						(xy -3.048 -0.762) (xy -4.572 -2.286) (xy -3.81 -2.286) (xy -4.572 -2.286) (xy -4.572 -1.524)
 					)
 					(stroke
-						(width 0.254)
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.778 -0.762) (xy -3.302 -2.286) (xy -2.54 -2.286) (xy -3.302 -2.286) (xy -3.302 -1.524)
+					)
+					(stroke
+						(width 0)
 						(type default)
 					)
 					(fill
@@ -581,7 +680,7 @@
 				)
 				(polyline
 					(pts
-						(xy 1.27 -1.27) (xy 1.27 1.27) (xy -1.27 0) (xy 1.27 -1.27)
+						(xy -1.27 -1.27) (xy -1.27 1.27)
 					)
 					(stroke
 						(width 0.254)
@@ -593,22 +692,10 @@
 				)
 				(polyline
 					(pts
-						(xy -3.048 -0.762) (xy -4.572 -2.286) (xy -3.81 -2.286) (xy -4.572 -2.286) (xy -4.572 -1.524)
+						(xy 1.27 -1.27) (xy 1.27 1.27) (xy -1.27 0) (xy 1.27 -1.27)
 					)
 					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.778 -0.762) (xy -3.302 -2.286) (xy -2.54 -2.286) (xy -3.302 -2.286) (xy -3.302 -1.524)
-					)
-					(stroke
-						(width 0)
+						(width 0.254)
 						(type default)
 					)
 					(fill
@@ -654,17 +741,24 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "0_generic_component:R"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
 				(offset 0)
 			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "R"
 				(at 2.54 0 90)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -673,6 +767,8 @@
 			)
 			(property "Value" "R"
 				(at -2.54 0 90)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -681,71 +777,71 @@
 			)
 			(property "Footprint" ""
 				(at 1.016 -0.254 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Resistor, US symbol"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "R res resistor"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "R_*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "R_0_1"
-				(polyline
-					(pts
-						(xy 0 -2.286) (xy 0 -2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
 				(polyline
 					(pts
 						(xy 0 2.286) (xy 0 2.54)
@@ -760,7 +856,7 @@
 				)
 				(polyline
 					(pts
-						(xy 0 -0.762) (xy 1.016 -1.143) (xy 0 -1.524) (xy -1.016 -1.905) (xy 0 -2.286)
+						(xy 0 2.286) (xy 1.016 1.905) (xy 0 1.524) (xy -1.016 1.143) (xy 0 0.762)
 					)
 					(stroke
 						(width 0)
@@ -784,7 +880,19 @@
 				)
 				(polyline
 					(pts
-						(xy 0 2.286) (xy 1.016 1.905) (xy 0 1.524) (xy -1.016 1.143) (xy 0 0.762)
+						(xy 0 -0.762) (xy 1.016 -1.143) (xy 0 -1.524) (xy -1.016 -1.905) (xy 0 -2.286)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.286) (xy 0 -2.54)
 					)
 					(stroke
 						(width 0)
@@ -799,7 +907,7 @@
 				(pin passive line
 					(at 0 3.81 270)
 					(length 1.27)
-					(name "~"
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -817,7 +925,7 @@
 				(pin passive line
 					(at 0 -3.81 90)
 					(length 1.27)
-					(name "~"
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -833,17 +941,24 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "0_generic_component:ferrite_bead"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
 				(offset 0)
 			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "FB"
 				(at -3.81 0.635 90)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -852,6 +967,8 @@
 			)
 			(property "Value" "ferrite_bead"
 				(at 3.81 0 90)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -860,62 +977,74 @@
 			)
 			(property "Footprint" ""
 				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Ferrite bead"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "L ferrite bead inductor filter"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "Inductor_* L_* *Ferrite*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "ferrite_bead_0_1"
 				(polyline
 					(pts
-						(xy 0 -1.27) (xy 0 -1.2192)
+						(xy -2.7686 0.4064) (xy -1.7018 2.2606) (xy 2.7686 -0.3048) (xy 1.6764 -2.159) (xy -2.7686 0.4064)
 					)
 					(stroke
 						(width 0)
@@ -939,7 +1068,7 @@
 				)
 				(polyline
 					(pts
-						(xy -2.7686 0.4064) (xy -1.7018 2.2606) (xy 2.7686 -0.3048) (xy 1.6764 -2.159) (xy -2.7686 0.4064)
+						(xy 0 -1.27) (xy 0 -1.2192)
 					)
 					(stroke
 						(width 0)
@@ -954,7 +1083,7 @@
 				(pin passive line
 					(at 0 3.81 270)
 					(length 2.54)
-					(name "~"
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -972,7 +1101,7 @@
 				(pin passive line
 					(at 0 -3.81 90)
 					(length 2.54)
-					(name "~"
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -988,13 +1117,18 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "100_MCU_ST_STM32WL:STM32WLE5C8Ux"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "U"
 				(at -17.78 36.83 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1004,6 +1138,8 @@
 			)
 			(property "Value" "STM32WLE5C8Ux"
 				(at 12.7 36.83 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1013,57 +1149,69 @@
 			)
 			(property "Footprint" "100_QFN_package:QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm"
 				(at -19.05 -35.56 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 					(justify right)
-					(hide yes)
 				)
 			)
 			(property "Datasheet" "https://www.st.com/resource/en/datasheet/stm32wle5c8.pdf"
 				(at -49.53 -33.02 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "STMicroelectronics Arm Cortex-M4 MCU, 64KB flash, 20KB RAM, 48 MHz, 1.8-3.6V, 29 GPIO, UFQFPN48"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "Arm Cortex-M4 STM32WL STM32WLEx"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "QFN*1EP*7x7mm*P0.5mm*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "STM32WLE5C8Ux_0_1"
@@ -1108,6 +1256,203 @@
 					(alternate "TIM2_CH2" bidirectional line)
 					(alternate "USART1_DE" bidirectional line)
 					(alternate "USART1_RTS" bidirectional line)
+				)
+				(pin bidirectional line
+					(at 22.86 -17.78 180)
+					(length 2.54)
+					(name "PB4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "ADC_IN3" bidirectional line)
+					(alternate "COMP1_INP" bidirectional line)
+					(alternate "COMP2_INP" bidirectional line)
+					(alternate "DEBUG_JTRST" bidirectional line)
+					(alternate "DEBUG_RF-LDORDY" bidirectional line)
+					(alternate "I2C3_SDA" bidirectional line)
+					(alternate "SPI1_MISO" bidirectional line)
+					(alternate "TIM17_BKIN" bidirectional line)
+					(alternate "USART1_CTS" bidirectional line)
+					(alternate "USART1_NSS" bidirectional line)
+				)
+				(pin bidirectional line
+					(at 22.86 -20.32 180)
+					(length 2.54)
+					(name "PB5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "COMP2_OUT" bidirectional line)
+					(alternate "I2C1_SMBA" bidirectional line)
+					(alternate "LPTIM1_IN1" bidirectional line)
+					(alternate "SPI1_MOSI" bidirectional line)
+					(alternate "TIM16_BKIN" bidirectional line)
+					(alternate "USART1_CK" bidirectional line)
+				)
+				(pin bidirectional line
+					(at 22.86 -22.86 180)
+					(length 2.54)
+					(name "PB6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "I2C1_SCL" bidirectional line)
+					(alternate "LPTIM1_ETR" bidirectional line)
+					(alternate "TIM16_CH1N" bidirectional line)
+					(alternate "USART1_TX" bidirectional line)
+				)
+				(pin bidirectional line
+					(at 22.86 -25.4 180)
+					(length 2.54)
+					(name "PB7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "I2C1_SDA" bidirectional line)
+					(alternate "LPTIM1_IN2" bidirectional line)
+					(alternate "PWR_PVD_IN" bidirectional line)
+					(alternate "TIM17_CH1N" bidirectional line)
+					(alternate "TIM1_BKIN" bidirectional line)
+					(alternate "USART1_RX" bidirectional line)
+				)
+				(pin bidirectional line
+					(at 22.86 -27.94 180)
+					(length 2.54)
+					(name "PB8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "I2C1_SCL" bidirectional line)
+					(alternate "TIM16_CH1" bidirectional line)
+					(alternate "TIM1_CH2N" bidirectional line)
+				)
+				(pin bidirectional line
+					(at 22.86 33.02 180)
+					(length 2.54)
+					(name "PA0"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "COMP1_OUT" bidirectional line)
+					(alternate "DEBUG_PWR-REGLP1S" bidirectional line)
+					(alternate "I2C3_SMBA" bidirectional line)
+					(alternate "I2S_CKIN" bidirectional line)
+					(alternate "PWR_WKUP1" bidirectional line)
+					(alternate "RTC_TAMP_IN2" bidirectional line)
+					(alternate "TIM2_CH1" bidirectional line)
+					(alternate "TIM2_ETR" bidirectional line)
+					(alternate "USART2_CTS" bidirectional line)
+					(alternate "USART2_NSS" bidirectional line)
+				)
+				(pin bidirectional line
+					(at 22.86 30.48 180)
+					(length 2.54)
+					(name "PA1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "DEBUG_PWR-REGLP2S" bidirectional line)
+					(alternate "I2C1_SMBA" bidirectional line)
+					(alternate "LPTIM3_OUT" bidirectional line)
+					(alternate "LPUART1_RTS" bidirectional line)
+					(alternate "SPI1_SCK" bidirectional line)
+					(alternate "TIM2_CH2" bidirectional line)
+					(alternate "USART2_DE" bidirectional line)
+					(alternate "USART2_RTS" bidirectional line)
+				)
+				(pin bidirectional line
+					(at 22.86 27.94 180)
+					(length 2.54)
+					(name "PA2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "COMP2_OUT" bidirectional line)
+					(alternate "DEBUG_PWR-LDORDY" bidirectional line)
+					(alternate "LPUART1_TX" bidirectional line)
+					(alternate "RCC_LSCO" bidirectional line)
+					(alternate "TIM2_CH3" bidirectional line)
+					(alternate "USART2_TX" bidirectional line)
 				)
 				(pin bidirectional line
 					(at 22.86 25.4 180)
@@ -1332,34 +1677,6 @@
 					)
 				)
 				(pin bidirectional line
-					(at 22.86 -17.78 180)
-					(length 2.54)
-					(name "PB4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "ADC_IN3" bidirectional line)
-					(alternate "COMP1_INP" bidirectional line)
-					(alternate "COMP2_INP" bidirectional line)
-					(alternate "DEBUG_JTRST" bidirectional line)
-					(alternate "DEBUG_RF-LDORDY" bidirectional line)
-					(alternate "I2C3_SDA" bidirectional line)
-					(alternate "SPI1_MISO" bidirectional line)
-					(alternate "TIM17_BKIN" bidirectional line)
-					(alternate "USART1_CTS" bidirectional line)
-					(alternate "USART1_NSS" bidirectional line)
-				)
-				(pin bidirectional line
 					(at -20.32 5.08 0)
 					(length 2.54)
 					(name "RFI_P"
@@ -1540,30 +1857,6 @@
 							)
 						)
 					)
-				)
-				(pin bidirectional line
-					(at 22.86 -20.32 180)
-					(length 2.54)
-					(name "PB5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "COMP2_OUT" bidirectional line)
-					(alternate "I2C1_SMBA" bidirectional line)
-					(alternate "LPTIM1_IN1" bidirectional line)
-					(alternate "SPI1_MOSI" bidirectional line)
-					(alternate "TIM16_BKIN" bidirectional line)
-					(alternate "USART1_CK" bidirectional line)
 				)
 				(pin bidirectional line
 					(at 22.86 -10.16 180)
@@ -1801,28 +2094,6 @@
 					(alternate "RCC_OSC32_IN" bidirectional line)
 				)
 				(pin bidirectional line
-					(at 22.86 -22.86 180)
-					(length 2.54)
-					(name "PB6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "I2C1_SCL" bidirectional line)
-					(alternate "LPTIM1_ETR" bidirectional line)
-					(alternate "TIM16_CH1N" bidirectional line)
-					(alternate "USART1_TX" bidirectional line)
-				)
-				(pin bidirectional line
 					(at -20.32 -15.24 0)
 					(length 2.54)
 					(name "PC15"
@@ -2015,150 +2286,34 @@
 						)
 					)
 				)
-				(pin bidirectional line
-					(at 22.86 -25.4 180)
-					(length 2.54)
-					(name "PB7"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "I2C1_SDA" bidirectional line)
-					(alternate "LPTIM1_IN2" bidirectional line)
-					(alternate "PWR_PVD_IN" bidirectional line)
-					(alternate "TIM17_CH1N" bidirectional line)
-					(alternate "TIM1_BKIN" bidirectional line)
-					(alternate "USART1_RX" bidirectional line)
-				)
-				(pin bidirectional line
-					(at 22.86 -27.94 180)
-					(length 2.54)
-					(name "PB8"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "I2C1_SCL" bidirectional line)
-					(alternate "TIM16_CH1" bidirectional line)
-					(alternate "TIM1_CH2N" bidirectional line)
-				)
-				(pin bidirectional line
-					(at 22.86 33.02 180)
-					(length 2.54)
-					(name "PA0"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "7"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "COMP1_OUT" bidirectional line)
-					(alternate "DEBUG_PWR-REGLP1S" bidirectional line)
-					(alternate "I2C3_SMBA" bidirectional line)
-					(alternate "I2S_CKIN" bidirectional line)
-					(alternate "PWR_WKUP1" bidirectional line)
-					(alternate "RTC_TAMP_IN2" bidirectional line)
-					(alternate "TIM2_CH1" bidirectional line)
-					(alternate "TIM2_ETR" bidirectional line)
-					(alternate "USART2_CTS" bidirectional line)
-					(alternate "USART2_NSS" bidirectional line)
-				)
-				(pin bidirectional line
-					(at 22.86 30.48 180)
-					(length 2.54)
-					(name "PA1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "8"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "DEBUG_PWR-REGLP2S" bidirectional line)
-					(alternate "I2C1_SMBA" bidirectional line)
-					(alternate "LPTIM3_OUT" bidirectional line)
-					(alternate "LPUART1_RTS" bidirectional line)
-					(alternate "SPI1_SCK" bidirectional line)
-					(alternate "TIM2_CH2" bidirectional line)
-					(alternate "USART2_DE" bidirectional line)
-					(alternate "USART2_RTS" bidirectional line)
-				)
-				(pin bidirectional line
-					(at 22.86 27.94 180)
-					(length 2.54)
-					(name "PA2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "9"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "COMP2_OUT" bidirectional line)
-					(alternate "DEBUG_PWR-LDORDY" bidirectional line)
-					(alternate "LPUART1_TX" bidirectional line)
-					(alternate "RCC_LSCO" bidirectional line)
-					(alternate "TIM2_CH3" bidirectional line)
-					(alternate "USART2_TX" bidirectional line)
-				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "1_power:+3.3V"
-			(power)
+			(power global)
 			(pin_names
 				(offset 0)
 			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "#PWR"
 				(at 0 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Value" "+3.3V"
 				(at 0 3.556 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -2167,56 +2322,52 @@
 			)
 			(property "Footprint" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Power symbol creates a global label with name \"+3.3V\""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "global power"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "+3.3V_0_1"
 				(polyline
 					(pts
 						(xy -0.762 1.27) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 0) (xy 0 2.54)
 					)
 					(stroke
 						(width 0)
@@ -2238,11 +2389,24 @@
 						(type none)
 					)
 				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
 			)
 			(symbol "+3.3V_1_1"
 				(pin power_in line
 					(at 0 0 90)
-					(length 0) hide
+					(length 0)
+					(hide yes)
 					(name "+3.3V"
 						(effects
 							(font
@@ -2259,26 +2423,33 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "1_power:GND"
-			(power)
+			(power global)
 			(pin_names
 				(offset 0)
 			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "#PWR"
 				(at 0 -6.35 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Value" "GND"
 				(at 0 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -2287,38 +2458,46 @@
 			)
 			(property "Footprint" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Power symbol creates a global label with name \"GNDREF\" , reference supply ground"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "global power"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "GND_0_1"
@@ -2374,7 +2553,8 @@
 			(symbol "GND_1_1"
 				(pin power_in line
 					(at 0 0 270)
-					(length 0) hide
+					(length 0)
+					(hide yes)
 					(name "GNDREF"
 						(effects
 							(font
@@ -2391,6 +2571,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "20_oscillator:ECS-TXO-25CSMV"
 			(pin_names
@@ -2399,8 +2580,12 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "Y"
 				(at -15.5252 8.1444 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -2410,6 +2595,8 @@
 			)
 			(property "Value" "ECS-TXO-25CSMV"
 				(at -10.16 -12.7 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -2419,39 +2606,47 @@
 			)
 			(property "Footprint" "20_oscillator:ECS-TXO-25CSMV"
 				(at 0 -15.24 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 					(justify bottom)
-					(hide yes)
 				)
 			)
 			(property "Datasheet" "https://ecsxtal.com/store/pdf/ECS-TXO-25CSMV.pdf"
 				(at 1.27 -17.78 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "ECS-TXO-25CSMV_0_0"
@@ -2541,6 +2736,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "270_cortex-M_debug_connector:cortex-M_debug_connector_10pin"
 			(pin_names
@@ -2549,8 +2745,12 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "J"
 				(at -7.62 8.0518 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -2560,6 +2760,8 @@
 			)
 			(property "Value" "cortex-M_debug_connector_10pin"
 				(at -16.2814 -10.4394 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -2569,39 +2771,47 @@
 			)
 			(property "Footprint" "220_cortex-M_debug_connector:FTSH-105-01-F-D-K"
 				(at -0.0254 -13.589 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 					(justify bottom)
-					(hide yes)
 				)
 			)
 			(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6209/ftsh-1xx-xx-xxx-dv-xxx-xxx-x-xx-mkt.pdf"
 				(at 0.0508 -15.5448 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Connector Header Surface Mount 10 position 0.050\" (1.27mm)"
 				(at 0.127 -18.7198 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "PartNumber" "FTSH-105-01-F-DV-K"
 				(at 0.127 -22.352 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "cortex-M_debug_connector_10pin_0_0"
@@ -2629,24 +2839,6 @@
 						)
 					)
 					(number "1"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 12.7 -5.08 180)
-					(length 5.08)
-					(name "nRESET"
-						(effects
-							(font
-								(size 0.8 0.8)
-							)
-						)
-					)
-					(number "10"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2798,8 +2990,136 @@
 						)
 					)
 				)
+				(pin passive line
+					(at 12.7 -5.08 180)
+					(length 5.08)
+					(name "nRESET"
+						(effects
+							(font
+								(size 0.8 0.8)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
 			)
+			(embedded_fonts no)
 		)
+	)
+	(rectangle
+		(start 267.97 149.86)
+		(end 372.11 218.44)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "84f52c06-158e-4693-8d05-e8c12deadfa3")
+	)
+	(rectangle
+		(start 267.97 48.26)
+		(end 323.85 87.63)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "8e992ea1-d0b9-4fce-a0fa-8a44310b4f1e")
+	)
+	(rectangle
+		(start 50.8 48.26)
+		(end 257.81 218.44)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "d2c856b3-0c5f-43b5-b2f8-63d3eb399e97")
+	)
+	(rectangle
+		(start 267.97 95.25)
+		(end 339.09 142.24)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "e3236eb0-55fe-4ac9-a6a1-9586dac181ca")
+	)
+	(text_box "Capacitors within this rectangle shall be as close as possible to the respective pin of the MCU\n"
+		(exclude_from_sim no)
+		(at 53.34 50.8 0)
+		(size 25.4 11.43)
+		(margins 0.9525 0.9525 0.9525 0.9525)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "cad01502-ecd1-47e7-8578-fe65e7958a94")
+	)
+	(text_box "The design shall adhere to the guidelines specified in ST Application Note AN2867, with particular emphasis on Chapter 7."
+		(exclude_from_sim no)
+		(at 332.74 152.4 0)
+		(size 36.83 8.89)
+		(margins 0.9525 0.9525 0.9525 0.9525)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+			(href "https://www.st.com/resource/en/application_note/an2867-guidelines-for-oscillator-design-on-stm8afals-and-stm32-mcusmpus-stmicroelectronics.pdf")
+		)
+		(uuid "d1bc9dc1-10ef-410d-a582-6eac0584dc8c")
+	)
+	(text_box "Populate a jumper on J1 before power up to activate bootloader"
+		(exclude_from_sim no)
+		(at 269.24 49.53 0)
+		(size 24.13 7.62)
+		(margins 0.9525 0.9525 0.9525 0.9525)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "d908afc5-87a2-48a5-a110-4d972ff5054c")
 	)
 	(junction
 		(at 175.26 69.85)
@@ -4441,115 +4761,8 @@
 		)
 		(uuid "fb2273aa-1158-48d5-8b44-53761bd531c8")
 	)
-	(rectangle
-		(start 267.97 149.86)
-		(end 372.11 218.44)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(uuid 84f52c06-158e-4693-8d05-e8c12deadfa3)
-	)
-	(rectangle
-		(start 267.97 48.26)
-		(end 323.85 87.63)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(uuid 8e992ea1-d0b9-4fce-a0fa-8a44310b4f1e)
-	)
-	(rectangle
-		(start 50.8 48.26)
-		(end 257.81 218.44)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(uuid d2c856b3-0c5f-43b5-b2f8-63d3eb399e97)
-	)
-	(rectangle
-		(start 267.97 95.25)
-		(end 339.09 142.24)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(uuid e3236eb0-55fe-4ac9-a6a1-9586dac181ca)
-	)
-	(text_box "Capacitors within this rectangle shall be as close as possible to the respective pin of the MCU\n"
-		(exclude_from_sim no)
-		(at 53.34 50.8 0)
-		(size 25.4 11.43)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "cad01502-ecd1-47e7-8578-fe65e7958a94")
-	)
-	(text_box "The design shall adhere to the guidelines specified in ST Application Note AN2867, with particular emphasis on Chapter 7."
-		(exclude_from_sim no)
-		(at 332.74 152.4 0)
-		(size 36.83 8.89)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-			(href "https://www.st.com/resource/en/application_note/an2867-guidelines-for-oscillator-design-on-stm8afals-and-stm32-mcusmpus-stmicroelectronics.pdf")
-		)
-		(uuid "d1bc9dc1-10ef-410d-a582-6eac0584dc8c")
-	)
-	(text_box "Populate a jumper on J1 before power up to activate bootloader"
-		(exclude_from_sim no)
-		(at 269.24 49.53 0)
-		(size 24.13 7.62)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "d908afc5-87a2-48a5-a110-4d972ff5054c")
-	)
 	(label "PH3-BOOT0"
 		(at 308.61 68.58 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4560,7 +4773,6 @@
 	)
 	(label "PB0_VDD_TCXO"
 		(at 275.59 158.75 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4571,7 +4783,6 @@
 	)
 	(label "SWO"
 		(at 308.61 114.3 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4582,7 +4793,6 @@
 	)
 	(label "SWCLK"
 		(at 182.88 162.56 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4593,7 +4803,6 @@
 	)
 	(label "SWDIO"
 		(at 182.88 160.02 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4604,7 +4813,6 @@
 	)
 	(label "SWDIO"
 		(at 308.61 109.22 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4615,7 +4823,6 @@
 	)
 	(label "PB0_VDD_TCXO"
 		(at 240.03 170.18 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4626,7 +4833,6 @@
 	)
 	(label "OSC_IN"
 		(at 360.68 182.88 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4637,7 +4843,6 @@
 	)
 	(label "NRST"
 		(at 328.93 119.38 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4648,7 +4853,6 @@
 	)
 	(label "SWCLK"
 		(at 308.61 111.76 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4659,7 +4863,6 @@
 	)
 	(label "SWO"
 		(at 182.88 175.26 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4670,7 +4873,6 @@
 	)
 	(label "OSC_IN"
 		(at 130.81 139.7 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4681,7 +4883,6 @@
 	)
 	(label "NRST"
 		(at 129.54 127 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4692,7 +4893,6 @@
 	)
 	(label "PH3-BOOT0"
 		(at 132.08 165.1 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4704,7 +4904,6 @@
 	(hierarchical_label "RFO_HP"
 		(shape output)
 		(at 130.81 157.48 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4716,7 +4915,6 @@
 	(hierarchical_label "VR_PA"
 		(shape output)
 		(at 127 134.62 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4728,7 +4926,6 @@
 	(hierarchical_label "RFI_N"
 		(shape output)
 		(at 130.81 152.4 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4740,7 +4937,6 @@
 	(hierarchical_label "RFI_P"
 		(shape output)
 		(at 130.81 154.94 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4752,7 +4948,6 @@
 	(hierarchical_label "USART2_rx"
 		(shape input)
 		(at 194.31 134.62 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4764,7 +4959,6 @@
 	(hierarchical_label "RF_SWITCH_CTRL"
 		(shape output)
 		(at 181.61 137.16 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4776,7 +4970,6 @@
 	(hierarchical_label "USART2_tx"
 		(shape output)
 		(at 205.74 132.08 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4789,14 +4982,18 @@
 		(lib_id "0_generic_component:C")
 		(at 68.58 193.04 180)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "025147b7-8779-4943-9507-8d7c99c3ded7")
 		(property "Reference" "C16"
 			(at 72.39 191.77 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4806,6 +5003,8 @@
 		)
 		(property "Value" "33pF"
 			(at 72.39 194.31 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4815,38 +5014,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 67.6148 189.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GP_NP0_16V-to-50V_18.pdf"
 			(at 68.58 193.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "33 pF ±2% 50V Ceramic Capacitor C0G, NP0 0402 (1005 Metric)"
 			(at 68.58 193.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "CC0402GRNPO9BN330"
 			(at 68.58 193.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -4856,7 +5063,7 @@
 			(uuid "353e4698-685b-401e-ba58-f3d1cbfb8127")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C16")
 					(unit 1)
@@ -4868,23 +5075,29 @@
 		(lib_id "1_power:+3.3V")
 		(at 101.6 57.15 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "03886b81-a903-46d7-ad8f-8a9962e99e32")
 		(property "Reference" "#PWR01"
 			(at 101.6 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "+3.3V"
 			(at 101.6 52.07 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4893,36 +5106,42 @@
 		)
 		(property "Footprint" ""
 			(at 101.6 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 101.6 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 101.6 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "c873982e-b667-4938-acf8-030be093a628")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR01")
 					(unit 1)
@@ -4934,23 +5153,29 @@
 		(lib_id "1_power:+3.3V")
 		(at 83.82 140.97 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "0b94f889-f39b-495d-b68a-3c550d075bca")
 		(property "Reference" "#PWR013"
 			(at 83.82 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "+3.3V"
 			(at 83.82 135.89 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4959,36 +5184,42 @@
 		)
 		(property "Footprint" ""
 			(at 83.82 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 83.82 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 83.82 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "162608f4-3823-4853-8697-23c71dd957d1")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR013")
 					(unit 1)
@@ -5000,13 +5231,17 @@
 		(lib_id "0_generic_component:LED")
 		(at 228.6 132.08 90)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "1003ace3-374d-4f9e-99c8-f078d0ab5886")
 		(property "Reference" "D1"
 			(at 232.41 132.3975 90)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5016,6 +5251,8 @@
 		)
 		(property "Value" "User LED Red"
 			(at 232.41 134.9375 90)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5025,38 +5262,46 @@
 		)
 		(property "Footprint" "3_LED_SMD:LED_0402_1005Metric"
 			(at 228.6 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/3701/B1811URO-20D000113U1930.pdf"
 			(at 228.6 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Red 631nm LED Indication - Discrete 2V 0402 (1005 Metric)"
 			(at 236.22 137.16 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "B1811URO-20D000113U1930"
 			(at 228.6 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -5066,7 +5311,7 @@
 			(uuid "53ad3a02-4e2e-4199-ab77-f2da246cb20d")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "D1")
 					(unit 1)
@@ -5078,23 +5323,29 @@
 		(lib_id "1_power:GND")
 		(at 274.32 123.19 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "11da0d54-68f5-4a10-8177-ab7f5e6ada1f")
 		(property "Reference" "#PWR011"
 			(at 274.32 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 274.32 128.27 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5103,36 +5354,42 @@
 		)
 		(property "Footprint" ""
 			(at 274.32 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 274.32 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 274.32 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "de7f8715-4815-4561-bd94-1b70d2d4f7fa")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR011")
 					(unit 1)
@@ -5144,14 +5401,18 @@
 		(lib_id "0_generic_component:ferrite_bead")
 		(at 275.59 168.91 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1937f36b-4e11-4a43-980d-f948bb3fee69")
 		(property "Reference" "FB1"
 			(at 279.4 167.5892 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5161,6 +5422,8 @@
 		)
 		(property "Value" "1400Ω/1GHz"
 			(at 279.4 170.1292 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5170,38 +5433,46 @@
 		)
 		(property "Footprint" "2_inductor_SMD:L_0402_1005Metric"
 			(at 273.812 168.91 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.murata.com/en-global/products/productdata/8796740223006/ENFA0024.pdf"
 			(at 275.59 168.91 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "1 kOhms @ 100 MHz 1 Signal Line Ferrite Bead 0402 (1005 Metric) 250mA 1.1Ohm"
 			(at 275.59 168.91 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "BLM15HG102SN1D"
 			(at 275.59 168.91 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -5211,7 +5482,7 @@
 			(uuid "4565a0cb-2107-4055-8258-dd06bd9eca3a")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "FB1")
 					(unit 1)
@@ -5223,14 +5494,18 @@
 		(lib_id "0_generic_component:C")
 		(at 220.98 175.26 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "22bc86f6-0355-4b62-9677-6b0b15d53e2a")
 		(property "Reference" "C12"
 			(at 224.79 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5240,6 +5515,8 @@
 		)
 		(property "Value" "47pF"
 			(at 224.79 176.53 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5249,38 +5526,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 221.9452 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GP_NP0_16V-to-50V_18.pdf"
 			(at 220.98 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "47 pF ±5% 50V Ceramic Capacitor C0G, NP0 0402 (1005 Metric)"
 			(at 220.98 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "CC0402JRNPO9BN470"
 			(at 220.98 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -5290,7 +5575,7 @@
 			(uuid "dbad1b27-ffff-4140-beb1-1b8b4002f5c7")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C12")
 					(unit 1)
@@ -5302,14 +5587,18 @@
 		(lib_id "0_generic_component:R")
 		(at 228.6 120.65 180)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2fc47029-06c9-4ad5-9808-9e3e455c8c71")
 		(property "Reference" "R2"
 			(at 231.14 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5319,6 +5608,8 @@
 		)
 		(property "Value" "340Ω"
 			(at 231.14 121.92 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5328,38 +5619,46 @@
 		)
 		(property "Footprint" "0_resistor_SMD:R_0402_1005Metric"
 			(at 227.584 120.396 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/app/datasheet/rchip/pyu-rc_group_51_rohs_l.pdf"
 			(at 228.6 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "340 Ohms ±1% 0.063W, 1/16W Chip Resistor 0402 (1005 Metric) Moisture Resistant Thick Film"
 			(at 228.6 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "RC0402FR-07340RL"
 			(at 228.6 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -5369,7 +5668,7 @@
 			(uuid "bbf8f608-751d-4db3-9f68-eee7620673c6")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "R2")
 					(unit 1)
@@ -5381,23 +5680,29 @@
 		(lib_id "1_power:+3.3V")
 		(at 194.31 57.15 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "30a9f2f6-3a90-44d0-836f-8e19fcad0f20")
 		(property "Reference" "#PWR02"
 			(at 194.31 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "+3.3V"
 			(at 194.31 52.07 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5406,36 +5711,42 @@
 		)
 		(property "Footprint" ""
 			(at 194.31 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 194.31 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 194.31 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "78f835b0-790e-4a7f-9bca-9efd18f34c18")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR02")
 					(unit 1)
@@ -5447,14 +5758,18 @@
 		(lib_id "0_generic_component:R")
 		(at 335.28 182.88 90)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "46c008cd-93a4-4052-9b89-1656c3502324")
 		(property "Reference" "R3"
 			(at 335.28 176.53 90)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5463,6 +5778,8 @@
 		)
 		(property "Value" "220Ω"
 			(at 335.28 179.07 90)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5471,38 +5788,46 @@
 		)
 		(property "Footprint" "0_resistor_SMD:R_0402_1005Metric"
 			(at 335.534 181.864 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/products/datasheet/rchip/PYu-RC_Group_51_RoHS_L_12.pdf"
 			(at 335.28 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "220 Ohms ±1% 0.063W, 1/16W Chip Resistor 0402 (1005 Metric) Moisture Resistant Thick Film"
 			(at 335.28 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "RC0402FR-07220RL"
 			(at 335.28 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -5512,7 +5837,7 @@
 			(uuid "e3bdf339-6152-4bc3-acdf-27f57db72797")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "R3")
 					(unit 1)
@@ -5524,13 +5849,17 @@
 		(lib_id "0_generic_component:C")
 		(at 130.81 64.77 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "473b520e-9a35-417c-8325-30922d251eaf")
 		(property "Reference" "C3"
 			(at 134.62 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5540,6 +5869,8 @@
 		)
 		(property "Value" "100nF"
 			(at 134.62 66.04 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5549,38 +5880,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 131.7752 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155R71E104KE14-01.pdf"
 			(at 130.81 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "0.1 µF ±10% 25V Ceramic Capacitor X7R 0402 (1005 Metric)"
 			(at 130.81 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GRM155R71E104KE14J"
 			(at 130.81 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -5590,7 +5929,7 @@
 			(uuid "ec1a29b9-4205-4f2b-92ca-0cbc1b59c509")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C3")
 					(unit 1)
@@ -5602,23 +5941,29 @@
 		(lib_id "1_power:+3.3V")
 		(at 274.32 104.14 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "47c8e3c2-425c-4354-89c9-c2e9ee882aa9")
 		(property "Reference" "#PWR09"
 			(at 274.32 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "+3.3V"
 			(at 274.32 99.06 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5627,36 +5972,42 @@
 		)
 		(property "Footprint" ""
 			(at 274.32 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 274.32 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 274.32 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "45639edc-0071-4bdf-9dad-53b054deead6")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR09")
 					(unit 1)
@@ -5668,23 +6019,29 @@
 		(lib_id "1_power:GND")
 		(at 275.59 209.55 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "49518355-3718-44f9-9240-d6f5cc783e2a")
 		(property "Reference" "#PWR022"
 			(at 275.59 215.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 275.59 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5693,36 +6050,42 @@
 		)
 		(property "Footprint" ""
 			(at 275.59 209.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 275.59 209.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 275.59 209.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "65916774-b5a0-450a-a9c5-7fd858b1f6f7")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR022")
 					(unit 1)
@@ -5734,23 +6097,29 @@
 		(lib_id "1_power:GND")
 		(at 220.98 182.88 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "49a312cf-b789-431f-a2d3-e490c6507823")
 		(property "Reference" "#PWR017"
 			(at 220.98 189.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 220.98 187.96 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5759,36 +6128,42 @@
 		)
 		(property "Footprint" ""
 			(at 220.98 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 220.98 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 220.98 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "8f729cc0-a43c-4533-aaf3-e420ea7dc124")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR017")
 					(unit 1)
@@ -5800,14 +6175,18 @@
 		(lib_id "0_generic_component:C")
 		(at 275.59 199.39 180)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5230c9cd-e2c8-43f3-9577-2cf71866333a")
 		(property "Reference" "C18"
 			(at 279.4 198.12 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5817,6 +6196,8 @@
 		)
 		(property "Value" "220nF"
 			(at 279.4 200.66 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5826,38 +6207,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 274.6248 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GPHC_X7R_6.3V-to-250V_24.pdf"
 			(at 275.59 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "0.22 µF ±10% 16V Ceramic Capacitor X7R 0402 (1005 Metric)"
 			(at 275.59 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "CC0402KRX7R7BB224"
 			(at 275.59 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -5867,7 +6256,7 @@
 			(uuid "7b61ab22-db48-4191-b5bc-e73806961761")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C18")
 					(unit 1)
@@ -5879,14 +6268,18 @@
 		(lib_id "0_generic_component:C")
 		(at 234.95 175.26 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5782dd62-c5ef-41a5-b0c1-d094a003cf97")
 		(property "Reference" "C13"
 			(at 238.76 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5896,6 +6289,8 @@
 		)
 		(property "Value" "1,2pF"
 			(at 238.76 176.53 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5905,38 +6300,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 235.9152 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GJM1555C1H1R2WB01-01.pdf"
 			(at 234.95 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "1.2 pF ±0.05pF 50V Ceramic Capacitor C0G, NP0 0402 (1005 Metric)"
 			(at 234.95 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GJM1555C1H1R2WB01D"
 			(at 234.95 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -5946,7 +6349,7 @@
 			(uuid "2786cf0f-4832-4b5c-8b49-49075126ec66")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C13")
 					(unit 1)
@@ -5958,14 +6361,18 @@
 		(lib_id "0_generic_component:C")
 		(at 110.49 185.42 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6111f3f2-9002-491e-a56b-e779ce9333e8")
 		(property "Reference" "C15"
 			(at 114.3 184.15 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5975,6 +6382,8 @@
 		)
 		(property "Value" "470nF"
 			(at 114.3 186.69 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5984,38 +6393,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0603_1608Metric"
 			(at 111.4552 189.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/app/datasheet/mlcc/upy-gphc_x7r_6_3v-to-250v.pdf"
 			(at 110.49 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "0.47 µF ±10% 16V Ceramic Capacitor X7R 0603 (1608 Metric)"
 			(at 110.49 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "CC0603KRX7R7BB474"
 			(at 110.49 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -6025,7 +6442,7 @@
 			(uuid "7f1f114f-5e6d-4a9a-953f-311281e08098")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C15")
 					(unit 1)
@@ -6037,14 +6454,18 @@
 		(lib_id "0_generic_component:C")
 		(at 97.79 152.4 180)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "61a23b12-a60a-4c03-b53f-f4d453aca10b")
 		(property "Reference" "C9"
 			(at 101.6 151.13 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6054,6 +6475,8 @@
 		)
 		(property "Value" "33pF"
 			(at 101.6 153.67 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6063,38 +6486,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 96.8248 148.59 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GP_NP0_16V-to-50V_18.pdf"
 			(at 97.79 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "33 pF ±2% 50V Ceramic Capacitor C0G, NP0 0402 (1005 Metric)"
 			(at 97.79 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "CC0402GRNPO9BN330"
 			(at 97.79 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -6104,7 +6535,7 @@
 			(uuid "775dba16-d05b-4849-8773-004e571e30bd")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C9")
 					(unit 1)
@@ -6116,23 +6547,29 @@
 		(lib_id "1_power:GND")
 		(at 68.58 198.12 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "620c955b-fcb3-47bf-bfe8-10b7b9536dcd")
 		(property "Reference" "#PWR020"
 			(at 68.58 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 68.58 203.2 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6141,36 +6578,42 @@
 		)
 		(property "Footprint" ""
 			(at 68.58 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 68.58 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 68.58 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "f44a43b1-a6e1-49a1-9a4c-c9f33da119f2")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR020")
 					(unit 1)
@@ -6182,14 +6625,18 @@
 		(lib_id "0_generic_component:R")
 		(at 297.18 74.93 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "629b9c0c-db38-49f6-998e-fdeb39dd92a3")
 		(property "Reference" "R1"
 			(at 299.72 73.66 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6199,6 +6646,8 @@
 		)
 		(property "Value" "10KΩ"
 			(at 299.72 76.2 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6208,38 +6657,46 @@
 		)
 		(property "Footprint" "0_resistor_SMD:R_0402_1005Metric"
 			(at 298.196 75.184 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/app/datasheet/rchip/pyu-rc_group_51_rohs_l.pdf"
 			(at 297.18 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "10 kOhms ±5% 0.063W, 1/16W Chip Resistor 0402 (1005 Metric) Moisture Resistant Thick Film"
 			(at 297.18 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "RC0402JR-0710KL"
 			(at 297.18 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -6249,7 +6706,7 @@
 			(uuid "1be1e51a-c1ad-4cfe-b101-5ea8fa483c56")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "R1")
 					(unit 1)
@@ -6261,14 +6718,18 @@
 		(lib_id "0_generic_component:C")
 		(at 168.91 64.77 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6c94530b-014b-43f2-ab2b-aa37c103daaa")
 		(property "Reference" "C4"
 			(at 172.72 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6278,6 +6739,8 @@
 		)
 		(property "Value" "10nF"
 			(at 172.72 66.04 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6287,38 +6750,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 169.8752 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://connect.kemet.com:7667/gateway/IntelliData-ComponentDocumentation/1.0/download/datasheet/C0402C103K3REC7411"
 			(at 168.91 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "10000 pF ±10% 25V Ceramic Capacitor X7R 0402 (1005 Metric)"
 			(at 168.91 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "C0402C103K3REC7411"
 			(at 168.91 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -6328,7 +6799,7 @@
 			(uuid "abe30d91-6175-4d72-850f-62b2e34e2605")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C4")
 					(unit 1)
@@ -6340,14 +6811,18 @@
 		(lib_id "0_generic_component:C")
 		(at 320.04 127 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "77c72dca-226e-4acc-9e4f-4bdbd4221a3f")
 		(property "Reference" "C7"
 			(at 323.85 125.73 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6357,6 +6832,8 @@
 		)
 		(property "Value" "100nF"
 			(at 323.85 128.27 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6366,38 +6843,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 321.0052 130.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155R71E104KE14-01.pdf"
 			(at 320.04 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "0.1 µF ±10% 25V Ceramic Capacitor X7R 0402 (1005 Metric)"
 			(at 320.04 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GRM155R71E104KE14J"
 			(at 320.04 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -6407,7 +6892,7 @@
 			(uuid "bdcb3a2c-7eed-41af-868a-902378ac88bc")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C7")
 					(unit 1)
@@ -6419,14 +6904,18 @@
 		(lib_id "0_generic_component:C")
 		(at 101.6 64.77 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7b5f276b-a2cb-43fb-9ed7-eee1d1e4eecb")
 		(property "Reference" "C1"
 			(at 105.41 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6436,6 +6925,8 @@
 		)
 		(property "Value" "4,7uF"
 			(at 105.41 66.04 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6445,38 +6936,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_1206_3216Metric"
 			(at 102.5652 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.murata.com/-/media/webrenewal/support/library/catalog/products/k35e.ashx?la=en-us&cvid=20200508021757000000"
 			(at 101.6 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "4.7 µF ±10% 25V Ceramic Capacitor X7R 1206 (3216 Metric)"
 			(at 101.6 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GCM31CR71E475KA55L"
 			(at 101.6 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -6486,7 +6985,7 @@
 			(uuid "06b38aa7-de8b-435e-9673-1bc394803388")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C1")
 					(unit 1)
@@ -6498,23 +6997,29 @@
 		(lib_id "1_power:GND")
 		(at 116.84 71.12 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7e268772-83c5-40c4-bc04-743d3b0e26f1")
 		(property "Reference" "#PWR04"
 			(at 116.84 77.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 116.84 76.2 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6523,36 +7028,42 @@
 		)
 		(property "Footprint" ""
 			(at 116.84 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 116.84 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 116.84 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "e82d978c-85a2-4373-9096-752c20a66c66")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR04")
 					(unit 1)
@@ -6564,13 +7075,17 @@
 		(lib_id "0_generic_component:C")
 		(at 182.88 64.77 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "7f389e31-616a-48e9-90b7-61ae941b43a9")
 		(property "Reference" "C5"
 			(at 186.69 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6580,6 +7095,8 @@
 		)
 		(property "Value" "1uF"
 			(at 186.69 66.04 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6589,38 +7106,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0603_1608Metric"
 			(at 183.8452 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.murata.com/-/media/webrenewal/support/library/catalog/products/k35e.ashx?la=en-us&cvid=20200508021757000000"
 			(at 182.88 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "1 µF ±10% 25V Ceramic Capacitor X7R 0603 (1608 Metric)"
 			(at 182.88 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GCM188R71E105KA64J"
 			(at 182.88 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -6630,7 +7155,7 @@
 			(uuid "3bd979aa-a8aa-4e2e-a793-a8c94384de2a")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C5")
 					(unit 1)
@@ -6642,13 +7167,17 @@
 		(lib_id "0_generic_component:Conn_01x02_Pin")
 		(at 280.67 66.04 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "83d93bfc-65b2-42ef-8fc5-bf60a2104a26")
 		(property "Reference" "J1"
 			(at 280.67 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6657,6 +7186,8 @@
 		)
 		(property "Value" "Conn_01x02_Pin"
 			(at 280.67 71.12 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6665,38 +7196,46 @@
 		)
 		(property "Footprint" "300_pin_header_connector:PinHeader_1x02_P2.54mm_Vertical"
 			(at 280.67 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://app.adam-tech.com/products/download/data_sheet/201605/ph1-xx-ua-data-sheet.pdf"
 			(at 280.67 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Connector Header Through Hole 2 position 0.100\" (2.54mm)"
 			(at 280.67 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "PH1-02-UA"
 			(at 280.67 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -6706,7 +7245,7 @@
 			(uuid "ba1e8425-7d8c-4336-b8c7-ab883eb3ccc7")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "J1")
 					(unit 1)
@@ -6718,23 +7257,29 @@
 		(lib_id "1_power:GND")
 		(at 328.93 193.04 90)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8588f82f-1928-4277-968e-dd983c4c82d7")
 		(property "Reference" "#PWR019"
 			(at 335.28 193.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 332.74 193.04 90)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6744,36 +7289,42 @@
 		)
 		(property "Footprint" ""
 			(at 328.93 193.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 328.93 193.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 328.93 193.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "b70c503f-9591-4335-97e9-3db0e1a572c4")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR019")
 					(unit 1)
@@ -6785,14 +7336,18 @@
 		(lib_id "0_generic_component:C")
 		(at 346.71 182.88 90)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8f197b99-8604-457b-a189-75330c6ed854")
 		(property "Reference" "C14"
 			(at 346.71 175.26 90)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6801,6 +7356,8 @@
 		)
 		(property "Value" "10pF"
 			(at 346.71 177.8 90)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6809,38 +7366,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 350.52 181.9148 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GP_NP0_16V-to-50V_18.pdf"
 			(at 346.71 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "10 pF ±5% 50V Ceramic Capacitor C0G, NP0 0402 (1005 Metric)"
 			(at 346.71 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "CC0402JRNPO9BN100"
 			(at 346.71 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -6850,7 +7415,7 @@
 			(uuid "0b387642-667d-4dd8-ab22-7bc8022755e4")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C14")
 					(unit 1)
@@ -6862,13 +7427,17 @@
 		(lib_id "100_MCU_ST_STM32WL:STM32WLE5C8Ux")
 		(at 154.94 160.02 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "90890d5c-2300-459f-b5c6-f10c0f03ea0d")
 		(property "Reference" "U1"
 			(at 163.83 198.12 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6878,6 +7447,8 @@
 		)
 		(property "Value" "STM32WLE5C8U6"
 			(at 163.83 200.66 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6887,39 +7458,47 @@
 		)
 		(property "Footprint" "100_QFN_package:QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm_ThermalVias"
 			(at 137.16 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify right)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.st.com/resource/en/datasheet/stm32wle5c8.pdf"
 			(at 154.94 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "IC RF TxRx + MCU 802.15.4 LoRaWAN 1.0, Sigfox 150MHz ~ 960MHz 48-UFQFN Exposed Pad"
 			(at 154.94 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "STM32WLE5C8U6"
 			(at 154.94 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "10"
@@ -7070,7 +7649,7 @@
 			(uuid "a80e2fa8-581c-4069-97e0-a06aff4a05cb")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "U1")
 					(unit 1)
@@ -7082,13 +7661,17 @@
 		(lib_id "0_generic_component:C")
 		(at 101.6 86.36 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "9151d4eb-5ea0-44b4-b810-3a4409f0862c")
 		(property "Reference" "C6"
 			(at 105.41 85.09 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7098,6 +7681,8 @@
 		)
 		(property "Value" "100nF"
 			(at 105.41 87.63 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7107,38 +7692,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 102.5652 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155R71E104KE14-01.pdf"
 			(at 101.6 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "0.1 µF ±10% 25V Ceramic Capacitor X7R 0402 (1005 Metric)"
 			(at 101.6 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GRM155R71E104KE14J"
 			(at 101.6 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -7148,7 +7741,7 @@
 			(uuid "b0a96416-60df-4d3a-bb2c-69719d7c89d8")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C6")
 					(unit 1)
@@ -7160,14 +7753,18 @@
 		(lib_id "0_generic_component:C")
 		(at 68.58 149.86 180)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "93493c07-d019-4e68-baa2-073edffebf14")
 		(property "Reference" "C8"
 			(at 72.39 148.59 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7177,6 +7774,8 @@
 		)
 		(property "Value" "33pF"
 			(at 72.39 151.13 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7186,38 +7785,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 67.6148 146.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GP_NP0_16V-to-50V_18.pdf"
 			(at 68.58 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "33 pF ±2% 50V Ceramic Capacitor C0G, NP0 0402 (1005 Metric)"
 			(at 68.58 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "CC0402GRNPO9BN330"
 			(at 68.58 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -7227,7 +7834,7 @@
 			(uuid "8df5f4af-b307-4fd5-8937-5123dc31ee1f")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C8")
 					(unit 1)
@@ -7239,14 +7846,18 @@
 		(lib_id "0_generic_component:C")
 		(at 116.84 64.77 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "94ed954e-07d8-470b-8e1b-dcd1cc6112af")
 		(property "Reference" "C2"
 			(at 120.65 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7256,6 +7867,8 @@
 		)
 		(property "Value" "100nF"
 			(at 120.65 66.04 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7265,38 +7878,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 117.8052 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155R71E104KE14-01.pdf"
 			(at 116.84 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "0.1 µF ±10% 25V Ceramic Capacitor X7R 0402 (1005 Metric)"
 			(at 116.84 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GRM155R71E104KE14J"
 			(at 116.84 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -7306,7 +7927,7 @@
 			(uuid "6b175eb4-6624-4859-9fcd-ac8ca90a9495")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C2")
 					(unit 1)
@@ -7318,23 +7939,29 @@
 		(lib_id "1_power:+3.3V")
 		(at 228.6 113.03 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "956a0eaa-9865-4e64-a1ed-78cf7e8493c1")
 		(property "Reference" "#PWR010"
 			(at 228.6 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "+3.3V"
 			(at 228.6 107.95 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7343,36 +7970,42 @@
 		)
 		(property "Footprint" ""
 			(at 228.6 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 228.6 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 228.6 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "40bf4823-01f1-4191-9aaa-c0a8d489ad1c")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR010")
 					(unit 1)
@@ -7384,14 +8017,18 @@
 		(lib_id "0_generic_component:C")
 		(at 207.01 175.26 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "99c07b00-1b0e-4919-a400-63efc093e2a7")
 		(property "Reference" "C11"
 			(at 210.82 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7401,6 +8038,8 @@
 		)
 		(property "Value" "100nF"
 			(at 210.82 176.53 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7410,38 +8049,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 207.9752 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155R71E104KE14-01.pdf"
 			(at 207.01 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "0.1 µF ±10% 25V Ceramic Capacitor X7R 0402 (1005 Metric)"
 			(at 207.01 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GRM155R71E104KE14J"
 			(at 207.01 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -7451,7 +8098,7 @@
 			(uuid "149a9511-734e-4895-920b-b36069b7047a")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C11")
 					(unit 1)
@@ -7463,23 +8110,29 @@
 		(lib_id "1_power:GND")
 		(at 297.18 80.01 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b1eef28c-1e6c-4a41-ade6-6aa412981782")
 		(property "Reference" "#PWR07"
 			(at 297.18 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 297.18 85.09 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7488,36 +8141,42 @@
 		)
 		(property "Footprint" ""
 			(at 297.18 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 297.18 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 297.18 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "d6b43b7c-29d0-4539-a180-c9ee9ab8dc61")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR07")
 					(unit 1)
@@ -7529,14 +8188,18 @@
 		(lib_id "0_generic_component:C")
 		(at 68.58 170.18 180)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b3fc08d9-51c6-4b55-a0f0-c566ba6ca76d")
 		(property "Reference" "C10"
 			(at 72.39 168.91 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7546,6 +8209,8 @@
 		)
 		(property "Value" "33pF"
 			(at 72.39 171.45 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7555,38 +8220,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
 			(at 67.6148 166.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GP_NP0_16V-to-50V_18.pdf"
 			(at 68.58 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "33 pF ±2% 50V Ceramic Capacitor C0G, NP0 0402 (1005 Metric)"
 			(at 68.58 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "CC0402GRNPO9BN330"
 			(at 68.58 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -7596,7 +8269,7 @@
 			(uuid "10085693-22ae-43c5-9f49-dbcbff4df3e8")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C10")
 					(unit 1)
@@ -7608,13 +8281,17 @@
 		(lib_id "0_generic_component:C")
 		(at 83.82 194.31 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "b9959b73-2a79-46c4-864c-be84437af4d6")
 		(property "Reference" "C17"
 			(at 87.63 193.04 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7624,6 +8301,8 @@
 		)
 		(property "Value" "4,7uF"
 			(at 87.63 195.58 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7633,38 +8312,46 @@
 		)
 		(property "Footprint" "1_capacitor_SMD:C_1206_3216Metric"
 			(at 84.7852 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://www.murata.com/-/media/webrenewal/support/library/catalog/products/k35e.ashx?la=en-us&cvid=20200508021757000000"
 			(at 83.82 194.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "4.7 µF ±10% 25V Ceramic Capacitor X7R 1206 (3216 Metric)"
 			(at 83.82 194.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "GCM31CR71E475KA55L"
 			(at 83.82 194.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "2"
@@ -7674,7 +8361,7 @@
 			(uuid "446c4d96-cb87-4cf4-83fc-d15fa0f28ba0")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "C17")
 					(unit 1)
@@ -7686,22 +8373,28 @@
 		(lib_id "1_power:+3.3V")
 		(at 298.45 58.42 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "baffcd5d-eaa2-46b6-9fdf-5af2c33f2046")
 		(property "Reference" "#PWR03"
 			(at 298.45 62.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "+3.3V"
 			(at 302.26 55.88 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7710,36 +8403,42 @@
 		)
 		(property "Footprint" ""
 			(at 298.45 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 298.45 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 298.45 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "b01a1b43-2644-4fd2-bbd8-435a00f08305")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR03")
 					(unit 1)
@@ -7751,23 +8450,29 @@
 		(lib_id "1_power:+3.3V")
 		(at 101.6 78.74 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "bd45ca90-8334-4ec0-888b-290cbf7b25a9")
 		(property "Reference" "#PWR06"
 			(at 101.6 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "+3.3V"
 			(at 101.6 73.66 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7776,36 +8481,42 @@
 		)
 		(property "Footprint" ""
 			(at 101.6 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 101.6 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 101.6 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "8e0aa748-3908-4fb0-8e11-b547a2260b08")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR06")
 					(unit 1)
@@ -7817,13 +8528,17 @@
 		(lib_id "270_cortex-M_debug_connector:cortex-M_debug_connector_10pin")
 		(at 292.1 114.3 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "c26d4405-0462-4d19-847d-451740e52a68")
 		(property "Reference" "J2"
 			(at 292.1 105.41 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7832,6 +8547,8 @@
 		)
 		(property "Value" "cortex-M_debug_connector_10pin"
 			(at 297.18 123.19 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7840,39 +8557,47 @@
 		)
 		(property "Footprint" "220_cortex-M_debug_connector:FTSH-105-01-F-D-K"
 			(at 292.0746 127.889 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify bottom)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6209/ftsh-1xx-xx-xxx-d-xxx-xx-mkt.pdf"
 			(at 292.1508 129.8448 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "CONN HEADER VERT 10POS 1.27MM"
 			(at 292.227 133.0198 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "FTSH-105-01-F-D-K"
 			(at 292.227 136.652 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "8"
@@ -7906,7 +8631,7 @@
 			(uuid "fb0c6094-b0f6-4522-81f6-9bec3e70906d")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "J2")
 					(unit 1)
@@ -7918,23 +8643,29 @@
 		(lib_id "1_power:GND")
 		(at 68.58 154.94 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ca819f4b-c174-4fc2-8faf-688c1f52c84e")
 		(property "Reference" "#PWR014"
 			(at 68.58 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 68.58 160.02 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7943,36 +8674,42 @@
 		)
 		(property "Footprint" ""
 			(at 68.58 154.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 68.58 154.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 68.58 154.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "d01e82a7-4aef-4d24-a3bf-5a879d7815da")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR014")
 					(unit 1)
@@ -7984,23 +8721,29 @@
 		(lib_id "1_power:GND")
 		(at 110.49 209.55 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d042063e-00a2-40fb-b223-2dba45b17e6f")
 		(property "Reference" "#PWR021"
 			(at 110.49 215.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 110.49 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8009,36 +8752,42 @@
 		)
 		(property "Footprint" ""
 			(at 110.49 209.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 110.49 209.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 110.49 209.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "12f730b6-14b9-4773-b761-90833d738405")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR021")
 					(unit 1)
@@ -8050,14 +8799,18 @@
 		(lib_id "0_generic_component:L")
 		(at 110.49 138.43 180)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d0d5bab5-b8f5-4f6d-b63a-925c40eedd9e")
 		(property "Reference" "L1"
 			(at 111.76 137.16 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8067,6 +8820,8 @@
 		)
 		(property "Value" "15uH"
 			(at 111.76 139.7 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8076,38 +8831,46 @@
 		)
 		(property "Footprint" "2_inductor_SMD:L_0805_2012Metric"
 			(at 110.49 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://product.tdk.com/en/system/files?file=dam/doc/product/inductor/inductor/smd/catalog/inductor_commercial_decoupling_mlz2012_en.pdf"
 			(at 110.49 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "15 µH Shielded Multilayer Inductor 250 mA 950mOhm 0805 (2012 Metric)"
 			(at 110.49 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "MLZ2012M150WT000"
 			(at 110.49 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -8117,7 +8880,7 @@
 			(uuid "b11d5eed-82dd-4673-b594-a87a41bccf7f")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "L1")
 					(unit 1)
@@ -8129,22 +8892,28 @@
 		(lib_id "1_power:GND")
 		(at 285.75 187.96 270)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "d5c3b64d-a752-40c6-a30c-e37c4da4dccf")
 		(property "Reference" "#PWR018"
 			(at 279.4 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 287.782 191.77 90)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8154,36 +8923,42 @@
 		)
 		(property "Footprint" ""
 			(at 285.75 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 285.75 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 285.75 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "c4d1337b-0731-4e4d-b5fb-b15e25a363e7")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR018")
 					(unit 1)
@@ -8195,22 +8970,28 @@
 		(lib_id "1_power:GND")
 		(at 175.26 71.12 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "dba88f7e-3c49-4d27-bf2c-9e19ef41824c")
 		(property "Reference" "#PWR05"
 			(at 175.26 77.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 175.26 76.2 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8219,36 +9000,42 @@
 		)
 		(property "Footprint" ""
 			(at 175.26 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 175.26 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 175.26 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "91a1c7a7-e24e-4e44-b385-c44f1ec1f9c9")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR05")
 					(unit 1)
@@ -8260,23 +9047,29 @@
 		(lib_id "1_power:GND")
 		(at 97.79 156.21 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "dc817b60-5322-43fd-a153-5ce4cf8a8e47")
 		(property "Reference" "#PWR015"
 			(at 97.79 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 97.79 161.29 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8285,36 +9078,42 @@
 		)
 		(property "Footprint" ""
 			(at 97.79 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 97.79 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 97.79 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "78f4699e-3fb2-4cbe-9849-6f25bb0b1f52")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR015")
 					(unit 1)
@@ -8326,13 +9125,17 @@
 		(lib_id "20_oscillator:ECS-TXO-25CSMV")
 		(at 307.34 185.42 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "e58038f3-668d-4028-99de-d6597c44092e")
 		(property "Reference" "Y1"
 			(at 307.34 172.72 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8341,6 +9144,8 @@
 		)
 		(property "Value" "ECS-TXO-25CSMV"
 			(at 307.34 175.26 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8349,39 +9154,47 @@
 		)
 		(property "Footprint" "20_oscillator:ECS-TXO-25CSMV"
 			(at 307.34 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify bottom)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://ecsxtal.com/store/pdf/ECS-TXO-25CSMV.pdf"
 			(at 308.61 203.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "32 MHz TCXO Clipped Sine Wave Oscillator 1.7V ~ 3.465V 4-SMD, No Lead"
 			(at 307.34 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "PartNumber" "ECS-TXO-25CSMV-320-DY-TR"
 			(at 307.34 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -8397,7 +9210,7 @@
 			(uuid "02535354-eb6e-451d-94b6-ef9ccf61f188")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "Y1")
 					(unit 1)
@@ -8409,22 +9222,28 @@
 		(lib_id "1_power:GND")
 		(at 101.6 92.71 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "f4f872bb-bf55-47e4-89d7-ed64633be579")
 		(property "Reference" "#PWR08"
 			(at 101.6 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 101.6 97.79 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8433,36 +9252,42 @@
 		)
 		(property "Footprint" ""
 			(at 101.6 92.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 101.6 92.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 101.6 92.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "1bc9283c-0379-42a3-8330-42fe4fd17eaa")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR08")
 					(unit 1)
@@ -8474,23 +9299,29 @@
 		(lib_id "1_power:GND")
 		(at 320.04 134.62 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "fb7da972-4b0e-4da1-b5a6-894a2d496db3")
 		(property "Reference" "#PWR012"
 			(at 320.04 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 320.04 139.7 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8499,36 +9330,42 @@
 		)
 		(property "Footprint" ""
 			(at 320.04 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 320.04 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 320.04 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "72162156-0d18-40f6-ab30-f3bbb972c4fd")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR012")
 					(unit 1)
@@ -8540,23 +9377,29 @@
 		(lib_id "1_power:GND")
 		(at 68.58 175.26 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ff0c6c32-3191-4ccb-a55e-7870249d5787")
 		(property "Reference" "#PWR016"
 			(at 68.58 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Value" "GNDREF"
 			(at 68.58 180.34 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8565,36 +9408,42 @@
 		)
 		(property "Footprint" ""
 			(at 68.58 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 68.58 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" ""
 			(at 68.58 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
 			(uuid "99000d4f-a9a6-432c-9e9b-aab1d6062c81")
 		)
 		(instances
-			(project "lora_usb_dongle_kicad"
+			(project "STM32WLE5_RF_dongle"
 				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/dc0ccc95-6b5c-40d3-9374-41354a9b55b7"
 					(reference "#PWR016")
 					(unit 1)

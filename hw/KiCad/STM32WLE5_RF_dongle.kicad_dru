@@ -1,0 +1,4 @@
+(version 1)
+(rule remove_solder_paste_from_DNP
+  (constraint solder_paste_abs_margin (opt -50mm))
+  (condition "A.Do_not_Populate"))
