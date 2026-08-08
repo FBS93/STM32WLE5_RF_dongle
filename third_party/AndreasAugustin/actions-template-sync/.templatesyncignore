@@ -1,0 +1,8 @@
+.all-contributorsrc
+.github/dependabot.yml
+README.md
+Dockerfile
+SECURITY.md
+docker-compose.yml
+Makefile
+.github/workflows/*

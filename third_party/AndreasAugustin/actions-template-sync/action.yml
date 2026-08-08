@@ -1,0 +1,140 @@
+name: "actions-template-sync"
+description: "Synchronises changes of the template repository"
+author: "AndreasAugustin"
+branding:
+  icon: cloud
+  color: green
+inputs:
+  source_gh_token:
+    description: 'GitHub Token for the repo to be synced from. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
+    required: false
+    default: ${{ github.token }}
+  target_gh_token:
+    description: 'GitHub Token for the repo to be synced to. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
+    required: false
+    default: ${{ github.token }}
+  github_token:
+    deprecationMessage: 'please use source_gh_token instead to have a declarative name'
+    description: 'GitHub Token for the repo to be synced from. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
+    required: false
+  source_repo_path:
+    description: "Repository path of the template"
+    required: true
+  upstream_branch:
+    description: "The target branch"
+  source_repo_ssh_private_key:
+    description: "[optional] private ssh key for the source repository. E.q. useful if using a private template repository."
+  pr_branch_name_prefix:
+    description: "[optional] the prefix of branches created by this action"
+    default: "chore/template_sync"
+  pr_title:
+    description: "[optional] the title of PRs opened by this action"
+    default: "upstream merge template repository"
+  pr_body:
+    description: "[optional] the body of PRs opened by this action"
+  pr_labels:
+    description: "[optional] comma separated list of pull request labels"
+    default: "template_sync"
+  pr_reviewers:
+    description: "[optional] comma separated list of pull request reviewers"
+  pr_commit_msg:
+    description: "[optional] the commit message of the template merge"
+    default: "chore(template): merge template changes :up:"
+  hostname:
+    description: "[optional] the hostname of the GitHub repository"
+    default: "github.com"
+  is_dry_run:
+    description: "[optional] set to true if you do not want to push the changes and not want to create a PR"
+  is_allow_hooks:
+    description: "[optional] set to true if you want to allow hooks. Use this functionality with caution!"
+    default: "false"
+  hooks:
+    description: "[optional] define the hooks as yaml string input"
+  is_force_push_pr:
+    description: "[optional] set to true if you want to force push and pr update"
+    default: "false"
+  is_pr_cleanup:
+    description: "[optional] set to true if you want to cleanup older PRs targeting the same branch."
+    default: "false"
+  is_keep_branch_on_pr_cleanup:
+    description: "[optional] set to true if you want to keep the branch when pr is cleanup"
+    default: "false"
+  is_not_source_github:
+    description: "[optional] set to true if the source repository is not a github related repository. Useful e.q. if the source is GitLab"
+    default: "false"
+  is_force_deletion:
+    description: "[optional] set to true if you want to force delete files which are deleted within the source repository even if they contain changes"
+    default: "false"
+  is_git_lfs:
+    description: "[optional] set to true if you want to enable git lfs"
+    default: "false"
+  git_user_name:
+    description: "[optional] set the committer git user.name for the merge commit"
+  git_user_email:
+    description: "[optional] set the committer git user.email for the merge commit"
+  git_remote_pull_params:
+    description: "[optional] set the pull parameters for the remote repository"
+  gpg_private_key:
+    description: "[optional] set the gpg private key if you want to sign your commits"
+  gpg_passphrase:
+    description: "[optional] set if your private gpg key has a password"
+  steps:
+    description: "[optional] set the steps to execute within the action"
+  template_sync_ignore_file_path:
+    description: "[optional] set the path to the ignore file"
+    default: ".templatesyncignore"
+  is_with_tags:
+    description: "[optional] set to true if tags should be synced"
+    default: "false"
+outputs:
+  pr_number:
+    description: "The number of the PR created"
+    value: ${{ steps.sync.outputs.pr_number }}
+  pr_branch:
+    description: "The name of the PR branch"
+    value: ${{ steps.sync.outputs.pr_branch }}
+  template_git_hash:
+    description: "The git hash of the template source repository"
+    value: ${{ steps.sync.outputs.template_git_hash }}
+runs:
+  using: "composite"
+  # image: "src/Dockerfile"
+  steps:
+    - name: github sync
+      run: ${{github.action_path}}/src/entrypoint.sh
+      # working-directory: src/
+      shell: bash
+      id: sync
+      env:
+        SOURCE_GH_TOKEN: ${{ inputs.source_gh_token}}
+        TARGET_GH_TOKEN: ${{ inputs.target_gh_token }}
+        # GITHUB_TOKEN is deprecated and will be removed soon
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        #
+        SOURCE_REPO_PATH: ${{ inputs.source_repo_path }}
+        UPSTREAM_BRANCH: ${{ inputs.upstream_branch }}
+        SSH_PRIVATE_KEY_SRC: ${{ inputs.source_repo_ssh_private_key }}
+        PR_BRANCH_NAME_PREFIX: ${{ inputs.pr_branch_name_prefix }}
+        PR_TITLE: ${{ inputs.pr_title }}
+        PR_BODY: ${{ inputs.pr_body }}
+        PR_LABELS: ${{ inputs.pr_labels }}
+        PR_REVIEWERS: ${{ inputs.pr_reviewers }}
+        PR_COMMIT_MSG: ${{ inputs.pr_commit_msg }}
+        HOSTNAME: ${{ inputs.hostname }}
+        IS_DRY_RUN: ${{ inputs.is_dry_run }}
+        IS_ALLOW_HOOKS: ${{ inputs.is_allow_hooks }}
+        HOOKS: ${{ inputs.hooks }}
+        IS_FORCE_PUSH_PR: ${{ inputs.is_force_push_pr }}
+        IS_GIT_LFS: ${{ inputs.is_git_lfs }}
+        IS_PR_CLEANUP: ${{ inputs.is_pr_cleanup}}
+        IS_KEEP_BRANCH_ON_PR_CLEANUP: ${{ inputs.is_keep_branch_on_pr_cleanup }}
+        IS_NOT_SOURCE_GITHUB: ${{ inputs.is_not_source_github }}
+        IS_FORCE_DELETION: ${{ inputs.is_force_deletion }}
+        GIT_USER_NAME: ${{ inputs.git_user_name }}
+        GIT_USER_EMAIL: ${{ inputs.git_user_email }}
+        GIT_REMOTE_PULL_PARAMS: ${{ inputs.git_remote_pull_params }}
+        GPG_PRIVATE_KEY: ${{ inputs.gpg_private_key }}
+        GPG_PASSPHRASE: ${{ inputs.gpg_passphrase }}
+        STEPS: ${{ inputs.steps }}
+        TEMPLATE_SYNC_IGNORE_FILE_PATH: ${{ inputs.template_sync_ignore_file_path }}
+        IS_WITH_TAGS: ${{ inputs.is_with_tags }}
