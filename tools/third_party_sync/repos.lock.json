@@ -6,6 +6,13 @@
       "resolved_release": "v2.5.3",
       "source": "release",
       "tarball_url": "https://api.github.com/repos/AndreasAugustin/actions-template-sync/tarball/v2.5.3"
+    },
+    "aflplusplus": {
+      "published_at": "2026-06-29T09:18:40Z",
+      "resolved_commit": "011cd189801830253c66ecd3cd6919ec01b46c34",
+      "resolved_release": "v5.02c",
+      "source": "release",
+      "tarball_url": "https://api.github.com/repos/AFLplusplus/AFLplusplus/tarball/v5.02c"
     }
   }
 }
