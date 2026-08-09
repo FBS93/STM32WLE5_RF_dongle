@@ -24,12 +24,10 @@
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/Analysis/PostDominators.h"
-#include "llvm/Demangle/Demangle.h"
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/Dominators.h"
 #include "llvm/IR/Function.h"
-#include "llvm/IR/GlobalIFunc.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Instruction.h"
@@ -44,7 +42,7 @@
 #include "llvm/IR/PassManager.h"
 #include "llvm/IR/Type.h"
 #include "llvm/Passes/PassBuilder.h"
-#if defined(__has_include) && __has_include("llvm/Plugins/PassPlugin.h")
+#if LLVM_MAJOR >= 22
   #include "llvm/Plugins/PassPlugin.h"
 #else
   #include "llvm/Passes/PassPlugin.h"
@@ -86,7 +84,6 @@
 #include "config.h"
 #include "debug.h"
 #include "afl-llvm-common.h"
-#include "PathCoverage.h"
 
 using namespace llvm;
 
@@ -158,6 +155,7 @@ class ModuleSanitizerCoverageAFL
                                                 Type *Ty);
 
   // Helper functions for cleaner code
+  bool   isInstructionInteresting(Instruction &IN);
   bool   isAflInterestingCall(Instruction &IN);
   void   initializeVersionSpecificTypes(IRBuilder<> &IRB);
   void   setupEnvironmentVariables();
@@ -174,9 +172,6 @@ class ModuleSanitizerCoverageAFL
   void   updateCoverageForSelect(IRBuilder<> &IRB, Value *result, Value *MapPtr,
                                  uint32_t &vector_cnt);
   void   setNoInstrumentMetadata(Value *V);
-  void   insertAbortAtFunctionEntry(Function &F);
-  void   collectNoAbortFunctions(Module &M);
-  bool   isNoAbortFunction(Function &F);
 
   std::string     getSectionName(const std::string &Section) const;
   std::string     getSectionStart(const std::string &Section) const;
@@ -205,36 +200,6 @@ class ModuleSanitizerCoverageAFL
   ConstantInt    *One = NULL;
   ConstantInt    *Zero = NULL;
   bool            deny_exec = false;
-  bool            abort_list = false;
-  uint32_t        first = 1;
-
-  /* Functions that run automatically outside the fuzzing entry point and must
-     never receive AFL_LLVM_ABORTLIST instrumentation: global constructors and
-     destructors (llvm.global_ctors / llvm.global_dtors), ifunc resolvers (run
-     by the dynamic loader during relocation), exit/teardown callbacks
-     (atexit and similar), the LLVMFuzzerInitialize harness setup function,
-     and everything those reach through direct calls. */
-  SmallPtrSet<Function *, 16> NoAbortFuncs;
-
-  /* AFL_LLVM_PATH (Ball-Larus per-function path coverage).  Same semantics
-     as AFL_LLVM_LTO_PATH in the LTO pass: 0=off, 1=relaxed, 2=restricted,
-     3=strict.  Activated also via AFL_LLVM_LTO_PATH or AFL_LLVM_PATH_MODE. */
-  bool     path_mode = false;
-  uint32_t path_mode_level = 0;
-  uint64_t extra_path_inst = 0;
-  uint32_t path_skipped_funcs = 0;
-  uint64_t path_max_paths = 100000;
-
-  /* Per-function path state, populated by analyzePathCoverage() before
-     InjectCoverage() runs and consumed by emitPathCoverage() afterwards. */
-  uint32_t                               current_path_count = 0;
-  uint32_t                               current_path_guard_base = 0;
-  llvm::DenseMap<BasicBlock *, uint64_t> pathNumPaths;
-  llvm::DenseMap<std::pair<BasicBlock *, BasicBlock *>, uint64_t> pathEdgeVal;
-  std::vector<std::pair<BasicBlock *, Instruction *>>             pathExits;
-
-  uint32_t analyzePathCoverage(Function &F);
-  void     emitPathCoverage(Function &F);
 
 };
 
@@ -353,6 +318,12 @@ std::pair<Value *, Value *> ModuleSanitizerCoverageAFL::CreateSecStartEnd(
 
 }
 
+bool ModuleSanitizerCoverageAFL::isInstructionInteresting(Instruction &I) {
+
+  return isAflCovInterestingInstruction(I);
+
+}
+
 bool ModuleSanitizerCoverageAFL::isAflInterestingCall(Instruction &IN) {
 
   CallInst *callInst = dyn_cast<CallInst>(&IN);
@@ -405,107 +376,6 @@ void ModuleSanitizerCoverageAFL::setupEnvironmentVariables() {
   use_threadsafe_counters = getenv("AFL_LLVM_THREADSAFE_INST");
   ijon_enabled = getenv("AFL_LLVM_IJON");
   if (getenv("AFL_LLVM_DENY_EXEC")) { deny_exec = true; }
-  if (getenv("AFL_LLVM_ABORTLIST")) { abort_list = true; }
-
-  /* AFL_LLVM_PATH (and aliases AFL_LLVM_LTO_PATH / AFL_LLVM_PATH_MODE):
-     Ball-Larus per-function path coverage on top of edge coverage.
-     Levels:
-       (unset/"0") — disabled.
-       "1" / ""    — relaxed: collapse every guard-only basic block
-                     (no calls, no stores, no atomics) via max(succ).
-       "2"         — restricted: like "1" but only collapse 2-successor
-                     guard-only BBs (preserves switches/indirectbr).
-       "3"         — strict Ball-Larus.  Other values are rejected. */
-  {
-
-    const char *p = getenv("AFL_LLVM_LTO_PATH");
-    if (!p) p = getenv("AFL_LLVM_PATH");
-    if (!p) p = getenv("AFL_LLVM_PATH_MODE");
-    if (p) {
-
-      if (*p == 0) {
-
-        /* Reject the empty value rather than silently enabling level 1 —
-           users who want level 1 should pass "1". */
-        FATAL(
-            "AFL_LLVM_PATH/AFL_LLVM_LTO_PATH/AFL_LLVM_PATH_MODE was set to "
-            "an empty value. Use \"1\" (relaxed), \"2\" (restricted), "
-            "\"3\" (strict), or \"0\" (off).");
-
-      } else if (strcmp(p, "1") == 0) {
-
-        path_mode_level = 1;
-
-      } else if (strcmp(p, "2") == 0) {
-
-        path_mode_level = 2;
-
-      } else if (strcmp(p, "3") == 0) {
-
-        path_mode_level = 3;
-
-      } else if (strcmp(p, "0") == 0) {
-
-        path_mode_level = 0;
-
-      } else {
-
-        FATAL(
-            "AFL_LLVM_PATH/AFL_LLVM_LTO_PATH/AFL_LLVM_PATH_MODE only "
-            "accepts \"0\" (off), \"1\" (relaxed), \"2\" (restricted), or "
-            "\"3\" (strict). Got %s.",
-            p);
-
-      }
-
-      path_mode = (path_mode_level > 0);
-
-    }
-
-  }
-
-  if (const char *mp = getenv("AFL_LLVM_PATH_MAX_PATHS")) {
-
-    char              *end = nullptr;
-    unsigned long long v = strtoull(mp, &end, 10);
-    if (!end || *end || v < 2 || v > (unsigned long long)INT32_MAX) {
-
-      /* INT32_MAX upper bound: the IR path index is held in a signed
-         i32 register, so any value beyond that would let path_base +
-         path_reg overflow the bitmap GEP. */
-      FATAL("AFL_LLVM_PATH_MAX_PATHS must be an integer in [2, %d] (got %s).",
-            INT32_MAX, mp);
-
-    }
-
-    path_max_paths = (uint64_t)v;
-
-  }
-
-  if (path_mode && !be_quiet) {
-
-    const char *path_label;
-    switch (path_mode_level) {
-
-      case 1:
-        path_label = "relaxed";
-        break;
-      case 2:
-        path_label = "restricted";
-        break;
-      case 3:
-        path_label = "strict";
-        break;
-      default:
-        path_label = "?";
-        break;
-
-    }
-
-    SAYF(cCYA "SanitizerCoveragePCGUARD" VERSION cRST " (PATH mode: %s)\n",
-         path_label);
-
-  }
 
 }
 
@@ -531,176 +401,6 @@ void ModuleSanitizerCoverageAFL::setNoInstrumentMetadata(Value *V) {
     I->setMetadata("afl.skip", Tag);
 
   }
-
-}
-
-void ModuleSanitizerCoverageAFL::insertAbortAtFunctionEntry(Function &F) {
-
-  BasicBlock          &BB = F.getEntryBlock();
-  BasicBlock::iterator IP = BB.getFirstInsertionPt();
-  if (IP == BB.end()) return;
-
-  IRBuilder<>    IRB(&*IP);
-  FunctionCallee AbortFn = F.getParent()->getOrInsertFunction(
-      "abort", AttributeList{}, Type::getVoidTy(*C));
-  IRB.CreateCall(AbortFn);
-
-  if (debug) {
-
-    fprintf(stderr,
-            "SanitizerCoveragePCGUARD: inserted abort() at entry of "
-            "non-instrumented function %s\n",
-            F.getName().str().c_str());
-
-  }
-
-}
-
-void ModuleSanitizerCoverageAFL::collectNoAbortFunctions(Module &M) {
-
-  NoAbortFuncs.clear();
-
-  SmallVector<Function *, 16> Worklist;
-  auto                        addRoot = [&](Function *Fn) {
-
-    if (Fn && !Fn->isDeclaration() && NoAbortFuncs.insert(Fn).second)
-      Worklist.push_back(Fn);
-
-  };
-
-  auto addRootValue = [&](Value *V) {
-
-    if (V) addRoot(dyn_cast<Function>(V->stripPointerCasts()));
-
-  };
-
-  // Roots that run automatically, outside the LLVMFuzzerTestOneInput entry
-  // point, so an abort() in them never signals out-of-scope fuzzing:
-  //   - global constructors/destructors: __attribute__((constructor))/
-  //     ((destructor)) functions and C++ static initializers, run at
-  //     startup/teardown around the forkserver;
-  //   - ifunc resolvers, run by the dynamic loader while processing
-  //     relocations - before any constructor and long before the forkserver;
-  //   - LLVMFuzzerInitialize, the one-time harness setup function run before
-  //     the first test case.
-  for (const char *ListName : {"llvm.global_ctors", "llvm.global_dtors"}) {
-
-    GlobalVariable *GV = M.getNamedGlobal(ListName);
-    if (!GV || !GV->hasInitializer()) continue;
-
-    ConstantArray *CA = dyn_cast<ConstantArray>(GV->getInitializer());
-    if (!CA) continue;
-
-    // Each entry is { i32 priority, ptr func, ptr data }; element 1 is the
-    // constructor/destructor function (possibly behind a pointer cast).
-    for (unsigned i = 0, e = CA->getNumOperands(); i < e; ++i) {
-
-      ConstantStruct *CS = dyn_cast<ConstantStruct>(CA->getOperand(i));
-      if (!CS || CS->getNumOperands() < 2) continue;
-      addRootValue(CS->getOperand(1));
-
-    }
-
-  }
-
-  for (GlobalIFunc &GI : M.ifuncs()) {
-
-    addRoot(GI.getResolverFunction());
-
-  }
-
-  // LLVMFuzzerInitialize runs once at startup (libFuzzer-style harnesses,
-  // also honored by AFL++), before any test case reaches
-  // LLVMFuzzerTestOneInput.  It and everything it calls set up the fuzzing
-  // harness rather than process input, so an abort() there is spurious.
-  addRoot(M.getFunction("LLVMFuzzerInitialize"));
-
-  // Functions registered to run at process/thread exit also run outside the
-  // fuzzer entry point (at teardown), so an abort() in them is spurious.
-  // Scan the whole module for calls to the registration functions below and
-  // take the registered callback (the argument at the given index).
-  static const struct {
-
-    const char *name;
-    unsigned    arg;
-
-  } ExitRegistrars[] = {
-
-      {"atexit", 0},
-      {"at_quick_exit", 0},
-      {"__cxa_atexit", 0},
-      {"__cxa_thread_atexit", 0},
-      {"__cxa_thread_atexit_impl", 0},
-      {"pthread_key_create", 1},
-
-  };
-
-  for (Function &F : M) {
-
-    for (BasicBlock &BB : F) {
-
-      for (Instruction &I : BB) {
-
-        auto *CB = dyn_cast<CallBase>(&I);
-        if (!CB) continue;
-        Function *Callee = CB->getCalledFunction();
-        if (!Callee) continue;
-        StringRef Name = Callee->getName();
-        for (const auto &R : ExitRegistrars) {
-
-          if (Name == R.name && CB->arg_size() > R.arg) {
-
-            addRootValue(CB->getArgOperand(R.arg));
-            break;
-
-          }
-
-        }
-
-      }
-
-    }
-
-  }
-
-  // Everything these roots can reach through direct calls also runs before
-  // the forkserver (or at teardown), so it must not abort either.  Indirect
-  // call targets cannot be resolved here and are left as-is.
-  while (!Worklist.empty()) {
-
-    Function *Fn = Worklist.pop_back_val();
-    for (BasicBlock &BB : *Fn) {
-
-      for (Instruction &I : BB) {
-
-        if (auto *CB = dyn_cast<CallBase>(&I)) {
-
-          addRoot(CB->getCalledFunction());
-
-        }
-
-      }
-
-    }
-
-  }
-
-}
-
-bool ModuleSanitizerCoverageAFL::isNoAbortFunction(Function &F) {
-
-  // Global ctors/dtors, ifunc resolvers, exit/teardown callbacks,
-  // LLVMFuzzerInitialize and their transitive callees collected from the
-  // module: these run automatically outside the fuzzing entry point.
-  if (NoAbortFuncs.count(&F)) return true;
-
-  // C++ constructors and destructors run as part of object lifecycle,
-  // identified here from the mangled name.
-  llvm::ItaniumPartialDemangler IPD;
-  std::string                   Name = F.getName().str();
-  if (!IPD.partialDemangle(Name.c_str()) && IPD.isCtorOrDtor()) return true;
-
-  return false;
 
 }
 
@@ -757,154 +457,6 @@ void ModuleSanitizerCoverageAFL::printDebugInfo(Instruction &IN) {
 
 }
 
-/* Ball-Larus path coverage — analysis phase.
-   Identifies exit points, strips back-edges via DFS, computes NumPaths(v)
-   bottom-up, applies the level-1/2 collapse and the >100k simplification
-   fallback, and assigns Ball-Larus prefix-sum edge values.
-   Stores all results in the per-function members so emitPathCoverage()
-   can consume them.
-   Returns the number of path slots to reserve, or 0 if the function should
-   be skipped (no exits, single-path, too many paths). */
-uint32_t ModuleSanitizerCoverageAFL::analyzePathCoverage(Function &F) {
-
-  pathNumPaths.clear();
-  pathEdgeVal.clear();
-  pathExits.clear();
-
-  if (!path_mode || F.empty()) return 0;
-
-  /* Defensive re-check of the function-level skip predicates so a future
-     refactor that moves the call site can't silently bypass them. Today
-     instrumentFunction already gates these — this is belt + braces. */
-  if (F.hasFnAttribute(llvm::Attribute::NoSanitizeCoverage)) return 0;
-#if LLVM_VERSION_MAJOR >= 19
-  if (F.hasFnAttribute(llvm::Attribute::DisableSanitizerInstrumentation))
-    return 0;
-#endif
-  if (!isInInstrumentList(&F, FMNAME)) return 0;
-
-  /* Analysis lives in instrumentation/PathCoverage.h — issues #1 (dedup),
-     #2 (iterative DFS), #16 (cached forward successors). */
-  afl::PathAnalysis       PA(path_mode_level, path_max_paths);
-  afl::PathAnalysisResult R = PA.analyze(F);
-
-  if (R.overCap) {
-
-    WARNF(
-        "Function %s has too many paths (>%llu) even after simplification; "
-        "skipping PATH instrumentation.",
-        F.getName().str().c_str(), (unsigned long long)path_max_paths);
-    ++path_skipped_funcs;
-    return 0;
-
-  }
-
-  if (R.simplified) {
-
-    WARNF(
-        "Function %s simplified for PATH (multi-way branches collapsed): "
-        "%llu paths.",
-        F.getName().str().c_str(), (unsigned long long)R.numPaths);
-
-  }
-
-  if (R.numPaths == 0) return 0;
-
-  pathExits = std::move(R.exits);
-  pathNumPaths = std::move(R.numPathsAtBB);
-  pathEdgeVal = std::move(R.edgeValues);
-  return (uint32_t)R.numPaths;
-
-}
-
-/* Ball-Larus path coverage — emission phase.
-   Allocates the per-function path register, inserts edge increments on
-   non-back edges, and emits a bitmap update at every exit point.  The
-   path register's value indexes into a region of FunctionGuardArray
-   reserved by InjectCoverage at [current_path_guard_base,
-   current_path_guard_base + current_path_count).  The runtime constructor
-   fills those guards with sequential bitmap IDs, exactly as for normal
-   block coverage. */
-void ModuleSanitizerCoverageAFL::emitPathCoverage(Function &F) {
-
-  if (!path_mode || current_path_count == 0) return;
-  if (!FunctionGuardArray) return;
-  if (pathExits.empty()) return;
-
-  LLVMContext &Ctx = F.getContext();
-  IntegerType *Int32 = Type::getInt32Ty(Ctx);
-
-  /* INVARIANT: analyzePathCoverage() ran on the original CFG;
-     emitPathCoverage runs after InjectCoverage(), which may have prepended
-     a hoist-map preamble to the entry block but must not have removed any
-     BBs that appear in pathExits / pathEdgeVal / pathNumPaths. The only
-     modification InjectCoverage currently performs here is adding the
-     entry-block preamble — that does not invalidate the Instruction* /
-     BasicBlock* cached in our maps. If a future change to InjectCoverage
-     removes or replaces BBs, the analysis must be re-run after InjectCoverage
-     instead. The alloca for path_reg is inserted at the (new) entry block's
-     firstInsertionPt so it sits in the live entry, not in the original one. */
-  /* Shared alloca + edge-increment emitter; exit-point writes follow below. */
-  AllocaInst *path_reg =
-      afl::emitPathCoverageEdges(F, pathEdgeVal,
-                                 /*setMD=*/[&](Instruction *I) {
-
-                                   setNoSanitizeMetadata(I);
-                                   setNoInstrumentMetadata(I);
-
-                                 });
-
-  /* Path-ID writes at every exit point in DAG-reachable BBs. */
-  for (auto &E : pathExits) {
-
-    if (!pathNumPaths.count(E.first)) continue;  // unreachable in DAG
-    IRBuilder<> IRB(E.second);
-
-    LoadInst *p = IRB.CreateLoad(Int32, path_reg);
-    setNoSanitizeMetadata(p);
-    setNoInstrumentMetadata(p);
-
-    /* Index into FunctionGuardArray at base + path_reg, then load the
-       i32 bitmap-ID stored there at runtime.  Zero-extend to i64 before
-       the GEP so the byte offset is unsigned. */
-    Value *guardIdx32 =
-        IRB.CreateAdd(p, ConstantInt::get(Int32, current_path_guard_base));
-    Value *guardIdx = IRB.CreateZExt(guardIdx32, IntegerType::getInt64Ty(Ctx));
-    Value *guardSlot = IRB.CreateGEP(Int32, FunctionGuardArray, guardIdx);
-    LoadInst *bitmapId = IRB.CreateLoad(Int32, guardSlot);
-    setNoSanitizeMetadata(bitmapId);
-    setNoInstrumentMetadata(bitmapId);
-
-    Value *CoverageIndex = bitmapId;
-
-    /* Apply IJON state-aware coverage if enabled (mirroring
-       InjectCoverageAtBlock). */
-    if (ijon_enabled && AFLIJONState) {
-
-      LoadInst *IJONStateVal = IRB.CreateLoad(Int32, AFLIJONState);
-      setNoSanitizeMetadata(IJONStateVal);
-      Value    *XorResult = IRB.CreateXor(IJONStateVal, CoverageIndex);
-      LoadInst *CovMapSize = IRB.CreateLoad(Int32, AFLCovMapSize);
-      setNoSanitizeMetadata(CovMapSize);
-      CoverageIndex = IRB.CreateURem(XorResult, CovMapSize);
-
-    }
-
-    Value *EffMapPtr = HoistedMapPtr;
-    if (!EffMapPtr) {
-
-      auto *L = IRB.CreateLoad(PtrTy, AFLMapPtr);
-      setNoSanitizeMetadata(L);
-      EffMapPtr = L;
-
-    }
-
-    updateCoverageBitmap(IRB, CoverageIndex, EffMapPtr);
-
-  }
-
-}
-
 Value *ModuleSanitizerCoverageAFL::instrumentVectorSelect(
     IRBuilder<> &IRB, Value *condition, FixedVectorType *tt,
     uint32_t &local_selects, uint32_t cnt_cov, uint32_t skip_blocks,
@@ -939,14 +491,7 @@ Value *ModuleSanitizerCoverageAFL::instrumentVectorSelect(
 
   }
 
-  Value *frozen_cond = IRB.CreateFreeze(condition);
-  if (auto *I = dyn_cast<Instruction>(frozen_cond)) {
-
-    I->setMetadata("afl.skip", MDNode::get(I->getContext(), {}));
-
-  }
-
-  return IRB.CreateSelect(frozen_cond, x, y);
+  return IRB.CreateSelect(condition, x, y);
 
 }
 
@@ -960,13 +505,12 @@ void ModuleSanitizerCoverageAFL::updateCoverageForSelect(IRBuilder<> &IRB,
   while (true) {
 
     Value *MapPtrIdx = nullptr;
-    Value *CoverageIndex = nullptr;
 
     if (!vector_cnt) {
 
       LoadInst *CurLoc = IRB.CreateLoad(IRB.getInt32Ty(), result);
       setNoSanitizeMetadata(CurLoc);
-      CoverageIndex = CurLoc;
+      MapPtrIdx = IRB.CreateGEP(Int8Ty, MapPtr, CurLoc);
 
     } else {
 
@@ -974,23 +518,9 @@ void ModuleSanitizerCoverageAFL::updateCoverageForSelect(IRBuilder<> &IRB,
       auto elementptr = IRB.CreateIntToPtr(element, Int32PtrTy);
       auto elementld = IRB.CreateLoad(IRB.getInt32Ty(), elementptr);
       setNoSanitizeMetadata(elementld);
-      CoverageIndex = elementld;
+      MapPtrIdx = IRB.CreateGEP(Int8Ty, MapPtr, elementld);
 
     }
-
-    // Apply IJON state-aware coverage if enabled
-    if (ijon_enabled && AFLIJONState) {
-
-      LoadInst *IJONStateVal = IRB.CreateLoad(Int32Ty, AFLIJONState);
-      setNoSanitizeMetadata(IJONStateVal);
-      Value    *XorResult = IRB.CreateXor(IJONStateVal, CoverageIndex);
-      LoadInst *CovMapSize = IRB.CreateLoad(Int32Ty, AFLCovMapSize);
-      setNoSanitizeMetadata(CovMapSize);
-      CoverageIndex = IRB.CreateURem(XorResult, CovMapSize);
-
-    }
-
-    MapPtrIdx = IRB.CreateGEP(Int8Ty, MapPtr, CoverageIndex);
 
     if (use_threadsafe_counters) {
 
@@ -1097,17 +627,6 @@ bool ModuleSanitizerCoverageAFL::instrumentModule(
   initInstrumentList();
   scanForDangerousFunctions(&M);
 
-  if (abort_list && !isInstrumentListActive()) {
-
-    WARNF(
-        "AFL_LLVM_ABORTLIST is set but neither AFL_LLVM_ALLOWLIST nor "
-        "AFL_LLVM_DENYLIST is in effect - no abort() calls will be inserted.");
-    abort_list = false;
-
-  }
-
-  if (abort_list) { collectNoAbortFunctions(M); }
-
   C = &(M.getContext());
   DL = &M.getDataLayout();
   CurModule = &M;
@@ -1130,11 +649,8 @@ bool ModuleSanitizerCoverageAFL::instrumentModule(
   Int1Ty = IRB.getInt1Ty();
 
   LLVMContext &Ctx = M.getContext();
-  // may already exist: the C11 pass creates it earlier at PipelineStartEP
-  AFLMapPtr = M.getGlobalVariable("__afl_area_ptr");
-  if (!AFLMapPtr)
-    AFLMapPtr = new GlobalVariable(
-        M, PtrTy, false, GlobalValue::ExternalLinkage, 0, "__afl_area_ptr");
+  AFLMapPtr = new GlobalVariable(M, PtrTy, false, GlobalValue::ExternalLinkage,
+                                 0, "__afl_area_ptr");
   AFLCovMapSize = new GlobalVariable(
       M, Int32Ty, false, GlobalValue::ExternalLinkage, 0, "__afl_cov_map_size");
 
@@ -1197,44 +713,11 @@ bool ModuleSanitizerCoverageAFL::instrumentModule(
                getenv("AFL_USE_TSAN") ? ", TSAN" : "",
                getenv("AFL_USE_CFISAN") ? ", CFISAN" : "",
                getenv("AFL_USE_UBSAN") ? ", UBSAN" : "");
-      char   buf[160] = "";
-      char  *bp = buf;
-      size_t bleft = sizeof(buf);
+      char buf[32] = "";
       if (skippedbb) {
 
-        int n = snprintf(bp, bleft, " %u instrumentation%s saved.", skippedbb,
-                         skippedbb == 1 ? "" : "s");
-        if (n > 0 && (size_t)n < bleft) {
-
-          bp += n;
-          bleft -= n;
-
-        }
-
-      }
-
-      if (path_mode) {
-
-        int n = snprintf(bp, bleft, " %llu extra map entries for PATH.",
-                         (unsigned long long)extra_path_inst);
-        if (n > 0 && (size_t)n < bleft) {
-
-          bp += n;
-          bleft -= n;
-
-        }
-
-        if (path_skipped_funcs) {
-
-          n = snprintf(bp, bleft, " (%u funcs skipped)", path_skipped_funcs);
-          if (n > 0 && (size_t)n < bleft) {
-
-            bp += n;
-            bleft -= n;
-
-          }
-
-        }
+        snprintf(buf, sizeof(buf), " %u instrumentation%s saved.", skippedbb,
+                 skippedbb == 1 ? "" : "s");
 
       }
 
@@ -1302,55 +785,10 @@ static bool isFullPostDominator(const BasicBlock        *BB,
 
 }
 
-static void markPersistentLoopEdges(Function &F) {
-
-  SmallVector<BasicBlock *, 8> edges;
-
-  for (auto &BB : F) {
-
-    bool calls_loop = false;
-    for (auto &IN : BB) {
-
-      CallInst *call = dyn_cast<CallInst>(&IN);
-      if (!call) continue;
-      Function *callee = call->getCalledFunction();
-      if (callee && callee->getName() == "__afl_persistent_loop") {
-
-        calls_loop = true;
-        break;
-
-      }
-
-    }
-
-    if (!calls_loop) continue;
-
-    for (BasicBlock *succ : successors(&BB)) {
-
-      if (succ->getSinglePredecessor() != &BB) continue;
-      Instruction *term = succ->getTerminator();
-      BranchInst  *br = dyn_cast<BranchInst>(term);
-      if (!br || !br->isUnconditional()) continue;
-      if (&*succ->getFirstNonPHIOrDbg() != term) continue;
-      edges.push_back(succ);
-
-    }
-
-  }
-
-  for (BasicBlock *BB : edges)
-    BB->getTerminator()->setMetadata("afl.skip",
-                                     MDNode::get(BB->getContext(), {}));
-
-}
-
 static bool shouldInstrumentBlock(const Function &F, const BasicBlock *BB,
                                   const DominatorTree            *DT,
                                   const PostDominatorTree        *PDT,
                                   const SanitizerCoverageOptions &Options) {
-
-  if (const Instruction *term = BB->getTerminator())
-    if (term->getMetadata("afl.skip")) return false;
 
   // Don't insert coverage for blocks containing nothing but unreachable: we
   // will never call __sanitizer_cov() for them, so counting them in
@@ -1362,8 +800,6 @@ static bool shouldInstrumentBlock(const Function &F, const BasicBlock *BB,
   // Don't insert coverage into blocks without a valid insertion point
   // (catchswitch blocks).
   if (BB->getFirstInsertionPt() == BB->end()) return false;
-
-  if (&F.getEntryBlock() != BB && isFullyArtificialBlock(BB)) return false;
 
   if (Options.NoPrune || &F.getEntryBlock() == BB) return true;
 
@@ -1378,31 +814,7 @@ void ModuleSanitizerCoverageAFL::instrumentFunction(
     Function &F, DomTreeCallback DTCallback, PostDomTreeCallback PDTCallback) {
 
   if (F.empty()) return;
-  if (!isInInstrumentList(&F, FMNAME)) {
-
-    /* AFL_LLVM_ABORTLIST: when an allow/deny list excludes this function from
-       instrumentation, insert an abort() at its entry so reaching it crashes.
-       Skip functions that isInInstrumentList rejects for non-list reasons
-       (compiler/sanitizer internals) and available_externally bodies (their
-       real definition lives elsewhere and may be inlined).  Also skip
-       functions that run automatically outside the fuzzing entry point -
-       constructors, destructors, ifunc resolvers, atexit-style exit
-       callbacks and LLVMFuzzerInitialize (plus their callees) - where an
-       abort() would fire during load/startup/teardown, harness setup or
-       object lifecycle instead of signalling that out-of-scope code was
-       reached. */
-    if (abort_list && !isIgnoreFunction(&F) &&
-        F.getLinkage() != GlobalValue::AvailableExternallyLinkage &&
-        !isNoAbortFunction(F)) {
-
-      insertAbortAtFunctionEntry(F);
-
-    }
-
-    return;
-
-  }
-
+  if (!isInInstrumentList(&F, FMNAME)) return;
   if (F.getName().contains(".module_ctor"))
     return;  // Should not instrument sanitizer init functions.
 #if LLVM_MAJOR >= 18
@@ -1432,9 +844,6 @@ void ModuleSanitizerCoverageAFL::instrumentFunction(
   if (Options.CoverageType >= SanitizerCoverageOptions::SCK_Edge)
     SplitAllCriticalEdges(
         F, CriticalEdgeSplittingOptions().setIgnoreUnreachableDests());
-
-  markPersistentLoopEdges(F);
-
   SmallVector<BasicBlock *, 16> BlocksToInstrument;
 
   const DominatorTree     *DT = DTCallback(F);
@@ -1477,29 +886,7 @@ void ModuleSanitizerCoverageAFL::instrumentFunction(
 
   }
 
-  /* PATH analysis must run BEFORE InjectCoverage so that
-     CreateFunctionLocalArrays reserves enough guard slots for path IDs.
-     emitPathCoverage runs AFTER InjectCoverage so it can use the
-     populated FunctionGuardArray and the (possibly hoisted-preamble)
-     entry block. */
-  current_path_count = 0;
-  current_path_guard_base = 0;
-  pathNumPaths.clear();
-  pathEdgeVal.clear();
-  pathExits.clear();
-  if (path_mode) { current_path_count = analyzePathCoverage(F); }
-
   InjectCoverage(F, BlocksToInstrument);
-
-  if (current_path_count) {
-
-    emitPathCoverage(F);
-    extra_path_inst += current_path_count;
-    /* Do NOT also bump `instr` — the banner already reports PATH slots
-       separately in the "extra map entries for PATH" suffix. Bumping both
-       would double-count them. */
-
-  }
 
   if (dump_cc) { calcCyclomaticComplexity(&F); }
 
@@ -1558,6 +945,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
   uint32_t cnt_cov = 0, cnt_sel = 0, cnt_sel_inc = 0, skip_blocks = 0,
            cnt_special = 0;
+  static uint32_t first = 1;
 
   for (auto &BB : F) {
 
@@ -1604,7 +992,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
       }
 
-      bool instrumentInst = isAflCovInterestingInstruction(IN);
+      bool instrumentInst = isInstructionInteresting(IN);
 
       if (instrumentInst) {
 
@@ -1678,14 +1066,6 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
             }
 
-          } else if (t->getTypeID() == llvm::Type::ScalableVectorTyID) {
-
-            // Scalable vectors (SVE/RISC-V V): we OR-reduce to scalar i1
-            // at instrumentation time, so only 2 guard slots needed.
-            block_is_instrumented = true;
-            cnt_sel++;
-            cnt_sel_inc += 2;
-
           } else {
 
             if (!be_quiet) {
@@ -1722,26 +1102,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
   }
 
-  /* PATH coverage: reserve current_path_count additional guard slots at
-     [AllBlocks.size() + xtra .. AllBlocks.size() + xtra + path_count).
-     Refuse to reserve when the resulting indexing would overflow the
-     signed i32 used for the GEP — values >= 2^31 sign-extend to
-     negative byte offsets. */
-  uint64_t guardArrayLen =
-      (uint64_t)AllBlocks.size() + xtra + (uint64_t)current_path_count;
-  if (guardArrayLen > (uint64_t)INT32_MAX) {
-
-    WARNF(
-        "Function %s would overflow FunctionGuardArray indexing "
-        "(len=%llu); skipping PATH instrumentation.",
-        F.getName().str().c_str(), (unsigned long long)guardArrayLen);
-    ++path_skipped_funcs;
-    current_path_count = 0;
-
-  }
-
-  current_path_guard_base = (uint32_t)AllBlocks.size() + xtra;
-  CreateFunctionLocalArrays(F, AllBlocks, xtra + current_path_count);
+  CreateFunctionLocalArrays(F, AllBlocks, xtra);
 
   if (!FunctionGuardArray) {
 
@@ -1758,44 +1119,8 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
   /* hoistMapPointerLoad inserts a new entry block (preamble).  Never
      instrument that block with code that uses HoistedMapPtr — it would run
      before the load.  AllBlocks was collected earlier so the preamble is
-     already excluded.
-     IMPORTANT: do NOT hoist for coroutines.  This pass runs before
-     CoroSplitPass.  A hoisted load that is used across suspend points gets
-     spilled into the coroutine frame; in the .destroy path the frame is
-     freed first and the spilled value is then read from freed memory →
-     heap-use-after-free.  For coroutines we emit a fresh per-block load
-     instead (see getEffectiveMapPtr below), which is never live across a
-     suspend point and therefore never spilled. */
-  if (AFLMapPtr) {
-
-    bool isCoro = false;
-    for (auto &BB : F) {
-
-      for (auto &I : BB) {
-
-        if (auto *II = dyn_cast<IntrinsicInst>(&I)) {
-
-          auto iid = II->getIntrinsicID();
-          if (iid == Intrinsic::coro_id || iid == Intrinsic::coro_id_retcon ||
-              iid == Intrinsic::coro_id_retcon_once ||
-              iid == Intrinsic::coro_id_async) {
-
-            isCoro = true;
-            break;
-
-          }
-
-        }
-
-      }
-
-      if (isCoro) break;
-
-    }
-
-    if (!isCoro) { HoistedMapPtr = hoistMapPointerLoad(F, AFLMapPtr, PtrTy); }
-
-  }
+     already excluded. */
+  if (AFLMapPtr) { HoistedMapPtr = hoistMapPointerLoad(F, AFLMapPtr, PtrTy); }
 
   uint32_t special = 0, local_selects = 0;
 
@@ -1833,7 +1158,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
       // printDebugInfo(IN);
 
       // Check if we should instrument this instruction for coverage
-      bool instrumentInst = isAflCovInterestingInstruction(IN);
+      bool instrumentInst = isInstructionInteresting(IN);
 
       if (instrumentInst) {
 
@@ -1853,15 +1178,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
           if (debug) printDebugInfo(IN);
 
-          /* "freeze" prevents the optimizer from deducing that the icmp
-             operands are non-poison merely because this select loads from
-             the selected guard pointer (which would be UB if the condition
-             were poison).  Without freeze, the optimizer can incorrectly
-             eliminate null checks (e.g. the empty-range guard in
-             std::reverse) that protect against inbounds-GEP UB.
-             Who would have thought we need this ... */
-          Value *res = IRB.CreateFreeze(icmp);
-          setNoInstrumentMetadata(res);
+          auto   res = icmp;
           Value *GuardPtr1 =
               createGuardPointer(IRB, cnt_cov + special + local_selects++ +
                                           AllBlocks.size() - skip_blocks);
@@ -1878,8 +1195,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
           if (debug) printDebugInfo(IN);
 
-          Value *res = IRB.CreateFreeze(fcmp);
-          setNoInstrumentMetadata(res);
+          auto   res = fcmp;
           Value *GuardPtr1 =
               createGuardPointer(IRB, cnt_cov + special + local_selects++ +
                                           AllBlocks.size() - skip_blocks);
@@ -1894,12 +1210,10 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
           if (debug) printDebugInfo(IN);
 
-          Value *pair = cxchg;
-          IRB.SetInsertPoint(cxchg->getNextNode());
-          Value *extracted = IRB.CreateExtractValue(pair, 1);
-          Value *res = IRB.CreateFreeze(extracted);
-          setNoInstrumentMetadata(res);
-          Value *GuardPtr1 =
+          Value      *pair = cxchg;
+          IRBuilder<> IRB(cxchg->getNextNode());
+          Value      *res = IRB.CreateExtractValue(pair, 1);
+          Value      *GuardPtr1 =
               createGuardPointer(IRB, cnt_cov + special + local_selects++ +
                                           AllBlocks.size() - skip_blocks);
           Value *GuardPtr2 =
@@ -1916,8 +1230,8 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
               Op != AtomicRMWInst::UMin && Op != AtomicRMWInst::UMax)
             continue;
 
-          IRB.SetInsertPoint(rmw->getNextNode());
-          Value *OldVal = rmw;  // result of atomicrmw: old value
+          IRBuilder<> IRB(rmw->getNextNode());
+          Value      *OldVal = rmw;  // result of atomicrmw: old value
           Value *NewVal = rmw->getValOperand();  // value passed to atomicrmw
 
           if (OldVal->getType() != NewVal->getType()) {
@@ -1958,9 +1272,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
           }
 
-          Value *cmp = IRB.CreateICmp(Pred, NewVal, OldVal, "rmw.cov");
-          Value *res = IRB.CreateFreeze(cmp);
-          setNoInstrumentMetadata(res);
+          Value *res = IRB.CreateICmp(Pred, NewVal, OldVal, "rmw.cov");
           Value *GuardPtr1 =
               createGuardPointer(IRB, cnt_cov + special + local_selects++ +
                                           AllBlocks.size() - skip_blocks);
@@ -1978,15 +1290,13 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
           if (t->getTypeID() == llvm::Type::IntegerTyID) {
 
-            Value *frozen_cond = IRB.CreateFreeze(condition);
-            setNoInstrumentMetadata(frozen_cond);
             Value *GuardPtr1 =
                 createGuardPointer(IRB, cnt_cov + special + local_selects++ +
                                             AllBlocks.size() - skip_blocks);
             Value *GuardPtr2 =
                 createGuardPointer(IRB, cnt_cov + special + local_selects++ +
                                             AllBlocks.size() - skip_blocks);
-            result = IRB.CreateSelect(frozen_cond, GuardPtr1, GuardPtr2);
+            result = IRB.CreateSelect(condition, GuardPtr1, GuardPtr2);
             setNoInstrumentMetadata(result);
 
           } else
@@ -2006,25 +1316,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
           } else
 
-              if (t->getTypeID() == llvm::Type::ScalableVectorTyID) {
-
-            // Scalable vectors (SVE/RISC-V V): OR-reduce to scalar i1
-            // since we cannot create a compile-time-fixed number of guard
-            // pointers for a runtime-variable vector length.
-            Value *frozen_cond = IRB.CreateFreeze(condition);
-            setNoInstrumentMetadata(frozen_cond);
-            Value *reduced = IRB.CreateOrReduce(frozen_cond);
-            setNoInstrumentMetadata(reduced);
-            Value *GuardPtr1 =
-                createGuardPointer(IRB, cnt_cov + special + local_selects++ +
-                                            AllBlocks.size() - skip_blocks);
-            Value *GuardPtr2 =
-                createGuardPointer(IRB, cnt_cov + special + local_selects++ +
-                                            AllBlocks.size() - skip_blocks);
-            result = IRB.CreateSelect(reduced, GuardPtr1, GuardPtr2);
-            setNoInstrumentMetadata(result);
-
-          } else {
+          {
 
             if (!be_quiet) {
 
@@ -2039,16 +1331,7 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
 
         }
 
-        Value *EffMapPtr = HoistedMapPtr;
-        if (!EffMapPtr) {
-
-          auto *L = IRB.CreateLoad(PtrTy, AFLMapPtr);
-          setNoSanitizeMetadata(L);
-          EffMapPtr = L;
-
-        }
-
-        updateCoverageForSelect(IRB, result, EffMapPtr, vector_cnt);
+        updateCoverageForSelect(IRB, result, HoistedMapPtr, vector_cnt);
         instr += vector_cnt;
 
       }
@@ -2060,6 +1343,8 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
   if (AllBlocks.empty() && !special && !local_selects) return false;
 
   uint32_t skipped = 0;
+
+  if (AllBlocks.size() < skipped) { abort(); }  // assert
 
   if (!AllBlocks.empty()) {
 
@@ -2081,8 +1366,6 @@ bool ModuleSanitizerCoverageAFL::InjectCoverage(
     }
 
   }
-
-  if (AllBlocks.size() < skipped) { abort(); }  // assert
 
   skippedbb += skipped;
 
@@ -2151,16 +1434,7 @@ void ModuleSanitizerCoverageAFL::InjectCoverageAtBlock(Function   &F,
 
     }
 
-    Value *EffMapPtr = HoistedMapPtr;
-    if (!EffMapPtr) {
-
-      auto *L = IRB.CreateLoad(PtrTy, AFLMapPtr);
-      setNoSanitizeMetadata(L);
-      EffMapPtr = L;
-
-    }
-
-    updateCoverageBitmap(IRB, CoverageIndex, EffMapPtr);
+    updateCoverageBitmap(IRB, CoverageIndex, HoistedMapPtr);
 
     // done :)
 

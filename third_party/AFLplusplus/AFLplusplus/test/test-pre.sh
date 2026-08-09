@@ -91,18 +91,13 @@ unset_afl_env() {
 unset_afl_env
 
 # Re-export defaults always
-export AFL_DISABLE_TRIM=1
 export AFL_EXIT_WHEN_DONE=1
 export AFL_EXIT_ON_TIME=60
 export AFL_SKIP_CPUFREQ=1
 export AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
 export AFL_PATH="$(pwd)/.."
-
-# Unset potentially present envs we do not want for tests
-unset AFL_CMPLOG_ONLY_NEW
-
 # Ensure in/out are clean
-rm -rf in in2 out out2
+rm -rf in in2 out
 
 #export AFL_LLVM_INSTRUMENT=AFL # AFL mode makes dlopen not link on macos
 

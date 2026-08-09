@@ -1,15 +1,20 @@
 # TODO list for AFL++
 
+## Next
+ - analyse regression 87d26ff7de5ba8e762bccdda85e91f5c951f17e9
+   - more?
+ - new classify map VAR=1
+
+
 ## Must
 
- - Review `mutation_array = ` in src/afl-fuzz-one.c
  - find a solution that SAYF now prints to stderr (help!)
  - afl_fsrv_deinit cmplog
  - hardened_usercopy=0 page_alloc.shuffle=0
  - add value_profile but only enable after 15 minutes without finds
  - cmplog max items env?
  - cmplog rtn sanity check on fixed length? currently we ignore the length
- - when trimming perform crash detection, new cov?
+ - when trimming then perform crash detection
 
 
 ## Should
@@ -17,6 +22,7 @@
  - cmplog: add loop count resolving (byte -> loop cnt change, calc special values)
  - support persistent and deferred fork server in afl-showmap?
  - better autodetection of shifting runtime timeout values
+ - afl-plot to support multiple plot_data
  - parallel builds for source-only targets
  - get rid of check_binary, replace with more forkserver communication
  - first fuzzer should be a main automatically? not sure.
@@ -31,10 +37,10 @@
 ## Further down the road
 
 QEMU mode/FRIDA mode:
- - non colliding instrumentation (done for qemu! frida todo)
+ - non colliding instrumentation
  - rename qemu specific envs to AFL_QEMU (AFL_ENTRYPOINT, AFL_CODE_START/END,
    AFL_COMPCOV_LEVEL?)
- - support multiple AFL_QEMU_EXITPOINT
+ - add AFL_QEMU_EXITPOINT (maybe multiple?)
 
 ## Ideas
 

@@ -6,8 +6,6 @@
  * You may obtain a copy of the License at
  *
  *     https://www.apache.org/licenses/LICENSE-2.0
-
-   SPDX-License-Identifier: Apache-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +27,7 @@
 
 #include "llvm/ADT/Statistic.h"
 #include "llvm/IR/IRBuilder.h"
-#if defined(__has_include) && __has_include("llvm/Plugins/PassPlugin.h")
+#if LLVM_MAJOR >= 22
   #include "llvm/Plugins/PassPlugin.h"
 #else
   #include "llvm/Passes/PassPlugin.h"
@@ -342,7 +340,6 @@ bool SplitSwitchesTransform::splitSwitches(Module &M) {
 
       if ((switchInst = dyn_cast<SwitchInst>(BB.getTerminator()))) {
 
-        if (switchInst->getMetadata("afl.skip")) continue;
         if (switchInst->getNumCases() < 1) continue;
         switches.push_back(switchInst);
 

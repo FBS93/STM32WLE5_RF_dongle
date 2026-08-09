@@ -18,8 +18,6 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
-   SPDX-License-Identifier: Apache-2.0
-
  */
 
 #ifndef _HAVE_TYPES_H
@@ -55,38 +53,14 @@ typedef uint128_t         u128;
 #define FS_NEW_VERSION_MIN 1
 #define FS_NEW_VERSION_MAX 1
 #define FS_NEW_ERROR 0xeffe0000
-#define FS_NEW_OPT_MAPSIZE 0x00000001           // parameter: 32 bit value
-#define FS_NEW_OPT_SHDMEM_FUZZ 0x00000002       // parameter: none
-#define FS_NEW_OPT_FUTEX 0x00000004             // parameter: none
-#define FS_NEW_OPT_ALLOCSIZE_DERIVE 0x00000008  // parameter: none
-/* Target appended a bug-pass map tail (MAP_SIZE_BUG_BYTES) to
- * __afl_set_map_size; the fuzzer subtracts it before treating the
- * region as coverage. parameter: none */
-#define FS_NEW_OPT_BUG_MAP 0x00000010
-#define FS_NEW_OPT_AUTODICT 0x00000800  // autodictionary data
-
-#if defined(__linux__) || defined(__APPLE__)
-/* Protocol phases for the futex-based forkserver handshake.
-   A single 32-bit shared-memory word (child_sync) carries these values so
-   that afl-fuzz and the persistent target child can coordinate each execution
-   cycle without going through the normal pipe path. The word is embedded in
-   the last bytes of the trace_bits shared map (see afl_shm_init), so it needs
-   no separate shared memory segment. */
-typedef enum {
-
-  AFL_CHILD_IDLE = 0,  /* child not started, or dead                        */
-  AFL_CHILD_RUN = 1,   /* fuzzer → child: execute the next test case        */
-  AFL_CHILD_DONE = 2,  /* child → fuzzer: this iteration is complete        */
-  AFL_CHILD_EXITED = 3, /* child → fuzzer: child is exiting (crash/end)      */
-
-} afl_child_state_t;
-
-#endif                                            /* __linux__ || __APPLE__ */
+#define FS_NEW_OPT_MAPSIZE 0x00000001      // parameter: 32 bit value
+#define FS_NEW_OPT_SHDMEM_FUZZ 0x00000002  // parameter: none
+#define FS_NEW_OPT_AUTODICT 0x00000800     // autodictionary data
 
 /* Reporting options */
 #define FS_OPT_ENABLED 0x80000001
 #define FS_OPT_MAPSIZE 0x40000000
-#define FS_OPT_C11 0x20000000
+#define FS_OPT_SNAPSHOT 0x20000000
 #define FS_OPT_AUTODICT 0x10000000
 #define FS_OPT_SHDMEM_FUZZ 0x01000000
 #define FS_OPT_NEWCMPLOG 0x02000000

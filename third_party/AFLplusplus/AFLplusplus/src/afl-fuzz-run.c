@@ -18,8 +18,6 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
-   SPDX-License-Identifier: Apache-2.0
-
    This is the real deal: the program takes an instrumented binary and
    attempts a variety of basic fuzzing tricks, paying close attention to
    how they affect the execution path.
@@ -39,6 +37,9 @@
 
 #include "cmplog.h"
 #include "asanfuzz.h"
+
+static u8 *input_data;
+static u32 input_len;
 
 #ifdef PROFILING
 u64 time_spent_working = 0;
@@ -64,13 +65,6 @@ fsrv_run_result_t __attribute__((hot)) fuzz_run_target(afl_state_t      *afl,
   }
 
 #endif
-
-  if (unlikely(fsrv->late_send && fsrv != &afl->fsrv)) {
-
-    fsrv->custom_input = afl->fsrv.custom_input;
-    fsrv->custom_input_len = afl->fsrv.custom_input_len;
-
-  }
 
   fsrv_run_result_t res = afl_fsrv_run_target(fsrv, timeout, &afl->stop_soon);
 
@@ -117,11 +111,11 @@ fsrv_run_result_t __attribute__((hot)) fuzz_run_target(afl_state_t      *afl,
 
     /* UNIFIED SHARED MEMORY ACCESS: Always use dynamic allocation */
 
-    if (likely(afl->ijon_cur_input && afl->ijon_cur_input_len)) {
+    if (likely(input_data && input_len)) {
 
       /* Use pre-initialized shared_access from afl state */
       ijon_update_max_dynamic(afl->ijon_state, afl->ijon_shared_access,
-                              afl->ijon_cur_input, afl->ijon_cur_input_len);
+                              input_data, input_len);
 
     }
 
@@ -190,9 +184,6 @@ u32 __attribute__((hot)) write_to_testcase(afl_state_t *afl, void **mem,
 
     }
 
-    ssize_t valid_size = new_size;
-    u8      did_swap = 0;
-
     if (unlikely(new_size < afl->min_length && !fix)) {
 
       new_size = afl->min_length;
@@ -203,18 +194,11 @@ u32 __attribute__((hot)) write_to_testcase(afl_state_t *afl, void **mem,
 
     }
 
-    if ((new_mem != *mem || new_size > valid_size) && new_mem != NULL &&
-        new_size > 0) {
+    if (new_mem != *mem && new_mem != NULL && new_size > 0) {
 
       new_buf = afl_realloc(AFL_BUF_PARAM(out_scratch), new_size);
       if (unlikely(!new_buf)) { PFATAL("alloc"); }
-      ssize_t copy_size = new_size < valid_size ? new_size : valid_size;
-      if (copy_size > 0) { memcpy(new_buf, new_mem, copy_size); }
-      if (new_size > copy_size) {
-
-        memset(new_buf + copy_size, 0, new_size - copy_size);
-
-      }
+      memcpy(new_buf, new_mem, new_size);
 
       /* if AFL_POST_PROCESS_KEEP_ORIGINAL is set then save the original memory
          prior post-processing in new_mem to restore it later */
@@ -226,7 +210,6 @@ u32 __attribute__((hot)) write_to_testcase(afl_state_t *afl, void **mem,
 
       *mem = new_buf;
       afl_swap_bufs(AFL_BUF_PARAM(out), AFL_BUF_PARAM(out_scratch));
-      did_swap = 1;
 
     }
 
@@ -262,7 +245,7 @@ u32 __attribute__((hot)) write_to_testcase(afl_state_t *afl, void **mem,
 
       len = new_size;
 
-    } else if (did_swap) {
+    } else {
 
       /* restore the original memory which was saved in new_mem */
       *mem = new_mem;
@@ -274,12 +257,6 @@ u32 __attribute__((hot)) write_to_testcase(afl_state_t *afl, void **mem,
 
     if (unlikely(len < afl->min_length && !fix)) {
 
-      u8 *padded = afl_realloc(AFL_BUF_PARAM(out_scratch), afl->min_length);
-      if (unlikely(!padded)) { PFATAL("alloc"); }
-      if (likely(len)) { memcpy(padded, *mem, len); }
-      memset(padded + len, 0, afl->min_length - len);
-      *mem = padded;
-      afl_swap_bufs(AFL_BUF_PARAM(out), AFL_BUF_PARAM(out_scratch));
       len = afl->min_length;
 
     } else if (unlikely(len > afl->max_length)) {
@@ -295,8 +272,8 @@ u32 __attribute__((hot)) write_to_testcase(afl_state_t *afl, void **mem,
 
   if (unlikely(afl->ijon_bits)) {
 
-    afl->ijon_cur_input = *mem;
-    afl->ijon_cur_input_len = len;
+    input_data = *mem;
+    input_len = len;
 
   }
 
@@ -382,7 +359,7 @@ static void write_with_gap(afl_state_t *afl, u8 *mem, u32 len, u32 skip_at,
         new_size =
             el->afl_custom_post_process(el->data, new_mem, new_size, &new_buf);
 
-        if (unlikely(!new_buf || new_size <= 0)) {
+        if (unlikely(!new_buf && new_size <= 0)) {
 
           new_size = 0;
           new_buf = new_mem;
@@ -523,8 +500,6 @@ u8 calibrate_case(afl_state_t *afl, struct queue_entry *q, u8 *use_mem,
 
   afl->stage_name = "calibration";
   afl->stage_max = afl->afl_env.afl_cal_fast ? CAL_CYCLES_FAST : CAL_CYCLES;
-
-  u32 early_skip = afl->stage_max > 3 ? 3 : 2;
 
   /* Make sure the forkserver is up before we do anything, and let's not
      count its spin-up time toward binary calibration. */
@@ -687,21 +662,11 @@ u8 calibrate_case(afl_state_t *afl, struct queue_entry *q, u8 *use_mem,
 
     }
 
-    // if no variability was detected then let's quit early
-    if (likely(!var_detected && afl->stage_cur >= early_skip)) {
-
-      if (unlikely(afl->debug)) { DEBUGF("calibration stage early skip\n"); }
-
-      ++afl->stage_cur;
-      break;
-
-    }
-
   }
 
   if (unlikely(afl->fixed_seed)) {
 
-    diff_us = (u64)(afl->fsrv.exec_tmout - 1) * (u64)afl->stage_cur;
+    diff_us = (u64)(afl->fsrv.exec_tmout - 1) * (u64)afl->stage_max;
 
   } else {
 
@@ -712,7 +677,7 @@ u8 calibrate_case(afl_state_t *afl, struct queue_entry *q, u8 *use_mem,
   }
 
   afl->total_cal_us += diff_us;
-  afl->total_cal_cycles += afl->stage_cur;
+  afl->total_cal_cycles += afl->stage_max;
 
   /* OK, let's collect some stats about the performance of this test case.
      This is used for fuzzing air time calculations in calculate_score(). */
@@ -724,15 +689,8 @@ u8 calibrate_case(afl_state_t *afl, struct queue_entry *q, u8 *use_mem,
 
   }
 
-  q->exec_us = diff_us / afl->stage_cur;
+  q->exec_us = diff_us / afl->stage_max;
   if (unlikely(!q->exec_us)) { q->exec_us = 1; }
-
-  u32 exec_ms = (u32)((q->exec_us + 500) / 1000);
-  if (unlikely(exec_ms > afl->slowest_exec_ms)) {
-
-    afl->slowest_exec_ms = exec_ms;
-
-  }
 
   q->bitmap_size = count_bytes(afl, afl->fsrv.trace_bits);
   q->handicap = handicap;
@@ -772,8 +730,6 @@ abort_calibration:
     afl->var_byte_count = count_bytes(afl, afl->var_bytes);
 
     if (!q->var_behavior) { ++afl->queued_variable; }
-
-    mark_as_variable(afl, q);
 
   }
 
@@ -907,7 +863,7 @@ void check_sync_fuzzers(afl_state_t *afl) {
 
     afl->is_main_node = 1;
     sprintf(qd_path, "%s/is_main_node", afl->out_dir);
-    int id_fd = open(qd_path, O_RDWR | O_CREAT, afl->perm);
+    int id_fd = open(qd_main_path, O_RDWR | O_CREAT, afl->perm);
     if (id_fd >= 0) { close(id_fd); }
 
   }
@@ -1131,14 +1087,13 @@ void sync_fuzzers(afl_state_t *afl) {
 
           if (mem == MAP_FAILED) { PFATAL("Unable to mmap '%s'", path); }
 
-          u8 *orig_mem = mem;
           u32 new_len = write_to_testcase(afl, (void **)&mem, st.st_size, 1);
 
           u8 fault = fuzz_run_target(afl, &afl->fsrv, afl->fsrv.exec_tmout);
 
           if (afl->stop_soon) {
 
-            munmap(orig_mem, st.st_size);
+            munmap(mem, st.st_size);
             close(fd);
 
             goto close_sync;
@@ -1149,7 +1104,7 @@ void sync_fuzzers(afl_state_t *afl) {
           afl->queued_imported += save_if_interesting(afl, mem, new_len, fault);
           show_stats(afl);
           afl->syncing_party = 0;
-          munmap(orig_mem, st.st_size);
+          munmap(mem, st.st_size);
 
         }
 
@@ -1418,19 +1373,8 @@ u8 trim_case(afl_state_t *afl, struct queue_entry *q, u8 *in_buf) {
       u32 written = 0;
       while (written < q->len) {
 
-        ssize_t result = write(fd, in_buf + written, q->len - written);
-        if (likely(result > 0)) {
-
-          written += result;
-          continue;
-
-        }
-
-        if (!result) { FATAL("Short write to '%s'", q->fname); }
-
-        if (errno == EINTR) { continue; }
-
-        PFATAL("Unable to write '%s'", q->fname);
+        ssize_t result = write(fd, in_buf, q->len - written);
+        if (result > 0) written += result;
 
       }
 

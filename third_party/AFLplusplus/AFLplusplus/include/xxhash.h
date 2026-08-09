@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: BSD-2-Clause */
 /*
  * xxHash - Extremely Fast Hash algorithm
  * Header File
