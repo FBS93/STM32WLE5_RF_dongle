@@ -116,7 +116,6 @@
 		)
 		(capping no)
 		(filling no)
-		(zone_defaults)
 		(pcbplotparams
 			(layerselection 0x00000000_00000000_55555555_5755f5ff)
 			(plot_on_all_layers_selection 0x00000000_00000000_00000000_00000000)
@@ -19135,8 +19134,8 @@
 		(uuid "5d9d4e5d-975e-43de-913e-8a623df0fa14")
 	)
 	(gr_text_box "PCBWay stackup and adapted trace dimensions defined in /workspaces/STM32WLE5_RF_dongle/hw/PCBWay/W1090617AS5P1-stackup & impedance control file.pdf\n\nWith the selected stackup, 50 ohm differential impedance cannot be achieved using edge-coupled microstrip within PCBWay standard limits. If needed, route both traces as nominal 50 Ohm single-ended microstrips, keep them short and symmetric, and do not apply a controlled differential-pair constraint.\n\nUse B.Cu (bottom) for low-speed, non-impedance-controlled signals only.\n\nGeneral power traces --> 0.5mm width\nDevice specific power traces --> 0.2mm width\n\n0.56mm via diameter and 0.25mm via hole for generic vias\n0.7mm via diameter and 0.3mm via hole for general power vias"
-		(start 117.3 71.89)
-		(end 129.8 76.39)
+		(start 117.28 72.54)
+		(end 129.78 76.285191)
 		(margins 0.1625 0.1625 0.1625 0.1625)
 		(layer "Cmts.User")
 		(uuid "6b103c07-fae2-4ab6-a57a-fae26b0c2a90")
