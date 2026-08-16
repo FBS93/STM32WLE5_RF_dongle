@@ -134,7 +134,7 @@ if [ "${mode}" = "--check" ]; then
     "${asm_formatter}" --check . >> "${asm_report}" 2>&1 || format_status=$?
 
     # Check CMake files across the workspace without modifying files.
-    find "${workspace_root}" -type f \( -name 'CMakeLists.txt' -o -name '*.cmake' \) ! -path '*/build/*' \
+    find "${workspace_root}" -type f \( -name 'CMakeLists.txt' -o -name '*.cmake' \) ! -path '*/build/*' ! -path '*/third_party/*' \
         -exec "${cmake_format_bin}" --check --config-files "${cmake_format_config}" {} + >> "${cmake_report}" 2>&1 || format_status=$?
 
     # Check Python formatting without modifying files.
@@ -148,7 +148,7 @@ else
     find . -type f -name '*.S' -exec "${asm_formatter}" {} + >> "${asm_report}" 2>&1 || format_status=$?
 
     # Format CMake files across the workspace.
-    find "${workspace_root}" -type f \( -name 'CMakeLists.txt' -o -name '*.cmake' \) ! -path '*/build/*' \
+    find "${workspace_root}" -type f \( -name 'CMakeLists.txt' -o -name '*.cmake' \) ! -path '*/build/*' ! -path '*/third_party/*' \
         -exec "${cmake_format_bin}" --in-place --config-files "${cmake_format_config}" {} + >> "${cmake_report}" 2>&1 || format_status=$?
 
     # Format Python files across the workspace using the repository Ruff config.
