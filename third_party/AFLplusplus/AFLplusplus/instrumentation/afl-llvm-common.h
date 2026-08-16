@@ -1,16 +1,3 @@
-/*
-   american fuzzy lop++ - part of the AFL++ project
-   ------------------------------------------------
-
-   Copyright 2019-2026 AFLplusplus Project. All rights reserved.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may obtain a copy at https://www.apache.org/licenses/LICENSE-2.0
-
-   SPDX-License-Identifier: Apache-2.0
-
- */
-
 #ifndef __AFLLLVMCOMMON_H
 #define __AFLLLVMCOMMON_H
 
@@ -60,7 +47,6 @@ char *getBBName(const llvm::BasicBlock *BB);
 bool  isIgnoreFunction(const llvm::Function *F);
 void  initInstrumentList();
 bool  isInInstrumentList(llvm::Function *F, std::string Filename);
-bool  isInstrumentListActive(void);
 unsigned long long int calculateCollisions(uint32_t edges);
 void                   scanForDangerousFunctions(llvm::Module *M);
 unsigned int           calcCyclomaticComplexity(llvm::Function *F);
@@ -69,7 +55,6 @@ bool                   isDecisionUse(const llvm::Value *Cond);
 bool                   isExecCall(llvm::Instruction *IN);
 std::pair<bool, bool>  detectIJONUsage(llvm::Module &M);
 void createIJONEnabledGlobal(llvm::Module &M, llvm::Type *Int32Ty);
-void createC11EnabledGlobal(llvm::Module &M, llvm::Type *Int32Ty);
 llvm::GlobalVariable *createIJONStateGlobal(llvm::Module &M,
                                             llvm::Type   *Int32Ty,
                                             bool          uses_ijon_state);
@@ -97,18 +82,6 @@ IS_EXTERN int be_quiet;
                                                \
   } while (0)
 
-/* LLVM 23 made BasicBlock::getTerminator() assert on non-well-formed
-   blocks; getTerminatorOrNull() restores the prior nullable behavior. */
-inline llvm::Instruction *aflTerminatorOrNull(llvm::BasicBlock *BB) {
-
-#if LLVM_VERSION_MAJOR >= 23
-  return BB->getTerminatorOrNull();
-#else
-  return BB->getTerminator();
-#endif
-
-}
-
 /* Mark an instruction so sanitizer passes ignore it. */
 inline void setNoSanitizeMetadata(llvm::Instruction *I) {
 
@@ -121,25 +94,6 @@ inline void setNoSanitizeMetadata(llvm::Instruction *I) {
   I->setMetadata(I->getModule()->getMDKindID("nosanitize"),
                  llvm::MDNode::get(I->getContext(), llvm::None));
 #endif
-
-}
-
-/* True when BB has at least one non-terminator instruction and every
-   non-terminator, non-debug instruction carries afl.skip, i.e. the block holds
-   only synthetic AFL code. The ">=1 instruction" guard keeps branch-only blocks
-   instrumented. */
-inline bool isFullyArtificialBlock(const llvm::BasicBlock *BB) {
-
-  bool seen = false;
-  for (const llvm::Instruction &I : *BB) {
-
-    if (I.isTerminator() || I.isDebugOrPseudoInst()) continue;
-    if (!I.getMetadata("afl.skip")) return false;
-    seen = true;
-
-  }
-
-  return seen;
 
 }
 
@@ -177,11 +131,7 @@ inline llvm::Value *hoistMapPointerLoad(llvm::Function       &F,
 
   /* Move static allocas into the preamble so ASan keeps them function-wide. */
   for (auto *AI : StaticAllocas)
-#if LLVM_MAJOR >= 20
-    AI->moveBefore(Load->getIterator());
-#else
     AI->moveBefore(Load);
-#endif
 
   return Load;
 

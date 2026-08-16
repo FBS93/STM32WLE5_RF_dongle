@@ -14,8 +14,6 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
-   SPDX-License-Identifier: Apache-2.0
-
  */
 
 #define AFL_LLVM_PASS
@@ -41,7 +39,7 @@
 #include "llvm/Pass.h"
 #include "llvm/Support/Debug.h"
 // #include "llvm/Transforms/IPO/PassManagerBuilder.h"
-#if defined(__has_include) && __has_include("llvm/Plugins/PassPlugin.h")
+#if LLVM_MAJOR >= 22
   #include "llvm/Plugins/PassPlugin.h"
 #else
   #include "llvm/Passes/PassPlugin.h"

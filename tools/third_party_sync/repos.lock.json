@@ -1,18 +1,18 @@
 {
   "repositories": {
-    "actions-template-sync": {
-      "published_at": "2026-05-04T20:03:20Z",
-      "resolved_commit": "8a0f668b83c32a0f673353086d74f12b8853d4f5",
-      "resolved_release": "v2.5.3",
-      "source": "release",
-      "tarball_url": "https://api.github.com/repos/AndreasAugustin/actions-template-sync/tarball/v2.5.3"
-    },
     "aflplusplus": {
-      "published_at": "2026-06-29T09:18:40Z",
-      "resolved_commit": "011cd189801830253c66ecd3cd6919ec01b46c34",
-      "resolved_release": "v5.02c",
+      "published_at": "2026-03-13T09:24:49Z",
+      "resolved_commit": "e5a8ba39ecf97d05e286fdd4e01da96554dbf64f",
+      "resolved_release": "v4.40c",
       "source": "release",
-      "tarball_url": "https://api.github.com/repos/AFLplusplus/AFLplusplus/tarball/v5.02c"
+      "tarball_url": "https://api.github.com/repos/AFLplusplus/AFLplusplus/tarball/v4.40c"
+    },
+    "actions-template-sync": {
+      "published_at": "2025-07-16T19:52:05Z",
+      "resolved_commit": "8ec19a5f2721ffb81ff809aa340ddf75e6a85ea6",
+      "resolved_release": "v2.5.2",
+      "source": "release",
+      "tarball_url": "https://api.github.com/repos/AndreasAugustin/actions-template-sync/tarball/v2.5.2"
     }
   }
 }

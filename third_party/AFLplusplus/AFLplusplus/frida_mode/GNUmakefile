@@ -121,9 +121,6 @@ else ifeq "$(shell uname)" "Darwin"
  OS:=macos
  AFL_CFLAGS:=$(AFL_CFLAGS) -Wno-deprecated-declarations
  GUM_ARCH:=""
- # afl-compiler-rt.o weakly references __asan_region_is_poisoned; tell ld
- # it may be missing at runtime (Mach-O won't accept a plain weak undef).
- LDFLAGS+=-Wl,-U,___asan_region_is_poisoned
  ifeq "$(ARCH)" "arm64"
   TARGET_CC= \
   	"clang" \
@@ -190,7 +187,7 @@ ifndef OS
  $(error "Operating system unsupported")
 endif
 
-GUM_DEVKIT_VERSION=17.9.3
+GUM_DEVKIT_VERSION=17.0.7
 GUM_DEVKIT_FILENAME=frida-gumjs-devkit-$(GUM_DEVKIT_VERSION)-$(OS)-$(ARCH).tar.xz
 GUM_DEVKIT_URL="https://github.com/frida/frida/releases/download/$(GUM_DEVKIT_VERSION)/$(GUM_DEVKIT_FILENAME)"
 

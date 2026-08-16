@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
 /* GCC plugin for cmplog routines instrumentation of code for AFL++.
 
    Copyright 2014-2019 Free Software Foundation, Inc

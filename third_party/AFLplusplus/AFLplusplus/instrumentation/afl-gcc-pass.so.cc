@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
 /* GCC plugin for instrumentation of code for american fuzzy lop.
 
    Copyright 2014-2019 Free Software Foundation, Inc

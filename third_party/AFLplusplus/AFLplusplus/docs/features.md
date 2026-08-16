@@ -107,9 +107,8 @@ Among others, the following features and patches have been integrated:
 * AFLfast's power schedules by Marcel Böhme:
   [https://github.com/mboehme/aflfast](https://github.com/mboehme/aflfast)
 * The fast deterministic stage by Han Zheng: [https://github.com/hexhive/mendelFuzz-Artifact/](https://github.com/hexhive/mendelFuzz-Artifact/)
-* An adaptive mutation scheduler inspired by the MOpt mutator
-  ([https://github.com/puppet-meteor/MOpt-AFL](https://github.com/puppet-meteor/MOpt-AFL)),
-  enabled with the `-L` switch (default: standard havoc)
+* The MOpt mutator:
+  [https://github.com/puppet-meteor/MOpt-AFL](https://github.com/puppet-meteor/MOpt-AFL)
 * LLVM mode Ngram coverage by Adrian Herrera
   [https://github.com/adrianherrera/afl-ngram-pass](https://github.com/adrianherrera/afl-ngram-pass)
 * LAF-Intel/CompCov support for instrumentation, QEMU mode and unicorn_mode

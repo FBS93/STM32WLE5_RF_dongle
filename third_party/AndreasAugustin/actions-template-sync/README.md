@@ -1,6 +1,6 @@
 # actions-template-sync
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-42-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-38-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
  [![actions-template-sync](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/actions_template_sync.yml/badge.svg)](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/actions_template_sync.yml)
@@ -94,7 +94,7 @@ jobs:
     steps:
       # To use this repository's private action, you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         # https://github.com/actions/checkout#usage
         # uncomment if you use submodules within the repository
         # with:
@@ -136,7 +136,7 @@ jobs:
 
       - name: Checkout
         # https://github.com/actions/checkout#usage
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           # submodules: true
           token: ${{ steps.generate_token.outputs.token }}
@@ -173,7 +173,7 @@ jobs:
       # To use this repository's private action, you must check out the repository
       - name: Checkout
         # https://github.com/actions/checkout#usage
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           # submodules: true
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -269,7 +269,7 @@ jobs:
     steps:
       # To use this repository's private action, you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           # submodules: true
           token: ${{ secrets.CUSTOM_GITHUB_PAT }}
@@ -284,58 +284,52 @@ jobs:
 
 ### Action Inputs
 
-| Variable | Description | Required | Default |
-| -------- | ----------- | -------- | ------- |
-| github_token | :warning: [Deprecated] please use `source_gh_token` instead to have a declarative name. Token for the repo. Can be passed in using `${{ secrets.GITHUB_TOKEN }}` | `true` | `${{ github.token }}` |
+| Variable                    | Description                                                                                                   | Required | Default                                                           |
+|-----------------------------|---------------------------------------------------------------------------------------------------------------|----------|-----------------------------------------------------------------------|
+| github_token                | :warning: [Deprecated] please use `source_gh_token` instead to have a declarative name. Token for the repo. Can be passed in using `${{ secrets.GITHUB_TOKEN }}`                                     | `true`   |   `${{ github.token }}`                                                                    |
 | source_gh_token | `[optional]` used for the source github repo token. Can be passed in using `${{ secrets.GITHUB_TOKEN }}` | `false` | `${{ github.token }}` |
 | target_gh_token | `[optional]` used for the source github repo token. Can be passed in using `${{ secrets.GITHUB_TOKEN }}` | `false` | `${{ github.token }}` |
-| source_repo_path | Repository path of the template | `true` | |
-| upstream_branch | The target branch | `false` | The remote's default (usually `main`) |
-| source_repo_ssh_private_key | `[optional]` private ssh key for the source repository. [see](#private-template-repository) | `false` | |
-| pr_branch_name_prefix | `[optional]` the prefix of branches created by this action | `false` | `chore/template_sync` |
-| pr_title | `[optional]` the title of PRs opened by this action. Must be already created. | `false` | `upstream merge template repository` |
-| pr_body | `[optional]` the body of PRs opened by this action. | `false` | `Merge ${SOURCE_REPO} ${TEMPLATE_GIT_HASH}` |
-| pr_labels | `[optional]` comma separated list. [pull request labels][pr-labels]. | `false` | `sync_template` |
-| pr_reviewers | `[optional]` comma separated list of pull request reviewers. | `false` | |
-| pr_commit_msg | `[optional]` commit message in the created pull request | `false` | `chore(template): merge template changes :up:` |
-| hostname | `[optional]` the hostname of the repository | `false` | `github.com` |
+| source_repo_path            | Repository path of the template                                                                               | `true`   |                                                                       |
+| upstream_branch             | The target branch                                                                                             | `false`  | The remote's default (usually `main`)                                                |
+| source_repo_ssh_private_key | `[optional]` private ssh key for the source repository. [see](#private-template-repository)                   | `false`  |                                                                       |
+| pr_branch_name_prefix       | `[optional]` the prefix of branches created by this action                                                    | `false`  | `chore/template_sync`                                                 |
+| pr_title                    | `[optional]` the title of PRs opened by this action. Must be already created.                                 | `false`  | `upstream merge template repository`                                  |
+| pr_body                     | `[optional]` the body of PRs opened by this action. | `false` | `Merge ${SOURCE_REPO} ${TEMPLATE_GIT_HASH}` |
+| pr_labels                   | `[optional]` comma separated list. [pull request labels][pr-labels].                                          | `false`  | `sync_template`                                                       |
+| pr_reviewers                | `[optional]` comma separated list of pull request reviewers.                                                  | `false`  |                                                                       |
+| pr_commit_msg               | `[optional]` commit message in the created pull request                                                       | `false`  | `chore(template): merge template changes :up:`                        |
+| hostname                    | `[optional]` the hostname of the repository                                                                   | `false`  | `github.com`                                                          |
 | is_git_lfs | `[optional]` set to `true` if you want to enalbe git lfs | `false` | `false` |
-| is_dry_run | `[optional]` set to `true` if you do not want to push the changes and not want to create a PR | `false` | |
-| is_allow_hooks | `[optional]` set to `true` if you want to enable lifecycle hooks. Use this with caution! | `false` | `false` |
+| is_dry_run                  | `[optional]` set to `true` if you do not want to push the changes and not want to create a PR                 | `false`  |                                                                       |
+| is_allow_hooks              | `[optional]` set to `true` if you want to enable lifecycle hooks. Use this with caution!                      | `false`  | `false`                                                               |
 | hooks | `[optional]` please check the lifecycle hooks section below | `false` | |
-| is_force_push_pr | `[optional]` set to `true` if you want to force push and pr update. Needs further permissions (see below) | `false` | `false` |
-| is_pr_cleanup | `[optional]` set to `true` if you want to cleanup older PRs targeting the same branch. Use this with caution! | `false` | `false` |
+| is_force_push_pr            | `[optional]` set to `true` if you want to force push and pr update. Needs further permissions (see below) | `false`  | `false`                                                               |
+| is_pr_cleanup               | `[optional]` set to `true` if you want to cleanup older PRs targeting the same branch. Use this with caution! | `false`  | `false`                                                               |
 | is_keep_branch_on_pr_cleanup | `[optional]` set to `true` if you want to keep the branch when pr is cleanup. Only makes sense together with `is_pr_cleanup` | `false` | `false` |
-| is_not_source_github | `[optional]` set to `true` if the source git provider is not GitHub | `false` | `false` |
+| is_not_source_github        | `[optional]` set to `true` if the source git provider is not GitHub                                           | `false`  | `false`                                                               |
 | is_force_deletion | `[optional]` set to `true` if you want to force delete files which are deleted within the source repository even if they contain changes. You need to also adjust `git_remote_pull_params` (see below for details) | `false` | `false` |
-| git_user_name | `[optional]` set the committer git user.name | `false` | `${GITHUB_ACTOR}` |
-| git_user_email | `[optional]` set the committer git user.email | `false` | `github-action@actions-template-sync.noreply.${SOURCE_REPO_HOSTNAME}` |
-| git_remote_pull_params | `[optional]` set remote pull parameters | `false` | `--allow-unrelated-histories --squash --strategy=recursive -X theirs` |
+| git_user_name               | `[optional]` set the committer git user.name                                                                  | `false`  | `${GITHUB_ACTOR}`                                                     |
+| git_user_email              | `[optional]` set the committer git user.email                                                                 | `false`  | `github-action@actions-template-sync.noreply.${SOURCE_REPO_HOSTNAME}` |
+| git_remote_pull_params      | `[optional]` set remote pull parameters                                                                       | `false`  | `--allow-unrelated-histories --squash --strategy=recursive -X theirs` |
 | gpg_private_key | `[optional]` set if you want to sign commits | `false` | |
 | gpg_passphrase | `[optional]` set if your optional gpg private key has a passphrase | `false` | |
 | steps | `[optional] add the steps you want to execute within the action` | `false` | all steps will be executed |
-| template_sync_ignore_file_path | `[optional] set the path to the ignore file.` | `false` | `.templatesyncignore` |
+| template_sync_ignore_file_path | `[optional] set the path to the ignore file.` | false |`.templatesyncignore` |
 | is_with_tags | `[optional]` set to `true` if tags should be synced | `false` | `false` |
 
 ### Action Outputs
 
 > Properties that are available after the action executed.
 
-| output            | description                                       |
-|-------------------|---------------------------------------------------|
-| pr_branch         | The name of the branch used for the pull request  |
-| pr_number         | The number of the pr created for the sync branch  |
-| template_git_hash | The template source repository git hash           |
+| output | description |
+| ------ | ----------- |
+| pr_branch | The name of the branch used for the pull request |
+| template_git_hash | The template source repository git hash |
 
 **Remarks** Please consider following edge cases
 
 * **pr_branch**
   * If PR branch already exists (e.g. after a 2nd run) the action won't update the branch but will still output the branch name
-  * If the remote repository already contains the source repository changes the action will exit and the output variable will be undefined
-  * If there are no changes the action will exit and the output variable will be undefined
-
-* **pr_number**
-  * If PR branch already exists (e.g. after a 2nd run) the action will set pr_number undefined (as there was no created PR's).
   * If the remote repository already contains the source repository changes the action will exit and the output variable will be undefined
   * If there are no changes the action will exit and the output variable will be undefined
 
@@ -345,7 +339,7 @@ Per default the action is using the default branch as the target. To change this
 
 ```yaml
   - name: Checkout
-    uses: actions/checkout@v6
+    uses: actions/checkout@v4
     with:
       ref: <target_branch>  # defaults to the default branch
 ```
@@ -451,7 +445,7 @@ jobs:
     steps:
       # To use this repository's private action, you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: actions-template-sync
         uses: AndreasAugustin/actions-template-sync@v2
@@ -518,7 +512,7 @@ jobs:
     steps:
       # To use this repository's private action, you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: actions-template-sync first steps
         uses: AndreasAugustin/actions-template-sync@v2
@@ -696,7 +690,7 @@ This happens because the template repository is trying to overwrite some files i
         steps:
           # To use this repository's private action, you must check out the repository
           - name: Checkout
-            uses: actions/checkout@v6
+            uses: actions/checkout@v4
             with:
               # submodules: true
               persist-credentials: false # needed
@@ -737,17 +731,17 @@ For more information, see "[Enabling debug logging.][enabling-debug-logging]"
 
 There are other great tools available within GitHub. Here you can find a comparison.
 
-| **feature** | **actions-template-sync** | [github-sync][other-repo-sync] | [git-repo-sync][other-git-repo-sync] | [action-template-repository-sync][other-action-template-repository-sync] |
+| **feature** | **actions-template-sync** |[github-sync][other-repo-sync]| [git-repo-sync][other-git-repo-sync] | [action-template-repository-sync][other-action-template-repository-sync] |
 | ----------- | ------------------------- | -------------------------- | ------------------------------------ | --------------------------------- |
 | GitHub action | :heavy_check_mark: | :heavy_check_mark: | :x: | :heavy_check_mark: |
 | hooks | :heavy_check_mark: | :x: | :x: | :x: |
 | available docker image | :heavy_check_mark: | :x: | :x: | :heavy_check_mark: |
-| sync between private and public repo | :heavy_check_mark: `PAT,ssh,Github app` | :heavy_check_mark: `PAT,ssh` | :x: local repos | :heavy_check_mark: `PAT` |
+| sync between private and public repo | :heavy_check_mark: `PAT,ssh,Github app` | :heavy_check_mark: `PAT,ssh` |:x: local repos | :heavy_check_mark: `PAT` |
 | sync between 2 private repos | :heavy_check_mark: `PAT,ssh,Github app` | :heavy_check_mark: `PAT,ssh` | :x: local repos | :heavy_check_mark: `PAT` |
 | sync between 2 public repos | :heavy_check_mark: | :heavy_check_mark: | :x: local repos | :heavy_check_mark: |
 | two way sync | :x: | :heavy_check_mark: | :x: | :x: |
 | Sync from a third-party repo to a Github repo | :heavy_check_mark: | :heavy_check_mark: | :x: local repos | :x: |
-| dry run | :heavy_check_mark: | :x: | :x: | :heavy_check_mark: |
+| dry run | :heavy_check_mark: | :x: | :x: | :heavy_check_mark:  |
 | ignore files | :heavy_check_mark: | :x: | :x: | :heavy_check_mark: |
 | creates a PR | :heavy_check_mark: | :heavy_check_mark: | :x: | :heavy_check_mark: |
 | sign commits | :heavy_check_mark: | :x: | :x: | :x: |
@@ -824,10 +818,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/PepijnB"><img src="https://avatars.githubusercontent.com/u/24453103?v=4?s=100" width="100px;" alt="Pepijn Boer"/><br /><sub><b>Pepijn Boer</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/issues?q=author%3APepijnB" title="Bug reports">🐛</a> <a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=PepijnB" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/alexvanderberkel"><img src="https://avatars.githubusercontent.com/u/862899?v=4?s=100" width="100px;" alt="Alex"/><br /><sub><b>Alex</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=alexvanderberkel" title="Code">💻</a> <a href="#ideas-alexvanderberkel" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/AndreasAugustin/actions-template-sync/pulls?q=is%3Apr+reviewed-by%3Aalexvanderberkel" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=alexvanderberkel" title="Tests">⚠️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/yuhengshen"><img src="https://avatars.githubusercontent.com/u/29867660?v=4?s=100" width="100px;" alt="yuhengshen"/><br /><sub><b>yuhengshen</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/issues?q=author%3Ayuhengshen" title="Bug reports">🐛</a> <a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=yuhengshen" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/cjlpowers"><img src="https://avatars.githubusercontent.com/u/4238634?v=4?s=100" width="100px;" alt="Chris Powers"/><br /><sub><b>Chris Powers</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=cjlpowers" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://toshy.dev"><img src="https://avatars.githubusercontent.com/u/31921460?v=4?s=100" width="100px;" alt="ToshY"/><br /><sub><b>ToshY</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=ToshY" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/KLAVIATURKIN"><img src="https://avatars.githubusercontent.com/u/11288889?v=4?s=100" width="100px;" alt="Yuriy"/><br /><sub><b>Yuriy</b></sub></a><br /><a href="#ideas-KLAVIATURKIN" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Eric-Liu-SANDAG"><img src="https://avatars.githubusercontent.com/u/108823453?v=4?s=100" width="100px;" alt="Eric Liu"/><br /><sub><b>Eric Liu</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=Eric-Liu-SANDAG" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>

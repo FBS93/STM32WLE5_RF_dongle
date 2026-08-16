@@ -12,8 +12,6 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
-   SPDX-License-Identifier: Apache-2.0
-
    This library is plugged into LLVM when invoking clang through afl-clang-lto.
 
  */
@@ -41,7 +39,7 @@
 #include "llvm/Config/llvm-config.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/IR/IRBuilder.h"
-#if defined(__has_include) && __has_include("llvm/Plugins/PassPlugin.h")
+#if LLVM_MAJOR >= 22
   #include "llvm/Plugins/PassPlugin.h"
 #else
   #include "llvm/Passes/PassPlugin.h"
@@ -244,7 +242,6 @@ PreservedAnalyses AFLdict2filePass::run(Module &M, ModuleAnalysisManager &MAM) {
 
         if ((cmpInst = dyn_cast<CmpInst>(&IN))) {
 
-          if (cmpInst->getMetadata("afl.skip")) continue;
           /* Check both operands for constants since LLVM may place the
              constant in either operand depending on the comparison
              direction and optimization level */
@@ -342,7 +339,6 @@ PreservedAnalyses AFLdict2filePass::run(Module &M, ModuleAnalysisManager &MAM) {
 
         if ((callInst = dyn_cast<CallInst>(&IN))) {
 
-          if (callInst->getMetadata("afl.skip")) continue;
           bool   isStrcmp = true;
           bool   isMemcmp = true;
           bool   isStrncmp = true;
@@ -412,62 +408,38 @@ PreservedAnalyses AFLdict2filePass::run(Module &M, ModuleAnalysisManager &MAM) {
            * prototype */
           FunctionType *FT = Callee->getFunctionType();
 
-          isStrstr &= FT->getNumParams() == 2 &&
-                      FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                      FT->getParamType(0)->isPointerTy();
-#else
-                      FT->getParamType(0) ==
-                          IntegerType::getInt8Ty(M.getContext())
-                              ->getPointerTo(0);
-#endif
-          isStrcmp &= FT->getNumParams() == 2 &&
-                      FT->getReturnType()->isIntegerTy(32) &&
-                      FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                      FT->getParamType(0)->isPointerTy();
-#else
-                      FT->getParamType(0) ==
-                          IntegerType::getInt8Ty(M.getContext())
-                              ->getPointerTo(0);
-#endif
-          isStrcasecmp &= FT->getNumParams() == 2 &&
-                          FT->getReturnType()->isIntegerTy(32) &&
-                          FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                          FT->getParamType(0)->isPointerTy();
-#else
-                          FT->getParamType(0) ==
-                              IntegerType::getInt8Ty(M.getContext())
-                                  ->getPointerTo(0);
-#endif
+          isStrstr &=
+              FT->getNumParams() == 2 &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0);
+          isStrcmp &=
+              FT->getNumParams() == 2 && FT->getReturnType()->isIntegerTy(32) &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0);
+          isStrcasecmp &=
+              FT->getNumParams() == 2 && FT->getReturnType()->isIntegerTy(32) &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0);
           isMemcmp &= FT->getNumParams() == 3 &&
                       FT->getReturnType()->isIntegerTy(32) &&
                       FT->getParamType(0)->isPointerTy() &&
                       FT->getParamType(1)->isPointerTy() &&
                       FT->getParamType(2)->isIntegerTy();
-          isStrncmp &= FT->getNumParams() == 3 &&
-                       FT->getReturnType()->isIntegerTy(32) &&
-                       FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                       FT->getParamType(0)->isPointerTy() &&
-#else
-                       FT->getParamType(0) ==
-                           IntegerType::getInt8Ty(M.getContext())
-                               ->getPointerTo(0) &&
-#endif
-                       FT->getParamType(2)->isIntegerTy();
-          isStrncasecmp &= FT->getNumParams() == 3 &&
-                           FT->getReturnType()->isIntegerTy(32) &&
-                           FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                           FT->getParamType(0)->isPointerTy() &&
-#else
-                           FT->getParamType(0) ==
-                               IntegerType::getInt8Ty(M.getContext())
-                                   ->getPointerTo(0) &&
-#endif
-                           FT->getParamType(2)->isIntegerTy();
+          isStrncmp &=
+              FT->getNumParams() == 3 && FT->getReturnType()->isIntegerTy(32) &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0) &&
+              FT->getParamType(2)->isIntegerTy();
+          isStrncasecmp &=
+              FT->getNumParams() == 3 && FT->getReturnType()->isIntegerTy(32) &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0) &&
+              FT->getParamType(2)->isIntegerTy();
           isStdString &= FT->getNumParams() >= 2 &&
                          FT->getParamType(0)->isPointerTy() &&
                          FT->getParamType(1)->isPointerTy();

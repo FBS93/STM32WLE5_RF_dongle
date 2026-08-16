@@ -45,11 +45,6 @@ TARGETS       =  $(______OS_TARGET:$(_UNIQ)=libtokencap.so)
 
 LDFLAGS     += $(_____OS_DL)
 
-SRCS = libtokencap.so.c
-ifeq ($(shell uname), Darwin)
-	SRCS += ../macos_fishhook/fishhook.c
-endif
-
 #ifeq "$(shell uname)" "Linux"
 #  TARGETS = libtokencap.so
 #  LDFLAGS     += -ldl
@@ -73,8 +68,8 @@ endif
 #endif
 all: $(TARGETS)
 
-libtokencap.so: $(SRCS) ../../config.h
-	$(CC) $(CFLAGS) $(CPPFLAGS) -shared -fPIC $(SRCS) -o $@ $(LDFLAGS)
+libtokencap.so: libtokencap.so.c ../../config.h
+	$(CC) $(CFLAGS) $(CPPFLAGS) -shared -fPIC $< -o $@ $(LDFLAGS)
 	cp -f libtokencap.so ../../
 
 .NOTPARALLEL: clean

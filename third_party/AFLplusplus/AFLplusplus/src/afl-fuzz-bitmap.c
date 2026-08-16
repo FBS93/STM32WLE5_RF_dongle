@@ -17,8 +17,6 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
-   SPDX-License-Identifier: Apache-2.0
-
    This is the real deal: the program takes an instrumented binary and
    attempts a variety of basic fuzzing tricks, paying close attention to
    how they affect the execution path.
@@ -49,28 +47,15 @@ static const u8 simplify_lookup[256] = {
 
 static const u8 count_class_lookup8[256] = {
 
-    // NEW
     [0] = 0,
     [1] = 1,
-    [2 ... 3] = 2,
-    [4 ... 7] = 4,
-    [8 ... 15] = 8,
-    [16 ... 31] = 16,
-    [32 ... 63] = 32,
-    [64 ... 127] = 64,
+    [2] = 2,
+    [3] = 4,
+    [4 ... 7] = 8,
+    [8 ... 15] = 16,
+    [16 ... 31] = 32,
+    [32 ... 127] = 64,
     [128 ... 255] = 128
-
-    /* OLD
-        [0] = 0,
-        [1] = 1,
-        [2] = 2,
-        [3] = 4,
-        [4 ... 7] = 8,
-        [8 ... 15] = 16,
-        [16 ... 31] = 32,
-        [32 ... 127] = 64,
-        [128 ... 255] = 128
-    */
 
 };
 
@@ -578,18 +563,6 @@ u8 __attribute__((hot)) save_if_interesting(afl_state_t *afl, void *mem,
 
   afl->san_case_status = 0;
 
-  if (unlikely(afl->fsrv.c11)) {
-
-    unsigned int *val = (unsigned int *)(&afl->fsrv.trace_bits[1]);
-    if (unlikely(*val)) {
-
-      afl->c11 = *val;
-      *val = 0;
-
-    }
-
-  }
-
   /* Update path frequency. */
 
   /* Generating a hash on every input is super expensive. Bad idea and should
@@ -664,39 +637,7 @@ u8 __attribute__((hot)) save_if_interesting(afl_state_t *afl, void *mem,
 
       for (san_idx = 0; san_idx < afl->san_binary_length; san_idx++) {
 
-        u8 san_sent = 0;
-
-        if (unlikely(afl->custom_mutators_count)) {
-
-          LIST_FOREACH(&afl->custom_mutator_list, struct custom_mutator, {
-
-            if (el->afl_custom_fuzz_send) {
-
-              if (!afl->afl_env.afl_custom_mutator_late_send) {
-
-                el->afl_custom_fuzz_send(el->data, mem, len);
-
-              } else {
-
-                afl->san_fsrvs[san_idx].custom_input = mem;
-                afl->san_fsrvs[san_idx].custom_input_len = len;
-
-              }
-
-              san_sent = 1;
-
-            }
-
-          });
-
-        }
-
-        if (likely(!san_sent)) {
-
-          afl_fsrv_write_to_testcase(&afl->san_fsrvs[san_idx], mem, len);
-
-        }
-
+        len = write_to_testcase(afl, &mem, len, 0);
         san_fault = fuzz_run_target(afl, &afl->san_fsrvs[san_idx],
                                     afl->san_fsrvs[san_idx].exec_tmout);
 
@@ -1102,6 +1043,20 @@ may_save_fault:
       }
 
 #endif
+      if (unlikely(afl->infoexec)) {
+
+        // if the user wants to be informed on new crashes - do that
+#if !TARGET_OS_IPHONE
+        // we dont care if system errors, but we dont want a
+        // compiler warning either
+        // See
+        // https://stackoverflow.com/questions/11888594/ignoring-return-values-in-c
+        (void)(system(afl->infoexec) + 1);
+#else
+        WARNF("command execution unsupported");
+#endif
+
+      }
 
       afl->last_crash_time = get_cur_time();
       afl->last_crash_execs = afl->fsrv.total_execs;
@@ -1124,30 +1079,6 @@ may_save_fault:
 
     ck_write(fd, mem, len, fn);
     close(fd);
-
-  }
-
-  if (unlikely(afl->infoexec) && fault == FSRV_RUN_CRASH) {
-
-    if (fd < 0) {
-
-      WARNF("Crash detected, but could not write testcase to '%s'", fn);
-
-    }
-
-    // if the user wants to be informed on new crashes - do that
-#if !TARGET_OS_IPHONE
-    // we dont care if system errors, but we dont want a
-    // compiler warning either
-    // See
-    // https://stackoverflow.com/questions/11888594/ignoring-return-values-in-c
-    char infoexec_cmd[PATH_MAX * 2];
-    snprintf(infoexec_cmd, sizeof(infoexec_cmd), "%s \"%s\"", afl->infoexec,
-             fn);
-    (void)(system(infoexec_cmd) + 1);
-#else
-    WARNF("command execution unsupported");
-#endif
 
   }
 

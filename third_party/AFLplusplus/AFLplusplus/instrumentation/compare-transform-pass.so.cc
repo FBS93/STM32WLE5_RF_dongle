@@ -6,8 +6,6 @@
  * You may obtain a copy of the License at
  *
  *     https://www.apache.org/licenses/LICENSE-2.0
-
-   SPDX-License-Identifier: Apache-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,23 +26,36 @@
 
 #include "llvm/ADT/Statistic.h"
 #include "llvm/IR/IRBuilder.h"
-#if defined(__has_include) && __has_include("llvm/Plugins/PassPlugin.h")
-  #include "llvm/Plugins/PassPlugin.h"
+#if LLVM_MAJOR >= 11                                /* use new pass manager */
+  #if LLVM_MAJOR >= 22
+    #include "llvm/Plugins/PassPlugin.h"
+  #else
+    #include "llvm/Passes/PassPlugin.h"
+  #endif
+  #include "llvm/Passes/PassBuilder.h"
+  #include "llvm/IR/PassManager.h"
 #else
-  #include "llvm/Passes/PassPlugin.h"
+  #include "llvm/IR/LegacyPassManager.h"
+  #include "llvm/Transforms/IPO/PassManagerBuilder.h"
 #endif
-#include "llvm/Passes/PassBuilder.h"
-#include "llvm/IR/PassManager.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
 #include "llvm/Pass.h"
 #include "llvm/Analysis/ValueTracking.h"
-#include "llvm/Passes/OptimizationLevel.h"
+#if LLVM_MAJOR >= 14                        /* how about stable interfaces? */
+  #include "llvm/Passes/OptimizationLevel.h"
+#endif
 
-#include "llvm/IR/Verifier.h"
-#include "llvm/IR/DebugInfo.h"
+#if LLVM_MAJOR >= 4 || (LLVM_MAJOR == 3 && LLVM_MINOR > 4)
+  #include "llvm/IR/Verifier.h"
+  #include "llvm/IR/DebugInfo.h"
+#else
+  #include "llvm/Analysis/Verifier.h"
+  #include "llvm/DebugInfo.h"
+  #define nullptr 0
+#endif
 
 #if LLVM_MAJOR >= 19
   #define STARTSWITH starts_with
@@ -59,16 +70,45 @@ using namespace llvm;
 
 namespace {
 
+#if LLVM_MAJOR >= 11                                /* use new pass manager */
 class CompareTransform : public PassInfoMixin<CompareTransform> {
 
  public:
   CompareTransform() {
 
+#else
+class CompareTransform : public ModulePass {
+
+ public:
+  static char ID;
+  CompareTransform() : ModulePass(ID) {
+
+#endif
+
     initInstrumentList();
 
   }
 
+#if LLVM_MAJOR < 11
+  #if LLVM_MAJOR >= 4
+  StringRef getPassName() const override {
+
+  #else
+  const char *getPassName() const override {
+
+  #endif
+
+    return "compcov transform";
+
+  }
+
+#endif
+
+#if LLVM_MAJOR >= 11                                /* use new pass manager */
   PreservedAnalyses run(Module &M, ModuleAnalysisManager &MAM);
+#else
+  bool runOnModule(Module &M) override;
+#endif
 
  private:
   bool transformCmps(Module &M, const bool processStrcmp,
@@ -80,6 +120,7 @@ class CompareTransform : public PassInfoMixin<CompareTransform> {
 
 }  // namespace
 
+#if LLVM_MAJOR >= 11                                /* use new pass manager */
 extern "C" ::llvm::PassPluginLibraryInfo LLVM_ATTRIBUTE_WEAK
 llvmGetPassPluginInfo() {
 
@@ -87,25 +128,28 @@ llvmGetPassPluginInfo() {
           /* lambda to insert our pass into the pass pipeline. */
           [](PassBuilder &PB) {
 
-#if 1
-  #if LLVM_MAJOR >= 16
+  #if 1
+    #if LLVM_MAJOR <= 13
+            using OptimizationLevel = typename PassBuilder::OptimizationLevel;
+    #endif
+    #if LLVM_MAJOR >= 16
             PB.registerOptimizerEarlyEPCallback(
-  #else
+    #else
             PB.registerOptimizerLastEPCallback(
-  #endif
+    #endif
                 [](ModulePassManager &MPM, OptimizationLevel OL
-  #if LLVM_MAJOR >= 20
+    #if LLVM_MAJOR >= 20
                    ,
                    ThinOrFullLTOPhase Phase
-  #endif
+    #endif
                 ) {
 
                   MPM.addPass(CompareTransform());
 
                 });
 
-/* TODO LTO registration */
-#else
+  /* TODO LTO registration */
+  #else
             using PipelineElement = typename PassBuilder::PipelineElement;
             PB.registerPipelineParsingCallback([](StringRef          Name,
                                                   ModulePassManager &MPM,
@@ -124,11 +168,15 @@ llvmGetPassPluginInfo() {
 
             });
 
-#endif
+  #endif
 
           }};
 
 }
+
+#else
+char CompareTransform::ID = 0;
+#endif
 
 bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
                                      const bool processMemcmp,
@@ -144,11 +192,29 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
   IntegerType                     *Int32Ty = IntegerType::getInt32Ty(C);
   IntegerType                     *Int64Ty = IntegerType::getInt64Ty(C);
 
+#if LLVM_MAJOR >= 9
   FunctionCallee tolowerFn;
+#else
+  Function *tolowerFn;
+#endif
   {
 
-    FunctionCallee c = M.getOrInsertFunction("tolower", Int32Ty, Int32Ty);
+#if LLVM_MAJOR >= 9
+    FunctionCallee
+#else
+    Constant *
+#endif
+        c = M.getOrInsertFunction("tolower", Int32Ty, Int32Ty
+#if LLVM_MAJOR < 5
+                                  ,
+                                  NULL
+#endif
+        );
+#if LLVM_MAJOR >= 9
     tolowerFn = c;
+#else
+    tolowerFn = cast<Function>(c);
+#endif
 
   }
 
@@ -166,7 +232,6 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
 
         if ((callInst = dyn_cast<CallInst>(&IN))) {
 
-          if (callInst->getMetadata("afl.skip")) continue;
           bool isStrcmp = processStrcmp;
           bool isMemcmp = processMemcmp;
           bool isStrncmp = processStrncmp;
@@ -222,53 +287,33 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
            * prototype */
           FunctionType *FT = Callee->getFunctionType();
 
-          isStrcmp &= FT->getNumParams() == 2 &&
-                      FT->getReturnType()->isIntegerTy(32) &&
-                      FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                      FT->getParamType(0)->isPointerTy();
-#else
-                      FT->getParamType(0) ==
-                          IntegerType::getInt8Ty(M.getContext())
-                              ->getPointerTo(0);
-#endif
-          isStrcasecmp &= FT->getNumParams() == 2 &&
-                          FT->getReturnType()->isIntegerTy(32) &&
-                          FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                          FT->getParamType(0)->isPointerTy();
-#else
-                          FT->getParamType(0) ==
-                              IntegerType::getInt8Ty(M.getContext())
-                                  ->getPointerTo(0);
-#endif
+          isStrcmp &=
+              FT->getNumParams() == 2 && FT->getReturnType()->isIntegerTy(32) &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0);
+          isStrcasecmp &=
+              FT->getNumParams() == 2 && FT->getReturnType()->isIntegerTy(32) &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0);
           isMemcmp &= FT->getNumParams() == 3 &&
                       FT->getReturnType()->isIntegerTy(32) &&
                       FT->getParamType(0)->isPointerTy() &&
                       FT->getParamType(1)->isPointerTy() &&
                       FT->getParamType(2)->isIntegerTy();
-          isStrncmp &= FT->getNumParams() == 3 &&
-                       FT->getReturnType()->isIntegerTy(32) &&
-                       FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                       FT->getParamType(0)->isPointerTy() &&
-#else
-                       FT->getParamType(0) ==
-                           IntegerType::getInt8Ty(M.getContext())
-                               ->getPointerTo(0) &&
-#endif
-                       FT->getParamType(2)->isIntegerTy();
-          isStrncasecmp &= FT->getNumParams() == 3 &&
-                           FT->getReturnType()->isIntegerTy(32) &&
-                           FT->getParamType(0) == FT->getParamType(1) &&
-#if LLVM_MAJOR >= 17
-                           FT->getParamType(0)->isPointerTy() &&
-#else
-                           FT->getParamType(0) ==
-                               IntegerType::getInt8Ty(M.getContext())
-                                   ->getPointerTo(0) &&
-#endif
-                           FT->getParamType(2)->isIntegerTy();
+          isStrncmp &=
+              FT->getNumParams() == 3 && FT->getReturnType()->isIntegerTy(32) &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0) &&
+              FT->getParamType(2)->isIntegerTy();
+          isStrncasecmp &=
+              FT->getNumParams() == 3 && FT->getReturnType()->isIntegerTy(32) &&
+              FT->getParamType(0) == FT->getParamType(1) &&
+              FT->getParamType(0) ==
+                  IntegerType::getInt8Ty(M.getContext())->getPointerTo(0) &&
+              FT->getParamType(2)->isIntegerTy();
 
           if (!isStrcmp && !isMemcmp && !isStrncmp && !isStrcasecmp &&
               !isStrncasecmp && !isIntMemcpy)
@@ -659,7 +704,11 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
 
     }
 
+#if LLVM_MAJOR >= 8
     Instruction *term = bb->getTerminator();
+#else
+    TerminatorInst *term = bb->getTerminator();
+#endif
     // Entry: null_check (if enabled) -> len_check (if exists) -> cmp_block
     BasicBlock *entry_bb =
         nullCheck ? null_check_bb
@@ -684,9 +733,9 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
         IRBuilder<> cur_lenchk_IRB(cur_lenchk_bb);
         Value      *icmp = cur_lenchk_IRB.CreateICmpEQ(
             sizedValue, ConstantInt::get(sizedValue->getType(), i));
-        if (auto *T = aflTerminatorOrNull(cur_lenchk_bb)) {
+        if (cur_lenchk_bb->getTerminator()) {
 
-          T->eraseFromParent();
+          cur_lenchk_bb->getTerminator()->eraseFromParent();
 
         }
 
@@ -704,8 +753,16 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
       IRBuilder<> cur_cmp_IRB(cur_cmp_bb);
 
       Value *v = ConstantInt::get(Int64Ty, i);
-      Value *ele = cur_cmp_IRB.CreateInBoundsGEP(Int8Ty, VarStr, v, "empty");
-      Value *load = cur_cmp_IRB.CreateLoad(Int8Ty, ele);
+      Value *ele = cur_cmp_IRB.CreateInBoundsGEP(
+#if LLVM_MAJOR >= 14
+          Int8Ty,
+#endif
+          VarStr, v, "empty");
+      Value *load = cur_cmp_IRB.CreateLoad(
+#if LLVM_MAJOR >= 14
+          Int8Ty,
+#endif
+          ele);
 
       if (isCaseInsensitive) {
 
@@ -753,7 +810,11 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
 
         Value *icmp =
             cur_cmp_IRB.CreateICmpEQ(isub, ConstantInt::get(Int8Ty, 0));
-        if (auto *T = aflTerminatorOrNull(cur_cmp_bb)) { T->eraseFromParent(); }
+        if (cur_cmp_bb->getTerminator()) {
+
+          cur_cmp_bb->getTerminator()->eraseFromParent();
+
+        }
 
         cur_cmp_IRB.CreateCondBr(
             icmp, next_lenchk_bb ? next_lenchk_bb : next_cmp_bb, end_bb);
@@ -761,7 +822,11 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
       } else {
 
         // Last iteration - add terminator to current block
-        if (auto *T = aflTerminatorOrNull(cur_cmp_bb)) { T->eraseFromParent(); }
+        if (cur_cmp_bb->getTerminator()) {
+
+          cur_cmp_bb->getTerminator()->eraseFromParent();
+
+        }
 
         BranchInst::Create(end_bb, cur_cmp_bb);
 
@@ -791,7 +856,13 @@ bool CompareTransform::transformCmps(Module &M, const bool processStrcmp,
 
 }
 
+#if LLVM_MAJOR >= 11                                /* use new pass manager */
 PreservedAnalyses CompareTransform::run(Module &M, ModuleAnalysisManager &MAM) {
+
+#else
+bool CompareTransform::runOnModule(Module &M) {
+
+#endif
 
   bool ret = false;
 
@@ -805,11 +876,12 @@ PreservedAnalyses CompareTransform::run(Module &M, ModuleAnalysisManager &MAM) {
   if (transformCmps(M, true, true, true, true, true) == true) ret = true;
   verifyModule(M);
 
-  /*  if (modified) {
-
-      PA.abandon<XX_Manager>();
-
-    }*/
+#if LLVM_MAJOR >= 11                                /* use new pass manager */
+                     /*  if (modified) {
+                   
+                         PA.abandon<XX_Manager>();
+                   
+                       }*/
 
   if (ret == true) {
 
@@ -821,5 +893,30 @@ PreservedAnalyses CompareTransform::run(Module &M, ModuleAnalysisManager &MAM) {
 
   }
 
+#else
+  return ret;
+#endif
+
 }
+
+#if LLVM_MAJOR < 11                                 /* use old pass manager */
+static void registerCompTransPass(const PassManagerBuilder &,
+                                  legacy::PassManagerBase &PM) {
+
+  auto p = new CompareTransform();
+  PM.add(p);
+
+}
+
+static RegisterStandardPasses RegisterCompTransPass(
+    PassManagerBuilder::EP_OptimizerLast, registerCompTransPass);
+
+static RegisterStandardPasses RegisterCompTransPass0(
+    PassManagerBuilder::EP_EnabledOnOptLevel0, registerCompTransPass);
+
+  #if LLVM_MAJOR >= 11
+static RegisterStandardPasses RegisterCompTransPassLTO(
+    PassManagerBuilder::EP_FullLinkTimeOptimizationLast, registerCompTransPass);
+  #endif
+#endif
 
