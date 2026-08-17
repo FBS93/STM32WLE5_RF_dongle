@@ -1,4 +1,17 @@
 /*
+   american fuzzy lop++ - part of the AFL++ project
+   ------------------------------------------------
+
+   Copyright 2019-2026 AFLplusplus Project. All rights reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may obtain a copy at https://www.apache.org/licenses/LICENSE-2.0
+
+   SPDX-License-Identifier: Apache-2.0
+
+ */
+
+/*
    american fuzzy lop++ - LLVM IJON instrumentation pass
    -----------------------------------------------------
 
@@ -15,7 +28,7 @@
 
 // Include LLVM headers first to avoid macro conflicts
 #include "llvm/Passes/PassBuilder.h"
-#if LLVM_MAJOR >= 22
+#if defined(__has_include) && __has_include("llvm/Plugins/PassPlugin.h")
   #include "llvm/Plugins/PassPlugin.h"
 #else
   #include "llvm/Passes/PassPlugin.h"
@@ -187,12 +200,15 @@ PreservedAnalyses IJONInstrumentation::run(Module                &M,
 
       if (M.getGlobalVariable("__afl_ijon_enabled", true) == nullptr) {
 
-        // Always create __afl_ijon_enabled for IJON memory allocation
+        // Always create __afl_ijon_enabled for IJON memory allocation.
+        // comdat so multiple instrumented TUs merge to one strong definition
+        // instead of a multiple-definition link error.
         IRBuilder<> IRB(M.getContext());
         Constant   *One32 = ConstantInt::get(IRB.getInt32Ty(), 1);
-        new GlobalVariable(M, IRB.getInt32Ty(), false,
-                           GlobalValue::ExternalLinkage, One32,
-                           "__afl_ijon_enabled");
+        auto       *GV = new GlobalVariable(M, IRB.getInt32Ty(), false,
+                                            GlobalValue::ExternalLinkage, One32,
+                                            "__afl_ijon_enabled");
+        GV->setComdat(M.getOrInsertComdat("__afl_ijon_enabled"));
 
       }
 
@@ -260,6 +276,7 @@ int IJONInstrumentation::instrumentFunction(Function &F) {
 
           if (calledFunc->getName() == "ijon_max" ||
               calledFunc->getName() == "ijon_max_variadic" ||
+              calledFunc->getName() == "ijon_max_until" ||
               calledFunc->getName() == "ijon_set" ||
               calledFunc->getName() == "ijon_inc" ||
               calledFunc->getName() == "ijon_xor_state") {
@@ -336,6 +353,11 @@ int IJONInstrumentation::instrumentFunction(Function &F) {
 
         // For ijon_xor_state, we don't transform - just count and pass through
         ijon_state_calls++;
+
+      } else if (calledFunc->getName() == "ijon_max_until") {
+
+        // Preserve ijon_max_until's encoded max value semantics.
+        ijon_max_calls++;
 
       } else {
 
@@ -692,9 +714,6 @@ llvmGetPassPluginInfo() {
           /* lambda to insert our pass into the pass pipeline. */
           [](PassBuilder &PB) {
 
-#if LLVM_VERSION_MAJOR <= 13
-            using OptimizationLevel = typename PassBuilder::OptimizationLevel;
-#endif
             // Register only once to avoid duplicate processing
             PB.registerOptimizerLastEPCallback(
                 [](ModulePassManager &MPM, OptimizationLevel OL

@@ -20,6 +20,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
    Shared code to handle the shared memory. This is used by the fuzzer
    as well the other components like afl-tmin, afl-showmap, etc...
 
@@ -51,6 +53,12 @@ typedef struct sharedmem {
   u8 *map;                                          /* shared memory region */
 
   size_t map_size;                                 /* actual allocated size */
+
+  /* The fuzzer<->child synchronization word lives in the last bytes of the
+     coverage map (see afl_shm_init). child_sync_offset is its byte offset
+     into ->map (0 means none). This avoids a second shared memory segment. */
+  u32  child_sync_offset;           /* offset of child_sync word in map     */
+  u32 *child_sync;                 /* pointer to the 4-byte sync word       */
 
   int             cmplog_mode;
   int             sanfuzz_mode;

@@ -8,6 +8,8 @@
  * You may obtain a copy of the License at
  *
  *     https://www.apache.org/licenses/LICENSE-2.0
+
+   SPDX-License-Identifier: Apache-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +30,7 @@
 
 #include "llvm/Pass.h"
 #include "llvm/Support/raw_ostream.h"
-#if LLVM_MAJOR >= 22
+#if defined(__has_include) && __has_include("llvm/Plugins/PassPlugin.h")
   #include "llvm/Plugins/PassPlugin.h"
 #else
   #include "llvm/Passes/PassPlugin.h"
@@ -985,9 +987,10 @@ size_t SplitComparesTransform::splitFPCompares(Module &M) {
     const unsigned int precision = sizeInBits == 32    ? 24
                                    : sizeInBits == 64  ? 53
                                    : sizeInBits == 128 ? 113
-                                   : sizeInBits == 16  ? 11
-                                   : sizeInBits == 80  ? 65
-                                                       : sizeInBits - 8;
+                                   : sizeInBits == 16
+                                       ? (op0->getType()->isBFloatTy() ? 8 : 11)
+                                   : sizeInBits == 80 ? 65
+                                                      : sizeInBits - 8;
 
     const unsigned           shiftR_exponent = precision - 1;
     const unsigned long long mask_fraction =
@@ -1087,10 +1090,10 @@ size_t SplitComparesTransform::splitFPCompares(Module &M) {
     bb->getInstList().insert(BasicBlock::iterator(bb->getTerminator()), is_nan);
 #endif
 
-    /* the result of the comparison, when at least one op is NaN
-       is true only for the "NOT EQUAL" predicates. */
-    bool NaNcmp_result = FcmpInst->getPredicate() == CmpInst::FCMP_ONE ||
-                         FcmpInst->getPredicate() == CmpInst::FCMP_UNE;
+    /* the result of the comparison, when at least one op is NaN,
+       is defined by ordered vs. unordered: ordered (FCMP_O*) predicates yield
+       false, unordered (FCMP_U*) predicates yield true. */
+    bool NaNcmp_result = CmpInst::isUnordered(FcmpInst->getPredicate());
 
     BasicBlock *nonan_bb =
         BasicBlock::Create(C, "noNaN", end_bb->getParent(), end_bb);
@@ -1722,6 +1725,7 @@ PreservedAnalyses SplitComparesTransform::run(Module                &M,
 
           if (auto CI = dyn_cast<CmpInst>(&IN)) {
 
+            if (CI->getMetadata("afl.skip")) continue;
             auto op0 = CI->getOperand(0);
             auto op1 = CI->getOperand(1);
             // has to valid operands

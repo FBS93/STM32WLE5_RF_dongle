@@ -20,6 +20,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
    A very simple tool that runs the targeted binary and displays
    the contents of the trace bitmap in a human-readable form. Useful in
    scripts to eliminate redundant inputs and perform other checks.
@@ -290,7 +292,7 @@ static u32 write_results_to_file(afl_forkserver_t *fsrv, u8 *outfile) {
 
   }
 
-  if (cmin_mode && (run_timed_out() || (!caa && child_crashed != cco))) {
+  if (cmin_mode && !caa && (run_timed_out() || child_crashed != cco)) {
 
     if (strcmp(outfile, "-")) {
 
@@ -1225,7 +1227,8 @@ static void usage(u8 *argv0) {
       "LD_BIND_LAZY: do not set LD_BIND_NOW env var for target\n"
       "AFL_CMIN_CRASHES_ONLY: (cmin_mode) only write tuples for crashing "
       "inputs\n"
-      "AFL_CMIN_ALLOW_ANY: (cmin_mode) write tuples for crashing inputs also\n"
+      "AFL_CMIN_ALLOW_ANY: (cmin_mode) write tuples for crashing and timeout "
+      "inputs also\n"
       "AFL_CRASH_EXITCODE: optional child exit code to be interpreted as "
       "crash\n"
       "AFL_DEBUG: enable extra developer output\n"
@@ -1603,6 +1606,7 @@ int main(int argc, char **argv_orig, char **envp) {
 #endif
 
   fsrv->trace_bits = afl_shm_init(&shm, map_size, 0, DEFAULT_PERMISSION, -1);
+  fsrv->child_sync_offset = shm.child_sync_offset;
 
   if (!quiet_mode) {
 
@@ -1638,6 +1642,14 @@ int main(int argc, char **argv_orig, char **envp) {
     fsrv->out_fd =
         open(stdin_file, O_RDWR | O_CREAT | O_EXCL, DEFAULT_PERMISSION);
     if (fsrv->out_fd < 0) { PFATAL("Unable to create '%s'", stdin_file); }
+
+    /* If we created the temp file ourselves and the target reads from stdin
+       (no @@ substitution), unlink the directory entry now. The open fd keeps
+       the file alive for writes, but SIGKILL / SIGSEGV / parent process kill
+       can no longer leave a stray .afl-showmap-temp-<pid> behind. With @@ the
+       path is baked into argv and must stay visible to the child, so we leave
+       it for the atexit / signal handler to clean up. */
+    if (!at_file && fsrv->use_stdin) { unlink(stdin_file); }
 
   } else {
 

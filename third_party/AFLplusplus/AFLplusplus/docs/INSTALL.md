@@ -119,10 +119,11 @@ See
 [https://www.spy-hill.com/help/apple/SharedMemory.html](https://www.spy-hill.com/help/apple/SharedMemory.html)
 for documentation for the shared memory settings and how to make them permanent.
 
-Next, to build AFL++, install the following packages from brew:
+Next, to build AFL++, install the following packages from brew (use `@version`
+install a specific version):
 
 ```shell
-brew install wget git make cmake llvm gdb coreutils
+brew install wget git make cmake llvm lld gdb coreutils
 ```
 
 Depending on your macOS system + brew version, brew may be installed in different places.
