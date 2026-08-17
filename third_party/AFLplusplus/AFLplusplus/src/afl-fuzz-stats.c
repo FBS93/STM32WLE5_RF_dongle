@@ -18,6 +18,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
    This is the real deal: the program takes an instrumented binary and
    attempts a variety of basic fuzzing tricks, paying close attention to
    how they affect the execution path.
@@ -319,6 +321,38 @@ void load_stats_file(afl_state_t *afl) {
 
 }
 
+#if defined(__linux__)
+static u64 get_peak_rss_kb(s32 pid) {
+
+  if (pid <= 0) { return 0; }
+
+  u8 path[64];
+  snprintf((char *)path, sizeof(path), "/proc/%d/status", pid);
+
+  FILE *fp = fopen((char *)path, "r");
+  if (!fp) { return 0; }
+
+  u64  kb = 0;
+  char line[256];
+  while (fgets(line, sizeof(line), fp)) {
+
+    if (!strncmp(line, "VmHWM:", 6)) {
+
+      unsigned long long tmp = 0;
+      if (sscanf(line + 6, "%llu", &tmp) == 1) { kb = (u64)tmp; }
+      break;
+
+    }
+
+  }
+
+  fclose(fp);
+  return kb;
+
+}
+
+#endif
+
 /* Update stats file for unattended monitoring. */
 
 void write_stats_file(afl_state_t *afl, u32 t_bytes, double bitmap_cvg,
@@ -372,6 +406,18 @@ void write_stats_file(afl_state_t *afl, u32 t_bytes, double bitmap_cvg,
 
 #ifndef __HAIKU__
   if (getrusage(RUSAGE_CHILDREN, &rus)) { rus.ru_maxrss = 0; }
+  #ifdef __APPLE__
+  u64 cur_rss_mb = (u64)rus.ru_maxrss >> 20;
+  #else
+  u64 cur_rss_mb = (u64)rus.ru_maxrss >> 10;
+  #endif
+  #if defined(__linux__)
+  u64 hwm_kb = get_peak_rss_kb(afl->fsrv.fsrv_pid);
+  u64 child_kb = get_peak_rss_kb(afl->fsrv.child_pid);
+  if (child_kb > hwm_kb) { hwm_kb = child_kb; }
+  if ((hwm_kb >> 10) > cur_rss_mb) { cur_rss_mb = hwm_kb >> 10; }
+  #endif
+  if (cur_rss_mb > afl->peak_rss_mb) { afl->peak_rss_mb = cur_rss_mb; }
 #endif
   u64 runtime_ms = afl->prev_run_time + cur_time - afl->start_time;
   u64 overhead_ms = (afl->calibration_time_us + afl->sync_time_us +
@@ -390,6 +436,9 @@ void write_stats_file(afl_state_t *afl, u32 t_bytes, double bitmap_cvg,
           "fuzz_time         : %llu\n"
           "calibration_time  : %llu\n"
           "cmplog_time       : %llu\n"
+          "cmplog_tightness  : %u\n"
+          "cmplog_tight_new  : %llu\n"
+          "cmplog_size_derive: %u\n"
           "sync_time         : %llu\n"
           "trim_time         : %llu\n"
           "execs_done        : %llu\n"
@@ -440,8 +489,9 @@ void write_stats_file(afl_state_t *afl, u32 t_bytes, double bitmap_cvg,
                      : (cur_time - afl->last_find_time) / 1000),
           (runtime_ms - MIN(runtime_ms, overhead_ms)) / 1000,
           afl->calibration_time_us / 1000000, afl->cmplog_time_us / 1000000,
-          afl->sync_time_us / 1000000, afl->trim_time_us / 1000000,
-          afl->fsrv.total_execs,
+          afl->cmplog_tightness, afl->cmplog_tightness_new,
+          afl->cmplog_size_derive, afl->sync_time_us / 1000000,
+          afl->trim_time_us / 1000000, afl->fsrv.total_execs,
           afl->fsrv.total_execs / ((double)(runtime_ms) / 1000),
           afl->last_avg_execs_saved, afl->queued_items, afl->queued_favored,
           afl->queued_discovered, afl->queued_imported, afl->queued_variable,
@@ -452,11 +502,7 @@ void write_stats_file(afl_state_t *afl, u32 t_bytes, double bitmap_cvg,
           afl->fsrv.total_execs - afl->last_crash_execs, afl->fsrv.exec_tmout,
           afl->slowest_exec_ms,
 #ifndef __HAIKU__
-  #ifdef __APPLE__
-          (unsigned long int)(rus.ru_maxrss >> 20),
-  #else
-          (unsigned long int)(rus.ru_maxrss >> 10),
-  #endif
+          (unsigned long int)afl->peak_rss_mb,
 #else
           -1UL,
 #endif
@@ -1312,15 +1358,16 @@ void show_stats_normal(afl_state_t *afl) {
 
   if (unlikely(!afl->skip_deterministic)) {
 
-    sprintf(tmp, "%s/%s, %s/%s, %s/%s, %s/%s",
-            u_stringify_int(IB(0), afl->stage_finds[STAGE_EXTRAS_UO]),
-            u_stringify_int(IB(1), afl->stage_cycles[STAGE_EXTRAS_UO]),
-            u_stringify_int(IB(2), afl->stage_finds[STAGE_EXTRAS_UI]),
-            u_stringify_int(IB(3), afl->stage_cycles[STAGE_EXTRAS_UI]),
-            u_stringify_int(IB(4), afl->stage_finds[STAGE_EXTRAS_AO]),
-            u_stringify_int(IB(5), afl->stage_cycles[STAGE_EXTRAS_AO]),
-            u_stringify_int(IB(6), afl->stage_finds[STAGE_EXTRAS_AI]),
-            u_stringify_int(IB(7), afl->stage_cycles[STAGE_EXTRAS_AI]));
+    sprintf(
+        tmp, "%s/%s, %s/%s, %s/%s, %s/%s",
+        u_stringify_int(IB(0), afl->stage_finds[STAGE_EXTRA_OVERWRITE]),
+        u_stringify_int(IB(1), afl->stage_cycles[STAGE_EXTRA_OVERWRITE]),
+        u_stringify_int(IB(2), afl->stage_finds[STAGE_EXTRA_INSERT]),
+        u_stringify_int(IB(3), afl->stage_cycles[STAGE_EXTRA_INSERT]),
+        u_stringify_int(IB(4), afl->stage_finds[STAGE_AUTO_EXTRA_OVERWRITE]),
+        u_stringify_int(IB(5), afl->stage_cycles[STAGE_AUTO_EXTRA_OVERWRITE]),
+        u_stringify_int(IB(6), afl->stage_finds[STAGE_AUTO_EXTRA_INSERT]),
+        u_stringify_int(IB(7), afl->stage_cycles[STAGE_AUTO_EXTRA_INSERT]));
 
   } else if (unlikely(!afl->extras_cnt || afl->custom_only)) {
 
@@ -1471,8 +1518,7 @@ void show_stats_normal(afl_state_t *afl) {
 
   if (afl->cpu_core_count) {
 
-    char *spacing = SP10, snap[24] = " " cLGN "snapshot" cRST " ";
-
+    char  *spacing = SP10;
     double cur_runnable = get_runnable_processes();
     u32    cur_utilization = cur_runnable * 100 / afl->cpu_core_count;
 
@@ -1489,8 +1535,6 @@ void show_stats_normal(afl_state_t *afl) {
     /* If we're clearly oversubscribed, use red. */
 
     if (!afl->no_cpu_meter_red && cur_utilization >= 150) { cpu_color = cLRD; }
-
-    if (afl->fsrv.snapshot) { spacing = snap; }
 
 #ifdef HAVE_AFFINITY
 
@@ -2151,15 +2195,16 @@ void show_stats_pizza(afl_state_t *afl) {
 
   if (unlikely(!afl->skip_deterministic)) {
 
-    sprintf(tmp, "%s/%s, %s/%s, %s/%s, %s/%s",
-            u_stringify_int(IB(0), afl->stage_finds[STAGE_EXTRAS_UO]),
-            u_stringify_int(IB(1), afl->stage_cycles[STAGE_EXTRAS_UO]),
-            u_stringify_int(IB(2), afl->stage_finds[STAGE_EXTRAS_UI]),
-            u_stringify_int(IB(3), afl->stage_cycles[STAGE_EXTRAS_UI]),
-            u_stringify_int(IB(4), afl->stage_finds[STAGE_EXTRAS_AO]),
-            u_stringify_int(IB(5), afl->stage_cycles[STAGE_EXTRAS_AO]),
-            u_stringify_int(IB(6), afl->stage_finds[STAGE_EXTRAS_AI]),
-            u_stringify_int(IB(7), afl->stage_cycles[STAGE_EXTRAS_AI]));
+    sprintf(
+        tmp, "%s/%s, %s/%s, %s/%s, %s/%s",
+        u_stringify_int(IB(0), afl->stage_finds[STAGE_EXTRA_OVERWRITE]),
+        u_stringify_int(IB(1), afl->stage_cycles[STAGE_EXTRA_OVERWRITE]),
+        u_stringify_int(IB(2), afl->stage_finds[STAGE_EXTRA_INSERT]),
+        u_stringify_int(IB(3), afl->stage_cycles[STAGE_EXTRA_INSERT]),
+        u_stringify_int(IB(4), afl->stage_finds[STAGE_AUTO_EXTRA_OVERWRITE]),
+        u_stringify_int(IB(5), afl->stage_cycles[STAGE_AUTO_EXTRA_OVERWRITE]),
+        u_stringify_int(IB(6), afl->stage_finds[STAGE_AUTO_EXTRA_INSERT]),
+        u_stringify_int(IB(7), afl->stage_cycles[STAGE_AUTO_EXTRA_INSERT]));
 
   } else if (unlikely(!afl->extras_cnt || afl->custom_only)) {
 
@@ -2313,8 +2358,7 @@ void show_stats_pizza(afl_state_t *afl) {
 
   if (afl->cpu_core_count) {
 
-    char *spacing = SP10, snap[80] = " " cLGN "Pizzaioli's busyness " cRST " ";
-
+    char  *spacing = SP10;
     double cur_runnable = get_runnable_processes();
     u32    cur_utilization = cur_runnable * 100 / afl->cpu_core_count;
 
@@ -2331,8 +2375,6 @@ void show_stats_pizza(afl_state_t *afl) {
     /* If we're clearly oversubscribed, use red. */
 
     if (!afl->no_cpu_meter_red && cur_utilization >= 150) { cpu_color = cLRD; }
-
-    if (afl->fsrv.snapshot) { spacing = snap; }
 
 #ifdef HAVE_AFFINITY
 

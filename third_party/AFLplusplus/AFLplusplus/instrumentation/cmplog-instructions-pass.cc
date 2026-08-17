@@ -13,6 +13,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
 */
 
 #include <stdio.h>
@@ -31,7 +33,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/raw_ostream.h"
-#if LLVM_MAJOR >= 22
+#if defined(__has_include) && __has_include("llvm/Plugins/PassPlugin.h")
   #include "llvm/Plugins/PassPlugin.h"
 #else
   #include "llvm/Passes/PassPlugin.h"
@@ -87,9 +89,6 @@ llvmGetPassPluginInfo() {
           /* lambda to insert our pass into the pass pipeline. */
           [](PassBuilder &PB) {
 
-#if LLVM_VERSION_MAJOR <= 13
-            using OptimizationLevel = typename PassBuilder::OptimizationLevel;
-#endif
             PB.registerOptimizerLastEPCallback([](ModulePassManager &MPM,
                                                   OptimizationLevel  OL
 #if LLVM_VERSION_MAJOR >= 20
@@ -225,6 +224,7 @@ bool CmpLogInstructions::hookInstrs(Module &M, LoopInfoCallback LICallback) {
         CmpInst *selectcmpInst = nullptr;
         if ((selectcmpInst = dyn_cast<CmpInst>(&IN))) {
 
+          if (selectcmpInst->getMetadata("afl.skip")) continue;
           // skip loop comparisons using LoopInfo for robust detection
           if (selectcmpInst->hasOneUse())
             if (auto BR = dyn_cast<BranchInst>(selectcmpInst->user_back()))

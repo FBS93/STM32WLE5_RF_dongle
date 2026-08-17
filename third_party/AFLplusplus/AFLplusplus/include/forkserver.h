@@ -20,6 +20,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
    Shared code that implements a forkserver. This is used by the fuzzer
    as well the other components like afl-tmin.
 
@@ -124,7 +126,7 @@ typedef struct afl_forkserver {
   u32 init_tmout;                       /* Configurable init timeout (ms)   */
   u32 map_size;                         /* map size used by the target      */
   u32 real_map_size;                    /* real map size, unaligned         */
-  u32 snapshot;                         /* is snapshot feature used         */
+  u32 c11;                              /* is c11 feature used              */
   u64 mem_limit;                        /* Memory cap for child (MB)        */
 
   u64 total_execs;                      /* How often run_target was called  */
@@ -147,6 +149,11 @@ typedef struct afl_forkserver {
   bool use_shmem_fuzz;                  /* use shared mem for test cases    */
 
   bool support_shmem_fuzz;              /* set by afl-fuzz                  */
+
+  bool use_futex;                       /* usage of futex implementation    */
+  bool qemu_bridge;
+  u32 *child_sync;                      /* shared word: fuzzer↔child sync   */
+  u32  child_sync_offset;        /* byte offset of child_sync in trace_bits */
 
   bool use_ijon;                        /* use IJON tracking feature        */
 
@@ -250,6 +257,12 @@ typedef struct afl_forkserver {
   u8   *custom_input;
   u32   custom_input_len;
   void (*late_send)(void *, const u8 *, size_t);
+
+  /* Appended at end-of-struct to avoid shifting offsets for downstream
+     consumers linking against an older layout. */
+  bool cmplog_size_derive_requested;    /* -l Z requires target support     */
+  bool supports_allocsize_derive;       /* target reports derive support    */
+  bool use_bug_map;                     /* target reports bug-pass map      */
 
 } afl_forkserver_t;
 
