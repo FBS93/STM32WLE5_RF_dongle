@@ -1,7 +1,7 @@
 ########################################
 # prod image
 #######################################
-FROM alpine:3.22.0 AS prod
+FROM alpine:3.23.4 AS prod
 
 ARG GH_CLI_VER=2.44.1
 
@@ -21,7 +21,8 @@ LABEL org.opencontainers.image.description="contains actions-template-sync"
 RUN apk add --update --no-cache bash git curl musl openssh git-lfs yq gnupg
 
 RUN wget https://github.com/cli/cli/releases/download/v${GH_CLI_VER}/gh_${GH_CLI_VER}_linux_386.tar.gz -O ghcli.tar.gz
-RUN tar --strip-components=1 -xf ghcli.tar.gz
+RUN tar --strip-components=1 -xf ghcli.tar.gz \
+    && rm ghcli.tar.gz
 
 ADD src/*.sh /bin/
 RUN chmod +x /bin/entrypoint.sh \
@@ -54,7 +55,7 @@ ENTRYPOINT ["/bin/zsh"]
 #######################################
 # image for creating the documentation
 ######################################
-FROM node:24.4.0-alpine AS docs
+FROM node:25.9.0-alpine AS docs
 
 # install packages
 RUN apk add --update --no-cache bash make git zsh curl tmux
