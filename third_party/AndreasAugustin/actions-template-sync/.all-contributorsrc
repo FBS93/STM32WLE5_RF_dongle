@@ -386,6 +386,42 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "cjlpowers",
+      "name": "Chris Powers",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4238634?v=4",
+      "profile": "https://www.linkedin.com/in/cjlpowers",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ToshY",
+      "name": "ToshY",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31921460?v=4",
+      "profile": "http://toshy.dev",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "KLAVIATURKIN",
+      "name": "Yuriy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11288889?v=4",
+      "profile": "https://github.com/KLAVIATURKIN",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "Eric-Liu-SANDAG",
+      "name": "Eric Liu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/108823453?v=4",
+      "profile": "https://github.com/Eric-Liu-SANDAG",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,

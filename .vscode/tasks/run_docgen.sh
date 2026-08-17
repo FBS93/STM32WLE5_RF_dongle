@@ -33,7 +33,8 @@ fi
 cd "${workspace_root}"
 
 echo "Generating ..."
-if python3 "tools/docgen/docgen.py" --root . --output "${DOCGEN_OUTPUT}" --title "${title}"; then
+if python3 "tools/docgen/docgen.py" --root . --output "${DOCGEN_OUTPUT}" \
+    --title "${title}" --exclude third_party; then
     echo "✅ Generated: ${DOCGEN_OUTPUT}/index.html"
 else
     status=$?

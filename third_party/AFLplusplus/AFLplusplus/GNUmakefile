@@ -31,7 +31,7 @@ PROGNAME    = afl
 VERSION     = $(shell grep '^$(HASH)define VERSION ' ../config.h | cut -d '"' -f2)
 
 PROGS       = afl-fuzz afl-showmap afl-tmin afl-gotcpu afl-analyze afl-cmin
-SH_PROGS    = afl-plot afl-cmin.awk afl-cmin.bash afl-cmin.py afl-whatsup afl-addseeds afl-system-config afl-persistent-config afl-cc
+SH_PROGS    = afl-plot afl-cmin.awk afl-cmin.bash afl-cmin.py afl-whatsup afl-addseeds afl-system-config afl-persistent-config afl-cc afl-health
 HEADERS     = include/afl-fuzz.h include/afl-mutations.h include/afl-persistent-replay.h include/afl-prealloc.h include/afl-record-compat.h include/alloc-inl.h include/android-ashmem.h include/cmplog.h include/common.h include/config.h include/coverage-32.h include/coverage-64.h include/debug.h include/envs.h include/forkserver.h include/hash.h include/list.h include/sharedmem.h include/snapshot-inl.h include/t1ha.h include/t1ha0_ia32aes_b.h include/t1ha_bits.h include/t1ha_selfcheck.h include/types.h include/xxhash.h include/afl-ijon-min.h
 MANPAGES=$(foreach p, $(PROGS) $(SH_PROGS), $(p).8)
 ASAN_OPTIONS=detect_leaks=0
@@ -178,7 +178,10 @@ override CFLAGS += -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-
 
 ifeq "$(SYS)" "FreeBSD"
   override CFLAGS  += -I /usr/local/include/
-  override LDFLAGS += -L /usr/local/lib/
+  # execinfo needed for backtrace under FreeBSD
+  override LDFLAGS += -L /usr/local/lib/ -lexecinfo
+  # Unicorn doesn't work on FreeBSD: doesn't get native library.
+  NO_UNICORN=1
 endif
 
 ifeq "$(SYS)" "DragonFly"
@@ -203,7 +206,7 @@ ifeq "$(SYS)" "Haiku"
   #SPECIAL_PERFORMANCE += -DUSEMMAP=1
 endif
 
-AFL_FUZZ_FILES = $(wildcard src/afl-fuzz*.c)
+AFL_FUZZ_FILES = $(wildcard src/afl-fuzz*.c) src/afl-main.c
 
 ifneq "$(shell command -v python3m 2>/dev/null)" ""
   ifneq "$(shell command -v python3m-config 2>/dev/null)" ""
@@ -428,7 +431,7 @@ help:
 	@echo "NO_UTF - do not use UTF-8 for line rendering in status screen (fallback to G1 box drawing, of vanilla AFL)"
 	@echo NO_NYX - disable building nyx mode dependencies
 	@echo "NO_CORESIGHT - disable building coresight (arm64 only)"
-	@echo NO_QEMU - disable building QEMU support
+	@echo "NO_QEMU - disable building QEMU support (qemu_mode and qemu_bridge)"
 	@echo NO_FRIDA - disable building FRIDA support
 	@echo NO_UNICORN - disable building unicorn
 	@echo NO_UNICORN_ARM64 - disable building unicorn on arm64
@@ -511,7 +514,7 @@ endif
 
 afl-cmin: #src/afl-cmin.c src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o $(COMM_HDR) | test_x86
 	cp -f afl-cmin.py afl-cmin
-#	$(CC) $(CFLAGS) $(COMPILE_STATIC) $(CFLAGS_FLTO) $(SPECIAL_PERFORMANCE) src/$@.c src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o -o $@ $(PYFLAGS) $(LDFLAGS) -pthread
+	#$(CC) $(CFLAGS) $(COMPILE_STATIC) $(CFLAGS_FLTO) $(SPECIAL_PERFORMANCE) src/$@.c src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o -o $@ $(PYFLAGS) $(LDFLAGS) -pthread
 #ifdef IS_IOS
 #	@ldid -Sentitlements.plist $@ && echo "[+] Signed $@" || { echo "[-] Failed to sign $@"; }
 #endif
@@ -594,13 +597,23 @@ ifdef IS_IOS
 	@ldid -Sentitlements.plist $@ && echo "[+] Signed $@" || { echo "[-] Failed to sign $@"; }
 endif
 
+src/afl-fuzz-mopt-adaptive.o : $(COMM_HDR) include/afl-fuzz.h src/afl-fuzz-mopt-adaptive.c
+	@$(CC) $(CFLAGS) $(ASAN_CFLAGS) -c src/afl-fuzz-mopt-adaptive.c -o src/afl-fuzz-mopt-adaptive.o
+
+test/unittests/unit_mopt.o : $(COMM_HDR) include/afl-fuzz.h test/unittests/unit_mopt.c
+	@$(CC) $(CFLAGS) $(ASAN_CFLAGS) -c test/unittests/unit_mopt.c -o test/unittests/unit_mopt.o
+
+unit_mopt: test/unittests/unit_mopt.o src/afl-fuzz-mopt-adaptive.o
+	@$(CC) $(CFLAGS) $(ASAN_CFLAGS) -Wl,--wrap=exit -Wl,--wrap=printf $^ -o test/unittests/unit_mopt $(LDFLAGS) $(ASAN_LDFLAGS) -lcmocka
+	./test/unittests/unit_mopt
+
 .PHONY: unit_clean
 unit_clean:
-	@rm -f ./test/unittests/unit_preallocable ./test/unittests/unit_list ./test/unittests/unit_maybe_alloc test/unittests/*.o
+	@rm -f ./test/unittests/unit_preallocable ./test/unittests/unit_list ./test/unittests/unit_maybe_alloc ./test/unittests/unit_mopt test/unittests/unit_mopt.o src/afl-fuzz-mopt-adaptive.o test/unittests/*.o
 
 .PHONY: unit
 ifneq "$(SYS)" "Darwin"
-unit:	unit_maybe_alloc unit_preallocable unit_list unit_clean unit_rand unit_hash
+unit:	unit_maybe_alloc unit_preallocable unit_list unit_clean unit_rand unit_hash unit_mopt
 else
 unit:
 	@echo [-] unit tests are skipped on Darwin \(lacks GNU linker feature --wrap\)
@@ -686,7 +699,7 @@ all_done: test_build
 
 .PHONY: clean
 clean:
-	rm -rf $(PROGS) afl-fuzz-document as afl-as afl-g++ afl-clang afl-clang++ *.o src/*.o *~ a.out core core.[1-9][0-9]* *.stackdump .test .test1 .test2 test-instr .test-instr0 .test-instr1 afl-cs-proxy afl-qemu-trace afl-gcc-fast afl-g++-fast ld *.so *.8 test/unittests/*.o test/unittests/unit_maybe_alloc test/unittests/preallocable .afl-* afl-gcc afl-g++ afl-clang afl-clang++ test/unittests/unit_hash test/unittests/unit_rand *.dSYM lib*.a
+	rm -rf $(PROGS) afl-fuzz-document as afl-as afl-g++ afl-clang afl-clang++ *.o src/*.o *~ a.out core core.[1-9][0-9]* *.stackdump .test .test1 .test2 test-instr .test-instr0 .test-instr1 afl-cs-proxy afl-qemu-trace afl-qemu-bridge afl-gcc-fast afl-g++-fast ld *.so *.8 test/unittests/*.o test/unittests/unit_maybe_alloc test/unittests/preallocable .afl-* afl-gcc afl-g++ afl-clang afl-clang++ test/unittests/unit_hash test/unittests/unit_rand *.dSYM lib*.a
 	-$(MAKE) -f GNUmakefile.llvm clean
 	-$(MAKE) -f GNUmakefile.gcc_plugin clean
 	-$(MAKE) -C utils/libdislocator clean
@@ -700,6 +713,10 @@ clean:
 	-$(MAKE) -C qemu_mode/fastexit clean
 	-$(MAKE) -C qemu_mode/libcompcov clean
 	-$(MAKE) -C qemu_mode/libqasan clean
+	-$(MAKE) -C qemu_bridge/unsigaction clean
+	-$(MAKE) -C qemu_bridge/fastexit clean
+	-$(MAKE) -C qemu_bridge/libcompcov clean
+	-$(MAKE) -C qemu_bridge/libqasan clean
 	-$(MAKE) -C frida_mode clean
 	rm -rf nyx_mode/packer/linux_initramfs/init.cpio.gz nyx_mode/libnyx/libnyx/target/release/* nyx_mode/QEMU-Nyx/x86_64-softmmu/qemu-system-x86_64
 ifeq "$(IN_REPO)" "1"
@@ -757,6 +774,7 @@ endif
 endif
 ifndef NO_QEMU
 	-cd qemu_mode && unset CFLAGS && ./build_qemu_support.sh
+	-cd qemu_bridge && unset CFLAGS && ./build_qemu_bridge_support.sh
 endif
 ifndef NO_UNICORN
 	-cd unicorn_mode && unset CFLAGS && ./build_unicorn_support.py
@@ -789,6 +807,7 @@ endif
 endif
 ifndef NO_QEMU
 	-cd qemu_mode && unset CFLAGS && ./build_qemu_support.sh
+	-cd qemu_bridge && unset CFLAGS && ./build_qemu_bridge_support.sh
 endif
 ifndef NO_UNICORN
 	-cd unicorn_mode && unset CFLAGS && ./build_unicorn_support.py
@@ -809,7 +828,7 @@ ifndef NO_NYX
 	@test -e libnyx.so && echo "[+] nyx_mode successfully built" || echo "[-] nyx_mode could not be built, it is optional, see nyx_mode/README.md for what is needed"
 endif
 endif
-	@test -e afl-qemu-trace && echo "[+] qemu_mode successfully built" || echo "[-] qemu_mode could not be built, see docs/INSTALL.md for what is needed"
+	@{ test -e afl-qemu-trace || test -e afl-qemu-bridge; } && echo "[+] qemu_mode/qemu_bridge successfully built (qemuafl -> afl-qemu-trace, bridge -> afl-qemu-bridge)" || echo "[-] qemu_mode/qemu_bridge could not be built, see docs/INSTALL.md for what is needed"
 ifndef NO_UNICORN
 	@test -e unicorn_mode/lib/libunicorn.a && echo "[+] unicorn_mode successfully built" || echo "[-] unicorn_mode could not be built, it is optional, see unicorn_mode/README.md for what is needed"
 endif
@@ -853,7 +872,7 @@ endif
 	@echo .B $* >> $@
 	@echo >> $@
 	@echo .SH SYNOPSIS >> $@
-	@./$* -h 2>&1 | head -n 3 | tail -n 1 | sed 's/^\.\///' >> $@
+	@./$* -h 2>&1 | head -n 3 | tail -n 1 | sed -e 's/^[Uu]sage: *//' -e 's/^[Ss]yntax: *//' -e 's#^\./##' >> $@
 	@echo >> $@
 	@echo .SH OPTIONS >> $@
 	@echo .nf >> $@
@@ -864,7 +883,7 @@ endif
 	@echo  The homepage of AFL++ is: https://github.com/AFLplusplus/AFLplusplus >> $@
 	@echo >> $@
 	@echo .SH LICENSE >> $@
-	@echo Apache License Version 2.0, January 2004 >> $@
+	@echo "AFL++ is licensed under AGPL-3.0-or-later, with original components under Apache-2.0; an optional commercial license is available. See https://github.com/AFLplusplus/AFLplusplus/blob/stable/LICENSING.md" >> $@
 
 .PHONY: install
 install: all $(MANPAGES)
@@ -875,6 +894,7 @@ install: all $(MANPAGES)
 	@for i in afl-llvm-dict2file.so afl-llvm-lto-instrumentlist.so afl-llvm-pass.so cmplog-instructions-pass.so cmplog-routines-pass.so cmplog-switches-pass.so compare-transform-pass.so libcompcov.so libdislocator.so libnyx.so libqasan.so libtokencap.so SanitizerCoverageLTO.so SanitizerCoveragePCGUARD.so split-compares-pass.so split-switches-pass.so injection-pass.so; do echo rm -fv $${DESTDIR}$(HELPER_PATH)/$${i}; done
 	install -m 755 $(PROGS) $(SH_PROGS) $${DESTDIR}$(BIN_PATH)
 	@if [ -f afl-qemu-trace ]; then install -m 755 afl-qemu-trace $${DESTDIR}$(BIN_PATH); fi
+	@if [ -f afl-qemu-bridge ]; then install -m 755 afl-qemu-bridge $${DESTDIR}$(BIN_PATH); fi
 	@if [ -f utils/plot_ui/afl-plot-ui ]; then install -m 755 utils/plot_ui/afl-plot-ui $${DESTDIR}$(BIN_PATH); fi
 	@if [ -f libdislocator.so ]; then set -e; install -m 755 libdislocator.so $${DESTDIR}$(HELPER_PATH); fi
 	@if [ -f libtokencap.so ]; then set -e; install -m 755 libtokencap.so $${DESTDIR}$(HELPER_PATH); fi
@@ -907,7 +927,7 @@ endif
 
 .PHONY: uninstall
 uninstall:
-	-cd $${DESTDIR}$(BIN_PATH) && rm -f $(PROGS) $(SH_PROGS) afl-cs-proxy afl-qemu-trace afl-plot-ui afl-fuzz-document afl-network-client afl-network-server afl-g* afl-plot.sh afl-ld-lto afl-c* afl-lto*
+	-cd $${DESTDIR}$(BIN_PATH) && rm -f $(PROGS) $(SH_PROGS) afl-cs-proxy afl-qemu-trace afl-qemu-bridge afl-plot-ui afl-fuzz-document afl-network-client afl-network-server afl-g* afl-plot.sh afl-ld-lto afl-c* afl-lto*
 	-cd $${DESTDIR}$(INCLUDE_PATH) && rm -f $(HEADERS:include/%=%)
 	-cd $${DESTDIR}$(HELPER_PATH) && rm -f afl-g*.*o afl-llvm-*.*o afl-compiler-*.*o libdislocator.so libtokencap.so libcompcov.so libqasan.so afl-frida-trace.so libnyx.so socketfuzz*.so argvfuzz*.so libAFLDriver.a libAFLQemuDriver.a as afl-as SanitizerCoverage*.so compare-transform-pass.so cmplog-*-pass.so split-*-pass.so dynamic_list.txt injections.dic
 	-rm -rf $${DESTDIR}$(MISC_PATH)/testcases $${DESTDIR}$(MISC_PATH)/dictionaries

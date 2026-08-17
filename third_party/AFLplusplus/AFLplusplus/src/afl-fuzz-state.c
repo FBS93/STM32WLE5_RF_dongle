@@ -17,6 +17,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
    This is the real deal: the program takes an instrumented binary and
    attempts a variety of basic fuzzing tricks, paying close attention to
    how they affect the execution path.
@@ -32,40 +34,6 @@ char *power_names[POWER_SCHEDULES_NUM] = {"explore", "mmopt", "exploit",
                                           "fast",    "coe",   "lin",
                                           "quad",    "rare",  "seek"};
 
-/* Initialize MOpt "globals" for this afl state */
-
-static void init_mopt_globals(afl_state_t *afl) {
-
-  MOpt_globals_t *core = &afl->mopt_globals_core;
-  core->finds = afl->core_operator_finds_puppet;
-  core->finds_v2 = afl->core_operator_finds_puppet_v2;
-  core->cycles = afl->core_operator_cycles_puppet;
-  core->cycles_v2 = afl->core_operator_cycles_puppet_v2;
-  core->cycles_v3 = afl->core_operator_cycles_puppet_v3;
-  core->is_pilot_mode = 0;
-  core->pTime = &afl->tmp_core_time;
-  core->period = period_core;
-  core->havoc_stagename = "MOpt-core-havoc";
-  core->splice_stageformat = "MOpt-core-splice %u";
-  core->havoc_stagenameshort = "MOpt_core_havoc";
-  core->splice_stagenameshort = "MOpt_core_splice";
-
-  MOpt_globals_t *pilot = &afl->mopt_globals_pilot;
-  pilot->finds = afl->stage_finds_puppet[0];
-  pilot->finds_v2 = afl->stage_finds_puppet_v2[0];
-  pilot->cycles = afl->stage_cycles_puppet[0];
-  pilot->cycles_v2 = afl->stage_cycles_puppet_v2[0];
-  pilot->cycles_v3 = afl->stage_cycles_puppet_v3[0];
-  pilot->is_pilot_mode = 1;
-  pilot->pTime = &afl->tmp_pilot_time;
-  pilot->period = period_pilot;
-  pilot->havoc_stagename = "MOpt-havoc";
-  pilot->splice_stageformat = "MOpt-splice %u";
-  pilot->havoc_stagenameshort = "MOpt_havoc";
-  pilot->splice_stagenameshort = "MOpt_splice";
-
-}
-
 /* A global pointer to all instances is needed (for now) for signals to arrive
  */
 
@@ -79,14 +47,14 @@ void afl_state_init(afl_state_t *afl, uint32_t map_size) {
   and out_size are NULL/0 by default. */
   memset(afl, 0, sizeof(afl_state_t));
 
-  afl->shm.map_size = map_size ? map_size : MAP_SIZE;
+  mopt_adaptive_init(afl);
+
+  map_size = map_size ? map_size : MAP_SIZE;
+  afl->shm.map_size = map_size;
+  afl->map_size = map_size;
 
   afl->smallest_favored = -1;
   afl->afl_ijon_history_limit = 20;
-  afl->w_init = 0.9;
-  afl->w_end = 0.3;
-  afl->g_max = 5000;
-  afl->period_pilot_tmp = 5000.0;
   afl->schedule = EXPLORE;              /* Power schedule (default: EXPLORE)*/
   afl->havoc_max_mult = HAVOC_MAX_MULT;
   afl->clear_screen = 1;                /* Window resized?                  */
@@ -158,8 +126,6 @@ void afl_state_init(afl_state_t *afl, uint32_t map_size) {
   /* 10% FrameShift overhead default */
   afl->afl_env.afl_frameshift_max_overhead = 0.10;
 
-  init_mopt_globals(afl);
-
   list_append(&afl_states, afl);
 
 }
@@ -171,6 +137,13 @@ void afl_resize_map_buffers(afl_state_t *afl, u32 old_size, u32 new_size) {
   afl->virgin_crash = ck_realloc(afl->virgin_crash, new_size);
   afl->var_bytes = ck_realloc(afl->var_bytes, new_size);
   afl->top_rated = ck_realloc(afl->top_rated, new_size * sizeof(void *));
+  if (afl->cycle_schedules && afl->top_rated_candidates) {
+
+    afl->top_rated_candidates =
+        ck_realloc(afl->top_rated_candidates, new_size * sizeof(u32 *));
+
+  }
+
   afl->clean_trace = ck_realloc(afl->clean_trace, new_size);
   afl->clean_trace_custom = ck_realloc(afl->clean_trace_custom, new_size);
   afl->first_trace = ck_realloc(afl->first_trace, new_size);
@@ -182,6 +155,13 @@ void afl_resize_map_buffers(afl_state_t *afl, u32 old_size, u32 new_size) {
 
     memset(afl->var_bytes + old_size, 0, size_diff);
     memset(afl->top_rated + old_size, 0, size_diff * sizeof(void *));
+    if (afl->cycle_schedules && afl->top_rated_candidates) {
+
+      memset(afl->top_rated_candidates + old_size, 0,
+             size_diff * sizeof(u32 *));
+
+    }
+
     memset(afl->clean_trace + old_size, 0, size_diff);
     memset(afl->clean_trace_custom + old_size, 0, size_diff);
     memset(afl->first_trace + old_size, 0, size_diff);
@@ -600,15 +580,14 @@ void read_afl_environment(afl_state_t *afl, char **envp) {
 
                               afl_environment_variable_len)) {
 
-            afl->afl_env.afl_statsd_tags_flavor =
-                (u8 *)get_afl_env(afl_environment_variables[i]);
+            // handled elsewhere
 
           } else if (!strncmp(env, "AFL_NO_COLOUR",
 
                               afl_environment_variable_len)) {
 
-            afl->afl_env.afl_statsd_tags_flavor =
-                (u8 *)get_afl_env(afl_environment_variables[i]);
+            // handled elsewhere
+
 #endif
 
           } else if (!strncmp(env, "AFL_KILL_SIGNAL",
@@ -943,8 +922,11 @@ void afl_state_deinit(afl_state_t *afl) {
   afl_free(afl->in_buf);
   afl_free(afl->in_scratch_buf);
   afl_free(afl->ex_buf);
-  afl_free(afl->alias_table);
-  afl_free(afl->alias_probability);
+  free(afl->alias_table);
+  free(afl->alias_probability);
+  free(afl->splice_buf_ids);
+  if (afl->testcase_buf) { afl_free(afl->testcase_buf); }
+  if (afl->splicecase_buf) { afl_free(afl->splicecase_buf); }
 
   if (afl->fsrv.use_ijon) { afl_free(afl->ijon_input_data); }
 

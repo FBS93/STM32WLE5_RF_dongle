@@ -59,6 +59,7 @@ cwd = Path(__file__).parent
 libs_path = cwd / "lib"
 include_path = cwd / "include"
 unicornafl_path = cwd / "unicornafl"
+cargo_target_dir = Path(os.environ["CARGO_TARGET_DIR"]) if "CARGO_TARGET_DIR" in os.environ else unicornafl_path / "target"
 
 if libs_path.exists():
     print("[!] Cleaning previous artifacts...")
@@ -155,14 +156,14 @@ cargo_out = run_cmd(f"cargo build --release --features bindings --message-format
 
 print("[*] Copying unicornafl libraries and headers")
 os.makedirs(libs_path, exist_ok=True)
-shutil.copyfile(unicornafl_path / "target" / "release" / "libunicornafl.a", libs_path / "libunicornafl.a")
+shutil.copyfile(cargo_target_dir / "release" / "libunicornafl.a", libs_path / "libunicornafl.a")
 if sys.platform == "darwin":
     dylib = "libunicornafl.dylib"
     ucdylib = "libunicorn.so"
 else:
     dylib = "libunicornafl.so"
     ucdylib = "libunicorn.so"
-shutil.copyfile(unicornafl_path / "target" / "release" / dylib, libs_path / dylib)
+shutil.copyfile(cargo_target_dir / "release" / dylib, libs_path / dylib)
 shutil.copytree(unicornafl_path / "include", include_path)
 print(f"[*] Now we have to look for unicorn dynamic libraries")
 unicorn_dylib = None
@@ -174,11 +175,12 @@ for ln in lns:
             if "linked_libs" in ln_json and any(["unicorn" in x for x in ln_json['linked_libs']]):
                 if "out_dir" in ln_json:
                     out_dir = Path(ln_json['out_dir'])
-                    try:
+                    if (out_dir / "lib").exists():
                         shutil.copytree(out_dir / "lib", libs_path, dirs_exist_ok=True)
-                    except FileNotFoundError:
+                    elif (out_dir / "lib64").exists():
                         shutil.copytree(out_dir / "lib64", libs_path, dirs_exist_ok=True)
-                    shutil.copytree(out_dir / "include", include_path, dirs_exist_ok=True)
+                    if (out_dir / "include").exists():
+                        shutil.copytree(out_dir / "include", include_path, dirs_exist_ok=True)
                     print(f"[*] Copied from {out_dir.absolute()}")
 
 

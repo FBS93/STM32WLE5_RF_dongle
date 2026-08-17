@@ -12,6 +12,7 @@ The host environment shall provide the following:
 - VS Code with the `ms-vscode-remote.vscode-remote-extensionpack` extension installed.
 - A Git identity configured. The `ms-vscode-remote.remote-containers` extension copies the host `.gitconfig` into the container at startup; see [Sharing Git credentials with your container](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials).
 - OpenCode installed. The devcontainer persists OpenCode state (including credentials and sessions) through the bind mount defined in [devcontainer.json](../../.devcontainer/devcontainer.json).
+- Host GUI support for containerized graphical applications.
 
 ## Initial setup
 

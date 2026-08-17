@@ -132,6 +132,7 @@ function set_github_action_outputs() {
 
   local pr_branch=$1
   local template_git_hash=$2
+  local pr_number=$3
 
   info "set github action outputs"
 
@@ -139,8 +140,10 @@ function set_github_action_outputs() {
     info "env var 'GITHUB_RUN_ID' is empty -> no github action workflow"
   else
     # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter
+    # shellcheck disable=SC2129
     echo "pr_branch=${pr_branch}" >> "$GITHUB_OUTPUT"
     echo "template_git_hash=${template_git_hash}" >> "$GITHUB_OUTPUT"
+    echo "pr_number=${pr_number}" >> "$GITHUB_OUTPUT"
   fi
   echo "::endgroup::"
 }
@@ -297,7 +300,7 @@ function eventual_create_labels () {
 
   if [[ -z "${pr_labels}" ]]; then
     info "'pr_labels' is empty. Skipping labels check"
-    retun 0
+    return 0
   fi
 
   readarray -t labels_array < <(awk -F',' '{ for( i=1; i<=NF; i++ ) print $i }' <<<"${pr_labels}")
@@ -553,7 +556,8 @@ function arr_prepare_pr_create_pr() {
     create_pr "${PR_TITLE}" "${PR_BODY}" "${UPSTREAM_BRANCH}" "${PR_LABELS}" "${PR_REVIEWERS}"
   fi
 
-
+  PR_NUMBER="$(gh pr view "$PR_BRANCH" --json number --jq '.number' 2>/dev/null || true)"
+  export PR_NUMBER
   echo "::endgroup::"
 }
 
@@ -604,4 +608,4 @@ else
   fi
 fi
 
-set_github_action_outputs "${PR_BRANCH}" "${TEMPLATE_GIT_HASH}"
+set_github_action_outputs "${PR_BRANCH}" "${TEMPLATE_GIT_HASH}" "${PR_NUMBER}"

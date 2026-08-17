@@ -314,6 +314,15 @@ test -e ../afl-clang-fast -a -e ../split-switches-pass.so && {
       CODE=1
     }
   }
+  # Test cmplog routine hooks on page-boundary strings
+  test -e test-cmplog-routines-bounds.sh && {
+    ./test-cmplog-routines-bounds.sh > /dev/null 2>&1 && {
+      $ECHO "$GREEN[+] cmplog routines bounds test passed"
+    } || {
+      $ECHO "$RED[!] cmplog routines bounds test failed"
+      CODE=1
+    }
+  }
   # Test cmplog instructions pass with non-standard integer sizes (issue #2704)
   test -e test-cmplog-bitint.sh && {
     ./test-cmplog-bitint.sh > /dev/null 2>&1 && {

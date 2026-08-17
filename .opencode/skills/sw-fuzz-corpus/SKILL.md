@@ -21,7 +21,7 @@ description: >
 - Store the generated AFL++ fuzz corpus in `sw/fuzz/<target>/corpus/`.
 - Prefer a small, meaningful initial corpus over a larger random corpus.
 
-## Suggested Workflow
+## Workflow
 
 1. Locate `EDF_FUZZ_EVENT_TABLE(...)` of the active CMake build target.
 2. Enumerate its registered immutable and mutable events.

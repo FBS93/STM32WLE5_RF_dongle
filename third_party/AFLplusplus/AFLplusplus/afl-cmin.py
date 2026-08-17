@@ -104,7 +104,7 @@ class HelpFormatter(argparse.HelpFormatter):
         super().__init__(prog, *args, **kargs)
         self.add_text("corpus minimization tool for AFL++ (python version)")
         self.add_text("")
-        self.add_text("%s" % prog)
+        self.add_text("%s [ options ] -- /path/to/target_app [ ... ]" % prog)
 
 
 def init_args():
@@ -238,13 +238,14 @@ def get_asan_options():
 
 
 def search_binary(name):
-    searches = [
-        None,
-        os.path.dirname(__file__),
-        os.getcwd(),
-    ]
+    searches = []
     if os.environ.get("AFL_PATH"):
         searches.append(os.environ["AFL_PATH"])
+    searches += [
+        os.path.dirname(__file__),
+        os.getcwd(),
+        None,
+    ]
 
     for search in searches:
         binary = shutil.which(name, path=search)
@@ -442,8 +443,19 @@ def afl_showmap(
     if args.allow_any:
         env["AFL_CMIN_ALLOW_ANY"] = "1"
 
-    if input_from_file:
+    # In batch mode, afl-showmap writes per-input coverage to files under
+    # output_path, so we don't need to read its stdout. Capturing it via a
+    # pipe is actively harmful for Nyx mode: the spawned qemu-system-x86_64
+    # inherits the stdout pipe, gets reparented to init when afl-showmap exits,
+    # and then keeps the pipe open indefinitely -- so p.stdout.read() hangs.
+    if batch:
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, env=env)
+        out = b""
+        p.wait()
+    elif input_from_file:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, env=env, bufsize=1048576)
+        out = p.stdout.read()
+        p.wait()
     else:
         p = subprocess.Popen(
             cmd,
@@ -452,8 +464,8 @@ def afl_showmap(
             env=env,
             bufsize=1048576,
         )
-    out = p.stdout.read()
-    p.wait()
+        out = p.stdout.read()
+        p.wait()
 
     if batch:
         result = []

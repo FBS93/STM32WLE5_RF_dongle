@@ -17,6 +17,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
    This is the real deal: the program takes an instrumented binary and
    attempts a variety of basic fuzzing tricks, paying close attention to
    how they affect the execution path.
@@ -649,13 +651,14 @@ void read_foreign_testcases(afl_state_t *afl, int first) {
 
         }
 
+        u8 *orig_mem = mem;
         u32 len = write_to_testcase(afl, (void **)&mem, st.st_size, 1);
         fault = fuzz_run_target(afl, &afl->fsrv, afl->fsrv.exec_tmout);
         afl->syncing_party = foreign_name;
         afl->foreign_file = nl[i]->d_name;
         afl->queued_imported += save_if_interesting(afl, mem, len, fault);
 
-        munmap(mem, st.st_size);
+        munmap(orig_mem, st.st_size);
         close(fd);
 
         if (st.st_mtime > mtime_max) { mtime_max = st.st_mtime; }
@@ -767,11 +770,15 @@ void read_testcases(afl_state_t *afl, u8 *directory) {
 
       struct stat st;
       u8          dfn[PATH_MAX];
+      u8          vfn[PATH_MAX];
       snprintf(dfn, PATH_MAX, "%s/.state/deterministic_done/%s", afl->in_dir,
+               nl[i]->d_name);
+      snprintf(vfn, PATH_MAX, "%s/.state/variable/%s", afl->in_dir,
                nl[i]->d_name);
       u8 *fn2 = alloc_printf("%s/%s", dir, nl[i]->d_name);
 
       u8 passed_det = 0;
+      u8 var_behavior = 0;
 
       if (lstat(fn2, &st) || access(fn2, R_OK)) {
 
@@ -791,10 +798,9 @@ void read_testcases(afl_state_t *afl, u8 *directory) {
 
       }
 
-      free(nl[i]);
-
       if (!S_ISREG(st.st_mode) || !st.st_size || strstr(fn2, "/README.txt")) {
 
+        free(nl[i]);
         ck_free(fn2);
         goto next_entry;
 
@@ -815,9 +821,22 @@ void read_testcases(afl_state_t *afl, u8 *directory) {
          and probably very time-consuming. */
 
       if (!access(dfn, F_OK)) { passed_det = 1; }
+      if (!access(vfn, F_OK)) {
+
+        var_behavior = 1;
+
+      } else {
+
+        snprintf(vfn, PATH_MAX, "%s/.state/variable_behavior/%s", afl->in_dir,
+                 nl[i]->d_name);
+        if (!access(vfn, F_OK)) { var_behavior = 1; }
+
+      }
 
       add_to_queue(afl, fn2, st.st_size >= MAX_FILE ? MAX_FILE : st.st_size,
                    passed_det);
+      afl->queue_top->var_behavior = var_behavior;
+      if (var_behavior) { ++afl->queued_variable; }
 
       if (unlikely(afl->shm.cmplog_mode)) {
 
@@ -842,6 +861,8 @@ void read_testcases(afl_state_t *afl, u8 *directory) {
         }
 
       }
+
+      free(nl[i]);
 
     next_entry:
       if (unlikely(++i >= (u32)nl_cnt)) { done = 1; }
@@ -1672,6 +1693,7 @@ void pivot_inputs(afl_state_t *afl) {
     /* Make sure that the passed_det value carries over, too. */
 
     if (q->passed_det) { mark_as_det_done(afl, q); }
+    if (q->var_behavior) { mark_as_variable(afl, q); }
 
     if (afl->custom_mutators_count) {
 
@@ -1883,6 +1905,10 @@ void nuke_resume_dir(afl_state_t *afl) {
   if (delete_files(fn, case_prefix)) { goto dir_cleanup_failed; }
   ck_free(fn);
 
+  fn = alloc_printf("%s/_resume/.state/variable", afl->out_dir);
+  if (delete_files(fn, case_prefix)) { goto dir_cleanup_failed; }
+  ck_free(fn);
+
   fn = alloc_printf("%s/_resume/.state/variable_behavior", afl->out_dir);
   if (delete_files(fn, case_prefix)) { goto dir_cleanup_failed; }
   ck_free(fn);
@@ -2041,6 +2067,10 @@ static void handle_existing_out_dir(afl_state_t *afl) {
   ck_free(fn);
 
   fn = alloc_printf("%s/queue/.state/redundant_edges", afl->out_dir);
+  if (delete_files(fn, case_prefix)) { goto dir_cleanup_failed; }
+  ck_free(fn);
+
+  fn = alloc_printf("%s/queue/.state/variable", afl->out_dir);
   if (delete_files(fn, case_prefix)) { goto dir_cleanup_failed; }
   ck_free(fn);
 
@@ -2387,6 +2417,12 @@ void setup_dirs_fds(afl_state_t *afl) {
   /* Directory with the auto-selected dictionary entries. */
 
   tmp = alloc_printf("%s/queue/.state/auto_extras/", afl->out_dir);
+  if (mkdir(tmp, afl->dir_perm)) { PFATAL("Unable to create '%s'", tmp); }
+  ck_free(tmp);
+
+  /* Directory for flagging queue entries with variable behavior. */
+
+  tmp = alloc_printf("%s/queue/.state/variable/", afl->out_dir);
   if (mkdir(tmp, afl->dir_perm)) { PFATAL("Unable to create '%s'", tmp); }
   ck_free(tmp);
 
@@ -3160,7 +3196,7 @@ void check_binary(afl_state_t *afl, u8 *fname) {
 
   /* Check for blatant user errors. */
 
-  /*  disabled. not a real-worl scenario where this is a problem.
+  /*  disabled. not a real-world scenario where this is a problem.
     if ((!strncmp(afl->fsrv.target_path, "/tmp/", 5) &&
          !strchr(afl->fsrv.target_path + 5, '/')) ||
         (!strncmp(afl->fsrv.target_path, "/var/tmp/", 9) &&
@@ -3325,6 +3361,15 @@ void check_binary(afl_state_t *afl, u8 *fname) {
     afl->persistent_mode = 1;
     afl->fsrv.persistent_mode = 1;
     afl->shmem_testcase_mode = 1;
+
+  } else if (afl->fsrv.qemu_mode &&
+
+             (getenv("AFL_QEMU_PERSISTENT_ADDR") ||
+              getenv("AFL_QEMU_SNAPSHOT"))) {
+
+    OKF(cPIN "QEMU persistent mode configuration options detected.");
+    afl->persistent_mode = 1;
+    afl->fsrv.persistent_mode = 1;
 
   }
 

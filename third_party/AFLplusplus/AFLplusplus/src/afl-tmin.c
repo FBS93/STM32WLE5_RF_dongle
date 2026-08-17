@@ -20,6 +20,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
    A simple test case minimizer that takes an input file and tries to remove
    as much data as possible while keeping the binary in a crashing state
    *or* producing consistent instrumentation output (the mode is auto-selected
@@ -1387,6 +1389,7 @@ int main(int argc, char **argv_orig, char **envp) {
 #endif
 
   fsrv->trace_bits = afl_shm_init(&shm, map_size, 0, DEFAULT_PERMISSION, -1);
+  fsrv->child_sync_offset = shm.child_sync_offset;
   detect_file_args(argv + optind, out_file, &fsrv->use_stdin);
   signal(SIGALRM, kill_child);
 

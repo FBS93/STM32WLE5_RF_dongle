@@ -94,6 +94,7 @@ The following skills support the development process but are not tied to a speci
 | Skill | Purpose | Path |
 |---|---|---|
 | `embedded-workbench-executor` | Execute delegated tasks from the Embedded Workbench orchestrator. | .opencode/skills/embedded-workbench-executor/SKILL.md |
+| `pdf-to-markdown` | Convert PDF files to Markdown format. | .opencode/skills/pdf-to-markdown/SKILL.md |
 | `sw-debug` | Debug software issues by investigating problems and deriving accurate conclusions based on evidence to enable correct resolution. | .opencode/skills/sw-debug/SKILL.md |
 | `sw-fuzz-corpus` | Analyze EDF fuzzable events to generate an AFL++ fuzz corpus. | .opencode/skills/sw-fuzz-corpus/SKILL.md |
 | `workbench-debug` | Debug and resolve development environment issues by investigating problems and deriving accurate conclusions based on evidence. | .opencode/skills/workbench-debug/SKILL.md |

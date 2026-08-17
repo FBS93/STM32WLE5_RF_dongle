@@ -17,6 +17,8 @@
 
      https://www.apache.org/licenses/LICENSE-2.0
 
+   SPDX-License-Identifier: Apache-2.0
+
    Gather some functions common to multiple executables
 
    - detect_file_args
@@ -125,6 +127,14 @@ void set_sanitizer_defaults() {
     setenv("LSAN_OPTIONS", buf, 1);
 
   }
+
+  /* Enforce halt_on_error=1 for all sanitizers except LSAN. This is set after
+     the LSAN_OPTIONS buffer is built (LSAN does not want it) but before ASAN,
+     UBSAN and MSAN consume default_options below. It is required for UBSAN,
+     which otherwise just logs and continues instead of aborting on a finding.
+   */
+
+  strcat(default_options, "halt_on_error=1:");
 
   /* for everything not LSAN we disable detect_leaks */
 
@@ -353,6 +363,8 @@ char **get_cs_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {
 
 /* Rewrite argv for QEMU. */
 
+static u8 *find_qemu_binary(u8 *own_loc);
+
 char **get_qemu_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {
 
   if (unlikely(getenv("AFL_QEMU_CUSTOM_BIN"))) {
@@ -374,7 +386,7 @@ char **get_qemu_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {
 
   /* Now we need to actually find the QEMU binary to put in argv[0]. */
 
-  *target_path_p = new_argv[0] = find_afl_binary(own_loc, "afl-qemu-trace");
+  *target_path_p = new_argv[0] = find_qemu_binary(own_loc);
   return new_argv;
 
 }
@@ -402,9 +414,7 @@ char **get_wine_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {
 /* Find binary, used by analyze, showmap, tmin
    @returns the path, allocating the string */
 
-u8 *find_binary(u8 *fname) {
-
-  // TODO: Merge this function with check_binary of afl-fuzz-init.c
+static u8 *find_binary_internal(u8 *fname, u8 fatal) {
 
   u8 *env_path = NULL;
   u8 *target_path = NULL;
@@ -421,7 +431,8 @@ u8 *find_binary(u8 *fname) {
         !(st.st_mode & 0111) || st.st_size < 4) {
 
       ck_free(target_path);
-      FATAL("Program '%s' not found or not executable", fname);
+      if (fatal) { FATAL("Program '%s' not found or not executable", fname); }
+      return NULL;
 
     }
 
@@ -479,7 +490,8 @@ u8 *find_binary(u8 *fname) {
 
     if (!target_path) {
 
-      FATAL("Program '%s' not found or not executable", fname);
+      if (fatal) { FATAL("Program '%s' not found or not executable", fname); }
+      return NULL;
 
     }
 
@@ -489,7 +501,15 @@ u8 *find_binary(u8 *fname) {
 
 }
 
-u8 *find_afl_binary(u8 *own_loc, u8 *fname) {
+u8 *find_binary(u8 *fname) {
+
+  // TODO: Merge this function with check_binary of afl-fuzz-init.c
+
+  return find_binary_internal(fname, 1);
+
+}
+
+static u8 *find_afl_binary_internal(u8 *own_loc, u8 *fname, u8 fatal) {
 
   u8 *afl_path = NULL, *target_path, *own_copy, *tmp;
   int perm = X_OK;
@@ -567,13 +587,59 @@ u8 *find_afl_binary(u8 *own_loc, u8 *fname) {
 
   if (perm == X_OK) {
 
-    return find_binary(fname);
+    return find_binary_internal(fname, fatal);
 
   } else {
 
-    FATAL("Library '%s' not found", fname);
+    if (fatal) { FATAL("Library '%s' not found", fname); }
+    return NULL;
 
   }
+
+}
+
+u8 *find_afl_binary(u8 *own_loc, u8 *fname) {
+
+  return find_afl_binary_internal(own_loc, fname, 1);
+
+}
+
+static u8 *find_qemu_binary(u8 *own_loc) {
+
+  u8 *mode = getenv("AFL_QEMU_MODE");
+  u8 *target_path = NULL;
+
+  if (mode && !strcasecmp(mode, "bridge")) {
+
+    target_path = find_afl_binary(own_loc, "afl-qemu-bridge");
+
+  } else if (mode && (!strcasecmp(mode, "trace") ||
+
+                      !strcasecmp(mode, "qemuafl"))) {
+
+    target_path = find_afl_binary(own_loc, "afl-qemu-trace");
+
+  } else {
+
+    target_path = find_afl_binary_internal(own_loc, "afl-qemu-trace", 0);
+
+    if (!target_path) {
+
+      target_path = find_afl_binary(own_loc, "afl-qemu-bridge");
+
+    }
+
+  }
+
+  if (!be_quiet) {
+
+    char *full = realpath(target_path, NULL);
+    OKF("Using QEMU binary: %s", full ? full : (char *)target_path);
+    if (full) { free(full); }
+
+  }
+
+  return target_path;
 
 }
 
