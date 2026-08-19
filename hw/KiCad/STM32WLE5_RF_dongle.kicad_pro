@@ -81,7 +81,12 @@
           "width": 0.2667
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "silk_over_copper|97250000|89050001|a3d737a1-851a-473a-a505-3f73e64ceb8d|db8c7e3d-ccb5-4976-ad90-b06b52f28e1a",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -730,7 +735,7 @@
         "uuid": "3d1ed669-1135-4c49-b1df-94cff2b9b047"
       }
     ],
-    "used_designators": "",
+    "used_designators": "#PWR50,R11",
     "variants": []
   },
   "sheets": [

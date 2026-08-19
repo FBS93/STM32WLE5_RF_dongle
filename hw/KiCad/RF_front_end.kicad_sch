@@ -1268,24 +1268,6 @@
 						)
 					)
 				)
-				(pin passive line
-					(at 15.24 2.54 180)
-					(length 5.08)
-					(name "VTCL"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-				)
 				(pin bidirectional line
 					(at 15.24 -2.54 180)
 					(length 5.08)
@@ -1297,6 +1279,26 @@
 						)
 					)
 					(number "6"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+			)
+			(symbol "SKY13453-385LF_1_0"
+				(pin passive line
+					(at 15.24 2.54 180)
+					(length 5.08)
+					(name "VCTL"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "5"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -3152,10 +3154,10 @@
 		(uuid "a8f48c19-81a2-426e-94f4-915c2aa49ef0")
 	)
 	(junction
-		(at 167.64 82.55)
+		(at 170.18 76.2)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "01ea5f3f-56d8-4242-ad46-696b81135612")
+		(uuid "1844c4a6-18c7-41ee-a893-568fc3d57112")
 	)
 	(junction
 		(at 139.7 50.8)
@@ -3252,6 +3254,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "af66227b-56ea-4740-badb-4d1ef5f1edca")
+	)
+	(junction
+		(at 154.94 76.2)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "be59ca1c-facb-405a-a350-fd6f7793cb01")
 	)
 	(junction
 		(at 177.8 50.8)
@@ -3489,6 +3497,16 @@
 	)
 	(wire
 		(pts
+			(xy 154.94 86.36) (xy 154.94 88.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3365ddb7-757e-4898-944f-e12ca0ab58cf")
+	)
+	(wire
+		(pts
 			(xy 67.31 40.64) (xy 63.5 40.64)
 		)
 		(stroke
@@ -3689,7 +3707,7 @@
 	)
 	(wire
 		(pts
-			(xy 181.61 113.03) (xy 181.61 82.55)
+			(xy 181.61 113.03) (xy 181.61 76.2)
 		)
 		(stroke
 			(width 0)
@@ -3739,7 +3757,7 @@
 	)
 	(wire
 		(pts
-			(xy 165.1 82.55) (xy 167.64 82.55)
+			(xy 148.59 76.2) (xy 154.94 76.2)
 		)
 		(stroke
 			(width 0)
@@ -3796,6 +3814,16 @@
 			(type default)
 		)
 		(uuid "8644f722-516b-4247-bcb1-dba44b330be5")
+	)
+	(wire
+		(pts
+			(xy 154.94 76.2) (xy 154.94 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "87f1cb0e-4808-4360-830f-ec190ca07fee")
 	)
 	(wire
 		(pts
@@ -3899,7 +3927,7 @@
 	)
 	(wire
 		(pts
-			(xy 181.61 82.55) (xy 167.64 82.55)
+			(xy 181.61 76.2) (xy 170.18 76.2)
 		)
 		(stroke
 			(width 0)
@@ -3949,7 +3977,7 @@
 	)
 	(wire
 		(pts
-			(xy 154.94 82.55) (xy 157.48 82.55)
+			(xy 138.43 76.2) (xy 140.97 76.2)
 		)
 		(stroke
 			(width 0)
@@ -4139,6 +4167,16 @@
 	)
 	(wire
 		(pts
+			(xy 170.18 88.9) (xy 170.18 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "db47fdb0-6c14-4a49-a79f-45e07bf2c712")
+	)
+	(wire
+		(pts
 			(xy 139.7 40.64) (xy 139.7 43.18)
 		)
 		(stroke
@@ -4149,7 +4187,7 @@
 	)
 	(wire
 		(pts
-			(xy 167.64 82.55) (xy 167.64 83.82)
+			(xy 170.18 76.2) (xy 170.18 78.74)
 		)
 		(stroke
 			(width 0)
@@ -4269,6 +4307,16 @@
 	)
 	(wire
 		(pts
+			(xy 154.94 76.2) (xy 170.18 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fb3c4bd7-1d11-4bbb-9350-0b9f1a108514")
+	)
+	(wire
+		(pts
 			(xy 177.8 50.8) (xy 177.8 57.15)
 		)
 		(stroke
@@ -4323,7 +4371,7 @@
 	)
 	(hierarchical_label "RF_SWITCH_CTRL"
 		(shape input)
-		(at 154.94 82.55 180)
+		(at 138.43 76.2 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4775,7 +4823,7 @@
 	)
 	(symbol
 		(lib_id "1_power:GND")
-		(at 167.64 91.44 0)
+		(at 170.18 88.9 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4786,7 +4834,7 @@
 		(fields_autoplaced yes)
 		(uuid "21ecebfe-b0d8-4cae-9248-7bdc34e0be8f")
 		(property "Reference" "#PWR027"
-			(at 167.64 97.79 0)
+			(at 170.18 95.25 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4797,7 +4845,7 @@
 			)
 		)
 		(property "Value" "GNDREF"
-			(at 167.64 96.52 0)
+			(at 170.18 93.98 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4807,7 +4855,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 167.64 91.44 0)
+			(at 170.18 88.9 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4818,7 +4866,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 167.64 91.44 0)
+			(at 170.18 88.9 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4829,7 +4877,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 167.64 91.44 0)
+			(at 170.18 88.9 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5716,6 +5764,84 @@
 	)
 	(symbol
 		(lib_id "1_power:GND")
+		(at 154.94 88.9 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "9eeef4ce-b0f7-45dd-9bd0-07864b2b813c")
+		(property "Reference" "#PWR050"
+			(at 154.94 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GNDREF"
+			(at 154.94 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 154.94 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 154.94 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 154.94 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "8896bd99-5b07-413e-b373-7aec674fdf24")
+		)
+		(instances
+			(project "STM32WLE5_RF_dongle"
+				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/ad9ae5b5-cf8f-4e68-8205-54438ed41a0f"
+					(reference "#PWR050")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "1_power:GND")
 		(at 101.6 57.15 0)
 		(unit 1)
 		(body_style 1)
@@ -6171,6 +6297,99 @@
 		)
 	)
 	(symbol
+		(lib_id "0_generic_component:R")
+		(at 154.94 82.55 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b7a78228-556b-4bec-9bc5-5d7671eac7db")
+		(property "Reference" "R11"
+			(at 157.48 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "340Ω"
+			(at 157.48 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "0_resistor_SMD:R_0402_1005Metric"
+			(at 153.924 82.296 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.yageo.com/upload/media/product/app/datasheet/rchip/pyu-rc_group_51_rohs_l.pdf"
+			(at 154.94 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "340 Ohms ±1% 0.063W, 1/16W Chip Resistor 0402 (1005 Metric) Moisture Resistant Thick Film"
+			(at 154.94 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "PartNumber" "RC0402FR-07340RL"
+			(at 154.94 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "12d860f2-62ca-4cfd-902b-18551db0c856")
+		)
+		(pin "1"
+			(uuid "a5d38047-b13f-45d6-b91a-f3fde28f504f")
+		)
+		(instances
+			(project "STM32WLE5_RF_dongle"
+				(path "/3d1ed669-1135-4c49-b1df-94cff2b9b047/0e17e17f-90b3-45ef-b1b3-8cfb60b68c2b/ad9ae5b5-cf8f-4e68-8205-54438ed41a0f"
+					(reference "R11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "0_generic_component:C")
 		(at 135.89 115.57 90)
 		(unit 1)
@@ -6263,7 +6482,7 @@
 	)
 	(symbol
 		(lib_id "0_generic_component:C")
-		(at 167.64 87.63 0)
+		(at 170.18 82.55 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6274,7 +6493,7 @@
 		(fields_autoplaced yes)
 		(uuid "bdd610b5-5647-40e4-925e-68e3748ff8ac")
 		(property "Reference" "C19"
-			(at 171.45 86.36 0)
+			(at 173.99 81.28 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6285,7 +6504,7 @@
 			)
 		)
 		(property "Value" "1nF"
-			(at 171.45 88.9 0)
+			(at 173.99 83.82 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6296,7 +6515,7 @@
 			)
 		)
 		(property "Footprint" "1_capacitor_SMD:C_0402_1005Metric"
-			(at 168.6052 91.44 0)
+			(at 171.1452 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6307,7 +6526,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/app/datasheet/mlcc/upy-gphc_x7r_6_3v-to-250v.pdf"
-			(at 167.64 87.63 0)
+			(at 170.18 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6318,7 +6537,7 @@
 			)
 		)
 		(property "Description" "1000 pF ±10% 16V Ceramic Capacitor X7R 0402 (1005 Metric)"
-			(at 167.64 87.63 0)
+			(at 170.18 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6329,7 +6548,7 @@
 			)
 		)
 		(property "PartNumber" "CC0402KRX7R7BB102"
-			(at 167.64 87.63 0)
+			(at 170.18 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6912,7 +7131,7 @@
 	)
 	(symbol
 		(lib_id "0_generic_component:R")
-		(at 161.29 82.55 90)
+		(at 144.78 76.2 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6923,7 +7142,7 @@
 		(fields_autoplaced yes)
 		(uuid "f4b4826e-34af-43cb-a661-97a310924a99")
 		(property "Reference" "R4"
-			(at 161.29 76.2 90)
+			(at 144.78 69.85 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6933,7 +7152,7 @@
 			)
 		)
 		(property "Value" "100Ω"
-			(at 161.29 78.74 90)
+			(at 144.78 72.39 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6943,7 +7162,7 @@
 			)
 		)
 		(property "Footprint" "0_resistor_SMD:R_0402_1005Metric"
-			(at 161.544 81.534 90)
+			(at 145.034 75.184 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6954,7 +7173,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.yageo.com/upload/media/product/app/datasheet/rchip/pyu-rc_group_51_rohs_l.pdf"
-			(at 161.29 82.55 0)
+			(at 144.78 76.2 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6965,7 +7184,7 @@
 			)
 		)
 		(property "Description" "100 Ohms ±1% 0.063W, 1/16W Chip Resistor 0402 (1005 Metric) Moisture Resistant Thick Film"
-			(at 161.29 82.55 0)
+			(at 144.78 76.2 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6976,7 +7195,7 @@
 			)
 		)
 		(property "PartNumber" "RC0402FR-07100RL"
-			(at 161.29 82.55 0)
+			(at 144.78 76.2 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
