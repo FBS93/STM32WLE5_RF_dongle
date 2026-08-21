@@ -1,0 +1,47 @@
+name: test-steps
+
+on:
+  push:
+  #   branches:
+  #     - "!main"
+  # pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  test-implementation-job:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # To use this repository's private action, you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Test action step first steps
+        uses: ./ # Uses an action in the root directory
+        with:
+          source_repo_path: AndreasAugustin/template.git
+          is_dry_run: true
+          is_force_push_pr: true
+          steps: "prechecks,pull"
+
+      - name: in between step
+        run: |
+          echo "I can do whatever I want"
+          git status
+
+      - name: Test action step next steps
+        uses: ./ # Uses an action in the root directory
+        id: test
+        with:
+          source_repo_path: AndreasAugustin/template.git
+          is_dry_run: true
+          is_force_push_pr: true
+          steps: "commit,push,pr"
+
+      - name: print output
+        env:
+          FORMER_OUTPUT_PR_BRANCH: ${{ steps.test.outputs.pr_branch }}
+        run: echo "pr_branch ${FORMER_OUTPUT_PR_BRANCH}"

@@ -55,7 +55,7 @@ fi
 
 echo "Generating documentation with CI results..."
 if python3 "tools/docgen/docgen.py" --root . --output "${DOCGEN_OUTPUT}" \
-    --title "${project_title} ${release_version}" --strict \
+    --title "${project_title} ${release_version}" --exclude third_party --strict \
     --test-result "CI" "${ci_log}"; then
     echo "✅ Generated: ${DOCGEN_OUTPUT}/index.html"
 else

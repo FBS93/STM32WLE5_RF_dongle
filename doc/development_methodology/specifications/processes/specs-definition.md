@@ -29,9 +29,15 @@ Define project specifications from stakeholder specifications.
 
 ## Guidelines
 
+### PDF to markdown conversion
+
+Every PDF file consumed from the stakeholder specifications shall be processed using the [pdf-to-markdown skill](../../../../.opencode/skills/pdf-to-markdown/SKILL.md) before its generated Markdown is consumed.
+
+For a source PDF at `spec/stakeholder_spec/<relative path>/<document basename>.pdf`, the generated Markdown shall be written to `spec/stakeholder_spec_parsed/<relative path>/<document basename>.md`. The relative path and basename shall be preserved exactly, replacing only the `.pdf` extension with `.md`.
+
 ### Specifications work product
 
-A dedicated `specs.md` document shall be defined to capture all specifications relevant to the system design by decomposing stakeholder specifications into traceable specifications.
+A dedicated `specs.md` document shall be defined by decomposing stakeholder specifications into traceable specifications that capture project-specific needs, constraints and expectations relevant to the system design. Referenced documentation shall not be extracted as specifications unless the stakeholder specifications explicitly identify specific content as applicable to the project.
 
 Each specification of the `specs.md` document shall:
 - Be derived directly from stakeholder specifications without modifying their original content.
@@ -64,7 +70,7 @@ Each tool of the `tools.md` document shall:
 - Define all project-specific tools available for implementation, test and debugging.
 - Describe how each tool shall be used.
   - Reference how it is integrated into the [Embedded Workbench](../../../ew.md) when applicable instead of redefining it.
-  - Reference tool-specific manuals or stakeholder documentation that support its usage.
+  - Reference tool-specific manuals or stakeholder documentation that support its usage. When stakeholder-related documentation is provided in PDF format, link both its AI processing source and original source.
 - Not redefine tools already provided by Embedded Workbench.
 
 The following tool template shall be used:
@@ -78,7 +84,14 @@ The following tool template shall be used:
 
 ## Usage
 
-<Usage description. May include references to manufacturer manuals or stakeholder specifications explaining how to use the tool>.
+<Usage description>.
+
+## References
+
+- <Stakeholder document name in PDF format>
+  - AI processing source: [<document basename>.md](stakeholder_spec_parsed/<relative path>/<document basename>.md)
+  - Original source: [<document basename>.pdf](stakeholder_spec/<relative path>/<document basename>.pdf)
+- [<Stakeholder document name in a plain-text format>](stakeholder_spec/<relative path>/<document filename>)
 ```
 
 ### External hardware documentation work product
@@ -89,7 +102,7 @@ Each external hardware documentation of the `external_hw_docs.md` document shall
 - Define a unique identifier for each external hardware documentation entry following the pattern: `EHW_DOC_<X>`
   - `<X>` is a monotonically increasing number that shall never be reused.
 - Provide a brief description of the external hardware documentation.
-- Provide a link to the stakeholder-provided external hardware documentation.
+- Reference stakeholder-provided external hardware documentation. When stakeholder-related documentation is provided in PDF format, link both its AI processing source and original source.
 
 The following external hardware documentation template shall be used:
 
@@ -98,5 +111,10 @@ The following external hardware documentation template shall be used:
 
 <Brief description of the external hardware documentation>.
 
-Link: <link to stakeholder-provided document>
+## References
+
+- <Stakeholder document name in PDF format>
+  - AI processing source: [<document basename>.md](stakeholder_spec_parsed/<relative path>/<document basename>.md)
+  - Original source: [<document basename>.pdf](stakeholder_spec/<relative path>/<document basename>.pdf)
+- [<Stakeholder document name in a plain-text format>](stakeholder_spec/<relative path>/<document filename>)
 ```

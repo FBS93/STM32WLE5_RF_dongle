@@ -2,3 +2,4 @@
 README.md
 LICENSE
 .devcontainer/devcontainer.json
+.gitignore

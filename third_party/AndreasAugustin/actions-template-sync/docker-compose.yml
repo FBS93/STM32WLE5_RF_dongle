@@ -1,0 +1,30 @@
+services:
+  dev:
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/app/
+      - ~/.gitconfig:/root/.gitconfig:ro
+    environment:
+      - SSH_PRIVATE_KEY_SRC
+
+  docs:
+    build:
+      context: .
+      target: docs
+    volumes:
+      - .:/app/
+
+  shellcheck:
+    image: koalaman/shellcheck:v0.7.2
+    volumes:
+      - .:/app/
+    working_dir: /app/
+
+  prod:
+    build:
+      context: .
+      target: prod
+    tty: true
+    entrypoint: ["/bin/bash"]

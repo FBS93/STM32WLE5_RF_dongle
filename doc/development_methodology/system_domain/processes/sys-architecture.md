@@ -37,9 +37,9 @@ The system modes system design shall:
   - Events triggering state transitions shall correspond to real interactions defined in the system requirements and system architecture:
     - Events originating from interfaces shall reference the corresponding interface identifiers and specify the expected reception that triggers the transition.
     - Internal events (e.g., faults, interrupts, ...) shall be aligned with and reference the corresponding system design where applicable.
-- Be defined in a dedicated Markdown document named `sys_modes_state_diagram.md`.
+  - Be defined in a dedicated Markdown document named `sys_modes_state_diagram.md`.
 
-Each state and event defined in the state diagram shall be explicitly described in dedicated tables within the same document. The following document template shall be used:
+Each state and event defined in the state diagram shall be explicitly described in dedicated tables within the `sys_modes_state_diagram.md`. The following document template shall be used:
 
 ```md
 # sys_modes_state_diagram
@@ -56,11 +56,11 @@ Each state and event defined in the state diagram shall be explicitly described 
 
 | State | Description |
 |---|---|
-| <STATE_NAME> | <DESCRIPTION> |
+| <STATE_NAME> | <Description>. |
 
 ## Events
 
 | Event | Description |
 |---|---|
-| <EVENT_NAME> | <DESCRIPTION> |
+| <EVENT_NAME> | <Description>. |
 ```
