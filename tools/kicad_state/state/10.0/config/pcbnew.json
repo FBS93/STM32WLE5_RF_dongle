@@ -84,9 +84,9 @@
   },
   "footprint_chooser": {
     "filter_on_pin_count": false,
-    "height": 828,
+    "height": 961,
     "sash_h": 685,
-    "sash_v": 355,
+    "sash_v": 419,
     "sort_mode": 0,
     "use_fp_filters": false,
     "width": 1193
@@ -98,7 +98,7 @@
       "always_show_cursor": false,
       "cross_hair_mode": 0
     },
-    "display": 2,
+    "display": 1,
     "fp_list_width": 300,
     "grid": {
       "axes_enabled": false,
@@ -240,10 +240,10 @@
     "maximized": false,
     "mru_path": "/kicad-runtime/documents/kicad/10.0/projects",
     "perspective": "layout2|",
-    "pos_x": 2124,
-    "pos_y": 1198,
+    "pos_x": 2033,
+    "pos_y": 1044,
     "size_x": 1193,
-    "size_y": 828,
+    "size_y": 961,
     "zoom": 1.0,
     "zoom_factors": [
       0.13,
@@ -455,7 +455,8 @@
     ],
     "open_libs": [
       "10_button",
-      "20_oscillator"
+      "20_oscillator",
+      "1000_user_silk_drawings"
     ]
   },
   "meta": {
@@ -512,7 +513,7 @@
       "/workspaces/STM32WLE5_RF_dongle/hw/KiCad/STM32WLE5_RF_dongle.kicad_pcb"
     ],
     "first_run_shown": false,
-    "last_footprint3d_dir": "",
+    "last_footprint3d_dir": "/usr/share/kicad/3dmodels/",
     "last_footprint_lib_dir": "/workspaces/STM32WLE5_RF_dongle/hw/FBS_kicad_lib/footprints",
     "last_imperial_units": 0,
     "last_metric_units": 1,
@@ -541,8 +542,8 @@
       "shove_vias": true,
       "smart_pads": true,
       "smooth_dragged_segments": true,
-      "snap_to_pads": false,
-      "snap_to_tracks": false,
+      "snap_to_pads": true,
+      "snap_to_tracks": true,
       "start_diagonal": false,
       "suggest_finish": false,
       "via_force_prop_iteration_limit": 40,
@@ -556,12 +557,12 @@
       "always_show_cursor": true,
       "cross_hair_mode": 0
     },
-    "display": 2,
+    "display": 1,
     "grid": {
       "axes_enabled": false,
       "fast_grid_1": 15,
       "fast_grid_2": 16,
-      "last_size": 15,
+      "last_size": 21,
       "line_width": 1.0,
       "min_spacing": 10.0,
       "override_connected": false,

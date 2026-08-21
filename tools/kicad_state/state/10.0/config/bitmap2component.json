@@ -1,15 +1,13 @@
 {
   "appearance": {
     "color_theme": "_builtin_default",
-    "custom_toolbars": false,
-    "left_frame_width": 301
+    "custom_toolbars": false
   },
-  "aui": {
-    "show_history_panel": false
-  },
+  "bitmap_file_name": "/workspaces/STM32WLE5_RF_dongle/hw/KiCad/assets/RF_Wizard.png",
   "color_picker": {
     "default_tab": 0
   },
+  "converted_file_name": "/workspaces/STM32WLE5_RF_dongle/hw/FBS_kicad_lib/footprints/1000_user_silk_drawings.pretty/RF_Wizard.kicad_mod",
   "cross_probing": {
     "auto_highlight": true,
     "center_on_items": true,
@@ -44,30 +42,17 @@
     "highlight_factor": 0.5,
     "select_factor": 0.75
   },
+  "last_format": 2,
+  "last_mod_layer": 1,
   "lib_tree": {
     "column_widths": null,
     "columns": [],
     "open_libs": []
   },
-  "libraries": {
-    "overrides": {}
-  },
   "meta": {
-    "version": 0
+    "version": 1
   },
-  "pcm": {
-    "check_for_updates": false,
-    "last_download_dir": "",
-    "lib_auto_add": true,
-    "lib_auto_remove": true,
-    "lib_prefix": "PCM_",
-    "repositories": [
-      {
-        "name": "KiCad official repository",
-        "url": "https://repository.kicad.org/repository.json"
-      }
-    ]
-  },
+  "negative": false,
   "plugins": {
     "actions": []
   },
@@ -91,45 +76,25 @@
     "selection_zoom": 1
   },
   "system": {
-    "check_for_kicad_updates": false,
     "file_history": [
-      "/workspaces/STM32WLE5_RF_dongle/hw/KiCad/STM32WLE5_RF_dongle.kicad_pro"
+      "/workspaces/STM32WLE5_RF_dongle/hw/KiCad/assets/RF_Wizard.png"
     ],
     "first_run_shown": false,
-    "last_design_block_lib_dir": "",
     "last_imperial_units": 5,
     "last_metric_units": 1,
-    "last_received_update": "",
-    "last_update_check_time": "",
     "max_undo_items": 0,
-    "open_projects": [
-      "/workspaces/STM32WLE5_RF_dongle/hw/KiCad/STM32WLE5_RF_dongle.kicad_pro"
-    ],
     "show_import_issues": true,
     "units": 1
   },
-  "template": {
-    "filter": 0,
-    "last_used": "",
-    "recent_templates": [],
-    "window": {
-      "pos": {
-        "x": -1,
-        "y": -1
-      },
-      "size": {
-        "height": -1,
-        "width": -1
-      }
-    }
-  },
+  "threshold": 50,
+  "units": 0,
   "window": {
     "aui_state": null,
     "cursor": {
       "always_show_cursor": true,
       "cross_hair_mode": 0
     },
-    "display": 1,
+    "display": 0,
     "grid": {
       "axes_enabled": false,
       "fast_grid_1": 15,
@@ -267,12 +232,12 @@
       "user_grid_y": ""
     },
     "maximized": false,
-    "mru_path": "/workspaces/STM32WLE5_RF_dongle/hw/KiCad/",
-    "perspective": "layout2|name=TopMainToolbar;caption=;state=139596;dir=4;layer=2;row=0;pos=0;prop=100000;bestw=34;besth=243;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=ProjectTree;caption=Project Files;state=1340;dir=4;layer=1;row=0;pos=0;prop=100000;bestw=301;besth=20;minw=250;minh=80;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=LocalHistory;caption=Local History;state=2098494;dir=4;layer=1;row=0;pos=1;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Editors;caption=Editors;state=508;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=700;besth=590;minw=700;minh=590;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(4,2,0)=34|dock_size(4,1,0)=301|dock_size(5,0,0)=700|",
-    "pos_x": 2160,
-    "pos_y": 1186,
-    "size_x": 989,
-    "size_y": 637,
+    "mru_path": "/workspaces/STM32WLE5_RF_dongle/hw/FBS_kicad_lib/footprints/1000_user_silk_drawings.pretty",
+    "perspective": "layout2|",
+    "pos_x": 256,
+    "pos_y": 965,
+    "size_x": 1280,
+    "size_y": 872,
     "zoom_factors": [
       0.13,
       0.22,
