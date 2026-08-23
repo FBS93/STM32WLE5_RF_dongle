@@ -1051,12 +1051,12 @@ Encoding:
 - Factor: 1 dBm.
 - Offset: 0 dBm.
 
-Encoded range: [0xEF, 0xFF] and [0x00, 0x16] (signed values [-17, -1] and [0, 22]).
+Encoded range: [0xF7, 0xFF] and [0x00, 0x16] (signed values [-9, -1] and [0, 22]).
 
-Physical range: [-17, 22] dBm.
+Physical range: [-9, 22] dBm.
 
 Dependencies and constraints:
-- The software shall derive the HP/LP PA path and safe PA settings from this requested power, [sysp_rfFrequencyHz](#sys_req_parameter_2), and the implemented RF hardware.
+- The software shall derive the correct configuration from this requested power, [sysp_rfFrequencyHz](#sys_req_parameter_2), and the implemented RF hardware.
 
 Domain:
 - sw
