@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y \
 # layer.  --break-system-packages is intentional here because this is a controlled
 # development container image rather than a shared host Python installation.
 RUN python -m pip install --break-system-packages \
-    "docling[rapidocr]==2.119.0" \
+    "docling[rapidocr]==v2.120.3" \
     Jinja2==3.1.6 \
     jsonschema==4.26.0 \
     markdown-it-py==4.0.0 \
