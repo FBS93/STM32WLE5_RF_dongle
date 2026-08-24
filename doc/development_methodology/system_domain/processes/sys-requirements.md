@@ -7,8 +7,6 @@ Define system requirements from specifications.
 ## Input work products
 
 - Specifications
-- Tools
-- External hardware documentation
 
 ## Output work products
 
