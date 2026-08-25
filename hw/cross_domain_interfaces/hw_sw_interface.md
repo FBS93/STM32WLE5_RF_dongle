@@ -73,7 +73,7 @@ Status: approved
 
 ### HW_SW_INTERFACE_7
 
-FT230XS-R U4 `TXD` is connected to PA3/`USART2_RX`, and PA2/`USART2_TX` is connected to FT230XS-R `RXD`, through the `USB_interface_tx` and `USB_interface_rx` hierarchical nets. The interface uses USART2 at `155200` baud with 8 data bits, no parity, and 1 stop bit (8-N-1).
+FT230XS-R U4 `TXD` is connected to PA3/`USART2_RX`, and PA2/`USART2_TX` is connected to FT230XS-R `RXD`, through the `USB_interface_tx` and `USB_interface_rx` hierarchical nets. The interface uses USART2 at `115200` baud with 8 data bits, no parity, and 1 stop bit (8-N-1).
 
 Hardware design reference: [top-level schematic](../../hw/KiCad/top.kicad_sch) and [USB interface schematic](../../hw/KiCad/USB_interface_and_power.kicad_sch) (U4 FT230XS-R, `TXD`, `RXD`, `USB_interface_tx` and `USB_interface_rx`).
 
