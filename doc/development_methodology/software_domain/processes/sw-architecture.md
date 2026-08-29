@@ -46,15 +46,14 @@ The following template shall be used for the description of this software design
 ```md
 This architecture shall follow an event-driven model using Event Driven Framework (EDF).
 
-## Events
-
-### <EVENT_NAME>
-
-<Event description>.
-
-Parameters:
-- <param_name>: <Parameter description>.
+Events:
+- `<EVENT_NAME>`
+  - Description: <Event description>.
+  - Parameters:
+    - `<param_name>`: <Parameter description>.
 ```
+
+The `Parameters` subsection shall be included only when the event has parameters.
 
 In this architecture model, all project-specific software components shall be defined as active objects. Each active object shall:
 - Encapsulate its own state and behavior.
@@ -124,39 +123,30 @@ The following template shall be used for the description of this software design
 ```md
 The platform shall be defined as follows:
 
-## Toolchains
+Toolchains:
+- <Design decisions related to the selected toolchains>.
 
-<Design decisions related to the selected toolchains>.
+Build configuration:
+- <Design decisions related to the selected build configuration>.
 
-## Build configuration
-
-<Design decisions related to the selected build configuration>.
-
-## Memory layout
-
-### RAM layout
-
+RAM layout:
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-### ROM layout
-
+ROM layout:
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-### NVM layout
-
+NVM layout:
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-## Debug configuration
+Debug configuration:
+- <Design decisions related to the selected debug configuration>.
 
-<Design decisions related to the selected debug configuration>.
-
-## Embedded C Framework (ECF) integration
-
-<Design decisions related to the Embedded C Framework (ECF) integration strategy>.
+Embedded C Framework (ECF) integration:
+- <Design decisions related to the Embedded C Framework (ECF) integration strategy>.
 ```
