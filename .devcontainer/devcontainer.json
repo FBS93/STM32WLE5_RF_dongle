@@ -7,9 +7,12 @@
     "RPI_USER": "${localEnv:RPI_USER}", // Raspberry Pi SSH username.
     "RPI_HOST": "${localEnv:RPI_HOST}", // Raspberry Pi IP address.
     "GDB_PORT": "${localEnv:GDB_PORT}", // TCP port where GDB server will listen.
+    "GDB_SERVER_RUN_CMD": "JLinkGDBServer -device STM32F103C8 -if SWD -speed 400 -port ${localEnv:GDB_PORT} -nogui", // Command to start the GDB server.
+    "LOG_SOURCE": "serial", // Logging source: serial or tcp.
     "LOG_PORT": "${localEnv:LOG_PORT}", // TCP port used for logging.
-    "LOG_BAUD_RATE": "115200", // Baud rate used for logging interface.
-    "LOG_SERIAL_DEVICE": "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_BG0301V6-if00-port0", // Stable Raspberry Pi serial device path assigned to target logging.
+    "LOG_BAUD_RATE": "115200", // Baud rate used when LOG_SOURCE = serial.
+    "LOG_SERIAL_DEVICE": "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_BG0301V6-if00-port0", // Stable Raspberry Pi serial device path assigned to target logging when LOG_SOURCE = serial.
+    "LOG_TCP_RUN_CMD": "", // Command to setup the external TCP logging provider when LOG_SOURCE = tcp. target logging.
     "LOGIC_ANALYZER_DEVICE": "fx2lafw", // Sigrok device selector assigned to the logic analyzer workflow.
     "LOGIC_ANALYZER_ARTIFACTS_DIR": "${containerWorkspaceFolder}/build/debug/logic_analyzer", // Directory where logic analyzer artifacts are stored grouped by logical capture name.
     "TARGET_RX_TIMEOUT_S": "10", // Maximum allowed inactivity time (seconds) without receiving data from the target.
