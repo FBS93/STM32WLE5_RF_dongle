@@ -5,9 +5,9 @@
 It works as follows:
 - Starting GDB server on a remote Raspberry Pi.
 - Flashing firmware via the GDB server.
-- Starting a serial-to-TCP bridge.
+- Starting or reusing the configured logging source.
 - Running the target firmware.
-- Capturing serial output.
+- Capturing logging output.
 - Reporting PASS/FAIL.
 
 # Glossary

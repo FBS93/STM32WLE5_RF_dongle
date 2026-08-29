@@ -86,9 +86,6 @@ Make sure that the environment variables in [devcontainer.json](../../../../.dev
 
 - `RPI_USER` and `RPI_HOST` must match the Raspberry Pi SSH credentials.
 - `GDB_PORT` must match the port used by the GDB server.
+- `GDB_SERVER_RUN_CMD` defines the command used to start the GDB server. Repeated executions of this command shall be idempotent.
 - `NETWORK_LATENCY_TIMEOUT_S` defines the maximum wait time used by readiness checks for the GDB server.
 - `SVD_FILE` must be set to the path of the SVD file used for target debugging.
-
-Make sure that the variables in [run_target_gdb_server.sh](../../../../.vscode/tasks/run_target_gdb_server.sh) are configured for the installed GDB server and target environment:
-
-- `GDB_SERVER_RUN_CMD` must be adapted to start the selected GDB server.

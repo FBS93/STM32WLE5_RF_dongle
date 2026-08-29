@@ -6,9 +6,17 @@ echo "📃 Enable target logging"
 # Validate required environment variables.
 : "${RPI_USER:?Missing RPI_USER}"
 : "${RPI_HOST:?Missing RPI_HOST}"
+: "${LOG_SOURCE:?Missing LOG_SOURCE}"
 : "${LOG_PORT:?Missing LOG_PORT}"
-: "${LOG_BAUD_RATE:?Missing LOG_BAUD_RATE}"
-: "${LOG_SERIAL_DEVICE:?Missing LOG_SERIAL_DEVICE}"
+if [ "${LOG_SOURCE}" = "serial" ]; then
+    : "${LOG_BAUD_RATE:?Missing LOG_BAUD_RATE}"
+    : "${LOG_SERIAL_DEVICE:?Missing LOG_SERIAL_DEVICE}"
+elif [ "${LOG_SOURCE}" = "tcp" ]; then
+    : "${LOG_TCP_RUN_CMD:?Missing LOG_TCP_RUN_CMD}"
+else
+    echo "❌ Error: unsupported LOG_SOURCE value '${LOG_SOURCE}'; expected 'serial' or 'tcp'."
+    exit 1
+fi
 : "${NETWORK_LATENCY_TIMEOUT_S:?Missing NETWORK_LATENCY_TIMEOUT_S}"
 : "${WORKSPACE_FOLDER:?Missing WORKSPACE_FOLDER}"
 
@@ -18,25 +26,51 @@ if ! command -v ssh >/dev/null 2>&1; then
     exit 1
 fi
 
-if ! command -v scp >/dev/null 2>&1; then
+if [ "${LOG_SOURCE}" = "serial" ] && ! command -v scp >/dev/null 2>&1; then
     echo "❌ Error: scp not found."
     exit 1
 fi
 
-# Local and remote file paths used to deploy and run the logging server.
-LOCAL_SCRIPT="${WORKSPACE_FOLDER}/tools/run_target_logging_server/run_target_logging_server.py"
-REMOTE_SCRIPT="/tmp/run_target_logging_server.py"
-REMOTE_LOG="/tmp/run_target_logging_server.log"
+if [ "${LOG_SOURCE}" = "tcp" ]; then
+    if ! (cd -- "${WORKSPACE_FOLDER}" && bash -c -- "${LOG_TCP_RUN_CMD}"); then
+        echo "❌ Error: LOG_TCP_RUN_CMD failed."
+        exit 1
+    fi
 
-if [ ! -f "${LOCAL_SCRIPT}" ]; then
-    echo "❌ Error: local script not found: ${LOCAL_SCRIPT}"
-    exit 1
-fi
+    ssh -o StrictHostKeyChecking=accept-new "${RPI_USER}@${RPI_HOST}" bash << EOF
+set -euo pipefail
 
-# Copy the target logging server script to the Raspberry Pi.
-scp -o StrictHostKeyChecking=accept-new "${LOCAL_SCRIPT}" "${RPI_USER}@${RPI_HOST}:${REMOTE_SCRIPT}" >/dev/null
+TIMEOUT_MS=\$(awk 'BEGIN { print int(${NETWORK_LATENCY_TIMEOUT_S} * 1000) }')
+while true; do
+    if /usr/bin/ss -ltn | /usr/bin/grep -E ":${LOG_PORT}[[:space:]]" >/dev/null; then
+        echo "✅ Logging server ready on port $LOG_PORT."
+        exit 0
+    fi
+    if [ "\$TIMEOUT_MS" -le 0 ]; then
+        break
+    fi
+    /usr/bin/sleep 0.2
+    TIMEOUT_MS=\$((TIMEOUT_MS - 200))
+done
 
-ssh -o StrictHostKeyChecking=accept-new "${RPI_USER}@${RPI_HOST}" bash << EOF
+echo "❌ Logging server failed."
+exit 1
+EOF
+elif [ "${LOG_SOURCE}" = "serial" ]; then
+    # Local and remote file paths used to deploy and run the serial logging server.
+    LOCAL_SCRIPT="${WORKSPACE_FOLDER}/tools/run_target_serial_logging_server/run_target_serial_logging_server.py"
+    REMOTE_SCRIPT="/tmp/run_target_serial_logging_server.py"
+    REMOTE_LOG="/tmp/run_target_serial_logging_server.log"
+
+    if [ ! -f "${LOCAL_SCRIPT}" ]; then
+        echo "❌ Error: local script not found: ${LOCAL_SCRIPT}"
+        exit 1
+    fi
+
+    # Copy the target logging server script to the Raspberry Pi.
+    scp -o StrictHostKeyChecking=accept-new "${LOCAL_SCRIPT}" "${RPI_USER}@${RPI_HOST}:${REMOTE_SCRIPT}" >/dev/null
+
+    ssh -o StrictHostKeyChecking=accept-new "${RPI_USER}@${RPI_HOST}" bash << EOF
 set -euo pipefail
 
 # Use the configured serial device.
@@ -49,7 +83,7 @@ SERIAL_DEVICE="\$(/usr/bin/readlink -f -- "${LOG_SERIAL_DEVICE}")"
 echo "USB serial device configured: ${LOG_SERIAL_DEVICE}."
 
 # Reuse the existing logging server when healthy and matching the device and port.
-if /usr/bin/ss -ltn | /usr/bin/grep ":$LOG_PORT" >/dev/null && \
+if /usr/bin/ss -ltn | /usr/bin/grep -E ":${LOG_PORT}[[:space:]]" >/dev/null && \
    /usr/bin/pgrep -f "python3 ${REMOTE_SCRIPT} ${LOG_SERIAL_DEVICE} ${LOG_PORT} ${LOG_BAUD_RATE}" >/dev/null; then
     for pid in \$(/usr/bin/pgrep -f "python3 ${REMOTE_SCRIPT} ${LOG_SERIAL_DEVICE} ${LOG_PORT} ${LOG_BAUD_RATE}"); do
         for fd in /proc/\${pid}/fd/*; do
@@ -66,7 +100,7 @@ if /usr/bin/ss -ltn | /usr/bin/grep ":$LOG_PORT" >/dev/null && \
 fi
 
 # Stop stale instances before starting a fresh one.
-if /usr/bin/ss -ltn | /usr/bin/grep ":$LOG_PORT" >/dev/null; then
+if /usr/bin/ss -ltn | /usr/bin/grep -E ":${LOG_PORT}[[:space:]]" >/dev/null; then
     /usr/bin/fuser -k ${LOG_PORT}/tcp 2>/dev/null || true
 fi
 /usr/bin/pkill -f "python3 ${REMOTE_SCRIPT}" 2>/dev/null || true
@@ -78,7 +112,7 @@ nohup python3 "${REMOTE_SCRIPT}" "${LOG_SERIAL_DEVICE}" "${LOG_PORT}" "${LOG_BAU
 # Wait for the TCP port.
 TIMEOUT_MS=\$(awk 'BEGIN { print int(${NETWORK_LATENCY_TIMEOUT_S} * 1000) }')
 while true; do
-    if /usr/bin/ss -ltn | /usr/bin/grep ":$LOG_PORT" >/dev/null; then
+    if /usr/bin/ss -ltn | /usr/bin/grep -E ":${LOG_PORT}[[:space:]]" >/dev/null; then
         echo "✅ Logging server ready on port $LOG_PORT."
         exit 0
     fi
@@ -93,3 +127,4 @@ echo "❌ Logging server failed."
 /usr/bin/tail -n 40 "${REMOTE_LOG}" || true
 exit 1
 EOF
+fi

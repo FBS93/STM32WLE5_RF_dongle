@@ -10,7 +10,7 @@ The containerized development environment provides Software-in-the-Loop (SiL) ca
 
 The Raspberry Pi runs a frozen, reproducible SD image and exposes standardized interfaces to the development container enabling repeatable target environments, Hardware-in-the-Loop (HiL) capabilities and low-cost remote target access with the following features:
 - Embedded target remote debugging via GDB server. See [embedded target remote debugging](../development_methodology/software_domain/resources/embedded_target_remote_debugging.md).
-- Embedded target remote logging via serial-to-TCP bridge. See [embedded target remote logging](../development_methodology/software_domain/resources/embedded_target_remote_logging.md).
+- Embedded target remote logging via a serial-to-TCP bridge or a user-configured external TCP provider. See [embedded target remote logging](../development_methodology/software_domain/resources/embedded_target_remote_logging.md).
 - Embedded target remote logic analyzer via Sigrok and PulseView web. See [embedded target remote logic analyzer](../development_methodology/resources/embedded_target_remote_logic_analyzer.md).
 - Embedded target remote HiL testing via CTest. See [embedded target remote HiL testing](../development_methodology/software_domain/resources/embedded_target_remote_HiL_testing.md).
 

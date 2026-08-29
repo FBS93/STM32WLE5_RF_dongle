@@ -161,8 +161,8 @@ def flash_via_gdb(test_binary):
 # Orchestrates the full test sequence:
 # - Start GDB server
 # - Flash firmware
-# - Start serial bridge
-# - Connect to serial output
+# - Start or reuse the configured logging source
+# - Connect to logging output
 # - Run firmware
 # - Capture and analyze output
 ##
@@ -179,15 +179,15 @@ def main():
   run([f"{WORKSPACE_FOLDER}/.vscode/tasks/run_target_logging_server.sh"])
 
   print("Connecting to target logging server ...", flush=True)
-  serial = socket.create_connection(
+  logging_socket = socket.create_connection(
     (RPI_HOST, LOG_PORT), timeout=NETWORK_LATENCY_TIMEOUT_S
   )
-  serial.settimeout(0.2)
+  logging_socket.settimeout(0.2)
 
-  # Flush stale serial data.
+  # Flush stale logging data.
   try:
     while True:
-      serial.recv(4096)
+      logging_socket.recv(4096)
   except socket.timeout:
     pass
 
@@ -217,7 +217,7 @@ def main():
   try:
     while True:
       try:
-        data = serial.recv(4096).decode(errors="replace")
+        data = logging_socket.recv(4096).decode(errors="replace")
       except socket.timeout:
         data = ""
 
@@ -244,7 +244,7 @@ def main():
 
   finally:
     # Cleanup.
-    serial.close()
+    logging_socket.close()
     gdb_proc.kill()
     gdb_proc.wait()
 

@@ -46,14 +46,15 @@ The following template shall be used for the description of this software design
 ```md
 This architecture shall follow an event-driven model using Event Driven Framework (EDF).
 
-Events:
-- `<EVENT_NAME>`
-  - Description: <Event description>.
-  - Parameters:
-    - `<param_name>`: <Parameter description>.
-```
+## Events
 
-The `Parameters` subsection shall be included only when the event has parameters.
+### <EVENT_NAME>
+
+<Event description>.
+
+Parameters:
+- <param_name>: <Parameter description>.
+```
 
 In this architecture model, all project-specific software components shall be defined as active objects. Each active object shall:
 - Encapsulate its own state and behavior.
@@ -123,30 +124,39 @@ The following template shall be used for the description of this software design
 ```md
 The platform shall be defined as follows:
 
-Toolchains:
-- <Design decisions related to the selected toolchains>.
+## Toolchains
 
-Build configuration:
-- <Design decisions related to the selected build configuration>.
+<Design decisions related to the selected toolchains>.
 
-RAM layout:
+## Build configuration
+
+<Design decisions related to the selected build configuration>.
+
+## Memory layout
+
+### RAM layout
+
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-ROM layout:
+### ROM layout
+
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-NVM layout:
+### NVM layout
+
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-Debug configuration:
-- <Design decisions related to the selected debug configuration>.
+## Debug configuration
 
-Embedded C Framework (ECF) integration:
-- <Design decisions related to the Embedded C Framework (ECF) integration strategy>.
+<Design decisions related to the selected debug configuration>.
+
+## Embedded C Framework (ECF) integration
+
+<Design decisions related to the Embedded C Framework (ECF) integration strategy>.
 ```
