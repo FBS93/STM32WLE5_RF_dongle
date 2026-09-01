@@ -33,7 +33,6 @@
  * Project-specific headers
  * -------------------------------------------------------------------------- */
 #include "ebf_core.h"
-#include "ebf_utils.h"
 #include "ebf.h"
 #include "eaf.h"
 #include "emf.h"
@@ -67,7 +66,7 @@ pthread_mutex_t EBF_critSecMutex = PTHREAD_MUTEX_INITIALIZER;
 /**
  * @todo If an init function is added to this module, move initialization there.
  */
-int8_t EBF_critSecNestCnt = 0;
+_Thread_local int8_t EBF_critSecNestCnt = 0;
 
 /*******************************************************************************
  * PRIVATE FUNCTIONS
@@ -90,42 +89,41 @@ EBF_WEAK void EBF_setStdinListener(EBF_stdin_t listener)
   EMF_UTILS_UNUSED_PARAM(listener);
 }
 
-EBF_WEAK void EBF_stdoutWrite(const uint8_t* data, uint16_t len)
+EBF_WEAK bool EBF_stdoutWrite(const uint8_t* data, uint16_t len)
 {
-  EAF_ASSERT_BLOCK_BEGIN();
-  EAF_ASSERT_IN_BLOCK(data != NULL);
-  EAF_ASSERT_IN_BLOCK(len > 0);
-  EAF_ASSERT_BLOCK_END();
+  size_t written;
+  int flushResult;
 
-  for (uint16_t i = 0; i < len; ++i)
-  {
-    fputc((int)data[i], stdout);
-  }
+  EAF_ASSERT(data != NULL);
+  EAF_ASSERT(len > 0U);
 
-  fflush(stdout);  // Flush to force immediate output
-}
+  EBF_CRITICAL_SECTION_ENTRY();
+  written = fwrite(data, sizeof(uint8_t), (size_t)len, stdout);
+  flushResult = fflush(stdout);
+  EBF_CRITICAL_SECTION_EXIT();
 
-EBF_WEAK bool EBF_stdoutIsReadyToWrite(uint16_t len)
-{
-  EMF_UTILS_UNUSED_PARAM(len);
-
-  return true;
+  return ((written == (size_t)len) && (flushResult == 0));
 }
 
 void EBF_entryCriticalSection(void)
 {
+  // Detect nested critical sections.
+  if (EBF_critSecNestCnt != 0)
+  {
+    EAF_ERROR_IN_CRITICAL_SECTION();
+  }
+
   (void)pthread_mutex_lock(&EBF_critSecMutex);
-
-  // Nested critical sections are not supported.
-  EAF_ASSERT_IN_CRITICAL_SECTION(EBF_critSecNestCnt == 0);
-
   EBF_critSecNestCnt++;
 }
 
 void EBF_exitCriticalSection(void)
 {
-  // Nested critical sections are not supported.
-  EAF_ASSERT_IN_CRITICAL_SECTION(EBF_critSecNestCnt == 1);
+  // Detect nested critical sections and exits without entry.
+  if (EBF_critSecNestCnt != 1)
+  {
+    EAF_ERROR();
+  }
 
   EBF_critSecNestCnt--;
   (void)pthread_mutex_unlock(&EBF_critSecMutex);

@@ -129,6 +129,11 @@
 #define USART_SR_RXNE (1U << 5U)
 
 /**
+ * @brief Overrun error flag.
+ */
+#define USART_SR_ORE (1U << 3U)
+
+/**
  * @brief USART enable bit.
  */
 #define USART_CR1_UE (1U << 13U)
@@ -149,6 +154,16 @@
 #define USART_CR1_RXNEIE (1U << 5U)
 
 /**
+ * @brief TX data register empty interrupt enable bit.
+ */
+#define USART_CR1_TXEIE (1U << 7U)
+
+/**
+ * @brief Asynchronous transmit buffer capacity.
+ */
+#define STDOUT_TX_BUFFER_CAPACITY 2048U
+
+/**
  * @brief NVIC IRQ number for USART1.
  */
 #define USART1_IRQ_NUM 37U
@@ -156,6 +171,34 @@
 /*******************************************************************************
  * PRIVATE TYPEDEFS
  ******************************************************************************/
+
+/**
+ * @brief Asynchronous standard output transmit state.
+ *
+ * See @ref stdout_tx_fifo_implementation.
+ */
+typedef struct
+{
+  uint8_t buffer[STDOUT_TX_BUFFER_CAPACITY]; /**< FIFO storage. */
+  volatile uint16_t head;  /**< Next FIFO position to transmit.
+                                volatile_use: asynchronous_interaction */
+  volatile uint16_t tail;  /**< Next FIFO position to fill.
+                                volatile_use: asynchronous_interaction */
+  volatile uint16_t count; /**< Number of bytes admitted to the FIFO.
+                                volatile_use: asynchronous_interaction */
+} stdoutTx_t;
+
+/**
+ * @brief Private standard input/output module state.
+ */
+typedef struct
+{
+  bool initialized; /**< Indicates whether the USART has been initialized. */
+  volatile EBF_stdin_t stdin_listener; /**< Registered input listener.
+                                            volatile_use:
+                                            asynchronous_interaction */
+  stdoutTx_t stdout_tx; /**< Asynchronous output transmit state. */
+} stdio_t;
 
 /*******************************************************************************
  * PRIVATE VARIABLES
@@ -167,16 +210,9 @@
 EAF_DEFINE_THIS_FILE(__FILE__);
 
 /**
- * @brief Indicates whether the USART has been initialized.
+ * @brief Private standard input/output module state.
  */
-static bool uartInitialized = false;
-
-/**
- * @brief Registered standard input listener.
- *
- * volatile_use: asynchronous_interaction
- */
-static volatile EBF_stdin_t stdinListener = NULL;
+static stdio_t stdio;
 
 /*******************************************************************************
  * PUBLIC VARIABLES
@@ -227,7 +263,7 @@ static void initUART(void)
   // Set USART1 RX interrupt to highest priority (0 = highest).
   NVIC_IPR_BASE[USART1_IRQ_NUM] = 0x00U;
 
-  uartInitialized = true;
+  stdio.initialized = true;
 }
 
 /*******************************************************************************
@@ -236,54 +272,106 @@ static void initUART(void)
 
 void EBF_setStdinListener(EBF_stdin_t listener)
 {
-  if (!uartInitialized)
+  EBF_CRITICAL_SECTION_ENTRY();
+
+  if (!stdio.initialized)
   {
     initUART();
   }
 
-  stdinListener = listener;
+  stdio.stdin_listener = listener;
+
+  EBF_CRITICAL_SECTION_EXIT();
 }
 
-bool EBF_stdoutIsReadyToWrite(uint16_t len)
+bool EBF_stdoutWrite(const uint8_t* data, uint16_t len)
 {
-  if (!uartInitialized)
+  uint16_t free_space;
+  bool accepted;
+
+  EBF_CRITICAL_SECTION_ENTRY();
+
+  EAF_ASSERT_IN_CRITICAL_SECTION(data != NULL);
+  EAF_ASSERT_IN_CRITICAL_SECTION(len > 0U);
+  EAF_ASSERT_IN_CRITICAL_SECTION(len <= STDOUT_TX_BUFFER_CAPACITY);
+
+  if (!stdio.initialized)
   {
     initUART();
   }
 
-  // No TX buffer --> only 1 Byte allowed.
-  return (len == 1) && (USART1_SR & USART_SR_TXE);
-}
-
-void EBF_stdoutWrite(const uint8_t* data, uint16_t len)
-{
-  // No TX buffer --> only 1 Byte allowed.
-  EAF_ASSERT(len == 1);
-
-  if (!uartInitialized)
+  accepted = false;
+  free_space = STDOUT_TX_BUFFER_CAPACITY - stdio.stdout_tx.count;
+  if (len <= free_space)
   {
-    initUART();
+    for (uint16_t i = 0U; i < len; i++)
+    {
+      stdio.stdout_tx.buffer[stdio.stdout_tx.tail] = data[i];
+      stdio.stdout_tx.tail =
+        (stdio.stdout_tx.tail + 1U) % STDOUT_TX_BUFFER_CAPACITY;
+    }
+
+    // Publish the admitted bytes only after completing the wrapped FIFO copy.
+    stdio.stdout_tx.count += len;
+
+    // Enable TX-empty interrupts to transmit the queued bytes.
+    USART1_CR1 |= USART_CR1_TXEIE;
+
+    accepted = true;
   }
 
-  // No blocking, so TX status shall be ready.
-  EAF_ASSERT(USART1_SR & USART_SR_TXE);
+  EBF_CRITICAL_SECTION_EXIT();
 
-  // Write the byte to the USART transmit data register (starts transmission).
-  USART1_DR = data[0];
+  return accepted;
 }
 
 void USART1_IRQHandler(void)
 {
+  uint32_t status;
   uint8_t byte;
 
-  if (USART1_SR & USART_SR_RXNE)
+  // Read USART status before processing RX flags.
+  status = USART1_SR;
+  if (status & USART_SR_ORE)  // RX overrun detected.
   {
-    // RXNE (Receive Data Register Not Empty) is cleared by reading USART1_DR.
-    byte = (uint8_t)USART1_DR;
+    (void)USART1_DR;  // Clear ORE by reading DR.
+    EAF_ERROR();      // Report the lost RX data.
+  }
+  else if (status & USART_SR_RXNE)  // RX data ready.
+  {
+    byte = (uint8_t)USART1_DR;  // Read and clear RXNE by reading DR.
 
-    if (stdinListener != NULL)
+    // If stdin listener registered, call it with the received byte.
+    if (stdio.stdin_listener != NULL)
     {
-      stdinListener(&byte, 1);
+      stdio.stdin_listener(&byte, 1U);
+    }
+  }
+
+  if ((USART1_SR & USART_SR_TXE) &&
+      (USART1_CR1 & USART_CR1_TXEIE))  // TX-empty interrupt active.
+  {
+    // If there are queued bytes, transmit the next byte and advance the FIFO.
+    if (stdio.stdout_tx.count > 0U)
+    {
+      USART1_DR = stdio.stdout_tx.buffer[stdio.stdout_tx.head];
+      stdio.stdout_tx.head =
+        (stdio.stdout_tx.head + 1U) % STDOUT_TX_BUFFER_CAPACITY;
+      stdio.stdout_tx.count--;
+    }
+
+    // Disable TX-empty interrupts when the FIFO becomes empty.
+    if (stdio.stdout_tx.count == 0U)
+    {
+      USART1_CR1 &= ~USART_CR1_TXEIE;
     }
   }
 }
+
+/**
+ * @anchor stdout_tx_fifo_implementation
+ * @par Standard-output transmit FIFO implementation
+ *
+ * The FIFO is implemented locally instead of using EMF_byteFifo to optimize
+ * execution time inside the critical section and USART ISRs.
+ */
