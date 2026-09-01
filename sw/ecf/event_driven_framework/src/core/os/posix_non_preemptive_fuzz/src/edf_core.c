@@ -353,17 +353,15 @@ static void installCoverageFlushSignalHandlers(void)
 
 void EAF_onError(const char* file, int line, int id)
 {
-  EMF_PRINT("Error in file %s, line %i, id %i\n",
-            EMF_PRINT_ARG_S(file),
-            EMF_PRINT_ARG_I(line),
-            EMF_PRINT_ARG_I(id));
+  EMF_UTILS_UNUSED_PARAM(file);
+  EMF_UTILS_UNUSED_PARAM(line);
+  EMF_UTILS_UNUSED_PARAM(id);
 
   /**
    * In this fuzzing port, an assert/error means the current testcase
-   * cannot continue executing normally. Therefore, this function logs the error
-   * context and terminates the process with `exit(0)` so the testcase ends
-   * immediately in a controlled way without being reported to AFL++ as a fatal
-   * crash.
+   * cannot continue executing normally. Therefore, terminates the process with
+   * `exit(0)` so the testcase ends immediately in a controlled way without
+   * being reported to AFL++ as a fatal crash.
    */
   exit(0);
 }

@@ -277,8 +277,16 @@
  * consider that concurrent or asynchronous execution is blocked during
  * this call.
  *
- * @note The default weak implementation logs the error information and
- * enters an infinite loop to halt execution.
+ * @note Implementations shall not call operations that can trigger another
+ * assertion.
+ *
+ * @note User implementations are strongly encouraged not to return. EAF_onError
+ * is the last line of defense against non-recoverable errors; after an
+ * assertion failure, the system state and availability of previously
+ * operational resources can no longer be guaranteed.
+ *
+ * @note The default weak implementation enters an infinite loop to halt
+ * execution.
  *
  * @param[in] file Pointer to the file name string.
  * @param[in] line Line number where the error occurred.

@@ -65,10 +65,9 @@
 
 EBF_WEAK void EAF_onError(const char* file, int line, int id)
 {
-  EMF_PRINT("Error in file %s, line %i, id %i\n",
-            EMF_PRINT_ARG_S(file),
-            EMF_PRINT_ARG_I(line),
-            EMF_PRINT_ARG_I(id));
+  EMF_UTILS_UNUSED_PARAM(file);
+  EMF_UTILS_UNUSED_PARAM(line);
+  EMF_UTILS_UNUSED_PARAM(id);
 
   while (1)
   {

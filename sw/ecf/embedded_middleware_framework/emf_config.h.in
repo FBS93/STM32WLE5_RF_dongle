@@ -1,0 +1,27 @@
+/*******************************************************************************
+ * @brief Embedded middleware framework configuration.
+ *
+ * @copyright
+ * Copyright (c) 2026 FBS93.
+ * See the LICENSE file of this project for license details.
+ * This notice shall be retained in all copies or substantial portions
+ * of the software.
+ *
+ * @warning
+ * This software is provided "as is", without any express or implied warranty.
+ * The user assumes all responsibility for its use and any consequences.
+ ******************************************************************************/
+
+#ifndef EMF_CONFIG_H
+#define EMF_CONFIG_H
+
+/**
+ * @brief Maximum formatted Print or Log message length: 1-65535 bytes.
+ */
+#define EMF_PRINT_MAX_LEN @EMF_PRINT_MAX_LEN@U
+
+#if ((EMF_PRINT_MAX_LEN < 1U) || (EMF_PRINT_MAX_LEN > 65535U))
+#error EMF_PRINT_MAX_LEN defined incorrectly, expected 1U to 65535U.
+#endif
+
+#endif /* EMF_CONFIG_H */

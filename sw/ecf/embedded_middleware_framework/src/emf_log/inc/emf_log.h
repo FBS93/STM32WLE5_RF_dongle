@@ -87,6 +87,9 @@
  *
  * @todo Review if 8 is sufficient for maximum number of arguments.
  *
+ * @note This macro shall not be called from an active EBF critical section.
+ * See @ref emf_stdout_critical_section_precondition.
+ *
  * @param[in] log_level Logging level.
  * @param[in] fmt Format string.
  * @param[in] ... Variable arguments.
@@ -110,6 +113,9 @@
  *
  * Builds a local array of arguments and passes them with the format string.
  *
+ * @note This macro shall not be called from an active EBF critical section.
+ * See @ref emf_stdout_critical_section_precondition.
+ *
  * @param[in] fmt Format string.
  * @param[in] ... Variable arguments.
  */
@@ -120,6 +126,9 @@
  * @brief Logs a warning-level message using @ref EMF_log().
  *
  * Builds a local array of arguments and passes them with the format string.
+ *
+ * @note This macro shall not be called from an active EBF critical section.
+ * See @ref emf_stdout_critical_section_precondition.
  *
  * @param[in] fmt Format string.
  * @param[in] ... Variable arguments.
@@ -132,6 +141,9 @@
  *
  * Builds a local array of arguments and passes them with the format string.
  *
+ * @note This macro shall not be called from an active EBF critical section.
+ * See @ref emf_stdout_critical_section_precondition.
+ *
  * @param[in] fmt Format string.
  * @param[in] ... Variable arguments.
  */
@@ -142,6 +154,9 @@
  * @brief Logs a debug-level message using @ref EMF_log().
  *
  * Builds a local array of arguments and passes them with the format string.
+ *
+ * @note This macro shall not be called from an active EBF critical section.
+ * See @ref emf_stdout_critical_section_precondition.
  *
  * @param[in] fmt Format string.
  * @param[in] ... Variable arguments.
@@ -190,6 +205,12 @@ void EMF_log_setLevel(EMF_log_level_t log_level);
  * @brief Logs a formatted message with arguments.
  *
  * Function used by the @c EMF_LOG_... macros.
+ *
+ * The prefix and formatted message are written atomically as one @ref EMF_print
+ * message and follow its size and error handling.
+ *
+ * @note This function shall not be called from an active EBF critical section.
+ * See @ref emf_stdout_critical_section_precondition.
  *
  * @param[in] log_level Logging level of the message.
  * @param[in] fmt Null-terminated format string.

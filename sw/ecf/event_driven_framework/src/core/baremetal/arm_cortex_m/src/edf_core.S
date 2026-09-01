@@ -118,7 +118,8 @@ EDF_core_preemptedContextReturn:
     // If execution reaches here, raise error.
     LDR     r0, =.Lfile
     LDR     r1, =__LINE__
-    BL      EAF_onError
+    MOVS    r2, #0
+    B       EAF_onError
 .size EDF_core_preemptedContextReturn, .-EDF_core_preemptedContextReturn
 
 

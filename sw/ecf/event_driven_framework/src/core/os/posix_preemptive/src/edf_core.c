@@ -231,7 +231,7 @@ int EDF_run(void)
 
   // See @ref pthread_priority_scope.
   sparam.sched_priority =
-    sched_get_priority_max(SCHED_FIFO) - EDF_MAIN_THREAD_PRIO_OFFSET;
+    sched_get_priority_max(SCHED_FIFO) - (int)EDF_MAIN_THREAD_PRIO_OFFSET;
 
   // See @ref scheduler_fifo_policy.
   (void)pthread_setschedparam(pthread_self(), SCHED_FIFO, &sparam);
@@ -310,9 +310,12 @@ void EDF_activeObject_start(EDF_activeObject_t* me,
 
   // Configure the Active Object thread priority.
   // See @ref pthread_priority_scope.
-  sched_param.sched_priority =
-    me->prio + (sched_get_priority_max(SCHED_FIFO) - EDF_MAX_ACTIVE_OBJECT -
-                ACTIVE_OBJECT_THREAD_PRIO_OFFSET);
+  // clang-format off
+  sched_param.sched_priority = me->prio +
+                               (sched_get_priority_max(SCHED_FIFO) -
+                                (int)EDF_MAX_ACTIVE_OBJECT -
+                                (int)ACTIVE_OBJECT_THREAD_PRIO_OFFSET);
+  // clang-format on
   (void)pthread_attr_setschedparam(&attr, &sched_param);
 
   // Configure the Active Object thread stack size.

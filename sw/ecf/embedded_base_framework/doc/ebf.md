@@ -8,7 +8,7 @@ EBF is a lightweight, multi-platform base framework designed to run on both embe
 
 When implementing stdin/stdout interfaces by overriding EBF weak functions, be aware that the resulting I/O behavior is implementation-dependent and may be blocking. Serializing a byte stream without adequate buffering or flow control can cause libraries using stdout to block until all bytes are transmitted. Avoiding TX blocking requires a properly sized transmit buffer and asynchronous transmission. Likewise, RX handling must be designed according to the use case to prevent data loss.
 
-If stdin/stdout can be used from multiple contexts with different priorities (i.e. they act as shared resources), their implementation shall be protected using `EBF_CRITICAL_SECTION_ENTRY()` and `EBF_CRITICAL_SECTION_EXIT()`.
+Stdin/stdout can be used from multiple contexts with different priorities (i.e. they act as shared resources). Therefore, all its implementations shall be protected using `EBF_CRITICAL_SECTION_ENTRY()` and `EBF_CRITICAL_SECTION_EXIT()`.
 
 All configuration options for this library are documented in the "EBF default configuration" section of [CMakeLists.txt](../../../../CMakeLists.txt).
 
@@ -23,21 +23,26 @@ All configuration options for this library are documented in the "EBF default co
 
 ```c
 #include "ebf.h"
+#include "eaf.h"
 
 /**
  * Custom stdin handler.
  */
-static void myStdinHandler(uint8_t const *data, uint16_t len)
+static void myStdinHandler(const uint8_t *data, uint16_t len)
 {
-    // Process incoming bytes ...
+  // Process incoming bytes ...
 }
 
 /**
  * Custom stdin listener registration.
  */
-void EBF_setStdinListener(EBF_stdin_t const listener)
+void EBF_setStdinListener(EBF_stdin_t listener)
 {
-    // Store listener pointer ...
+  EBF_CRITICAL_SECTION_ENTRY();
+
+  // Store listener pointer ...
+
+  EBF_CRITICAL_SECTION_EXIT();
 }
 
 /**
@@ -45,35 +50,30 @@ void EBF_setStdinListener(EBF_stdin_t const listener)
  * Can output to any platform-specific channel
  * (e.g., UART/SPI/... on target, console on host).
  */
-void EBF_stdoutWrite(const uint8_t *data, uint16_t const len)
+bool EBF_stdoutWrite(const uint8_t *data, uint16_t len)
 {
-    // Process outgoing bytes ...
-}
+  EBF_CRITICAL_SECTION_ENTRY();
 
-/**
- * Custom stdout writer check.
- */
-bool EBF_stdoutIsReadyToWrite(uint16_t const len) {
-    // Check if stdout can send 'len' bytes ...
+  // Process all outgoing bytes and return true or return false.
+
+  EBF_CRITICAL_SECTION_EXIT();
+
+  return ...;
 }
 
 void example(void)
 {
-    EBF_setStdinListener(myStdinHandler);
+  uint32_t value;
 
-    EBF_CRITICAL_SECTION_ENTRY();
+  value = 0xAABBCCDDU;
 
-    // Write to stdout if ready
-    if (EBF_stdoutIsReadyToWrite(4)) {
-        uint32_t value = 0xAABBCCDD;
-        EBF_stdoutWrite(&value, sizeof(value));
-    }
+  EBF_setStdinListener(myStdinHandler);
 
-    EBF_CRITICAL_SECTION_EXIT();
+  EAF_ASSERT(EBF_stdoutWrite((const uint8_t *)&value, sizeof(value)));
 
-    while(1) {
-        EBF_NOP();
-    }
+  while(1) {
+    EBF_NOP();
+  }
 }
 
 ```

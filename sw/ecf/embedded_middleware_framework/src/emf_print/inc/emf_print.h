@@ -115,6 +115,9 @@
  * @todo Limit of 8 arguments is imposed by EMF_PRINT_NARG.
  * @todo If the limit is changed update the documentation.
  *
+ * @note This macro shall not be called from an active EBF critical section.
+ * See @ref emf_stdout_critical_section_precondition.
+ *
  * @param[in] fmt Format string.
  * @param[in] ... Variable arguments (max 8).
  */
@@ -149,6 +152,13 @@
  *
  * Function used by EMF_PRINT macro.
  *
+ * The complete message is written atomically through EBF stdout. EAF is
+ * triggered if the formatted message exceeds @c EMF_PRINT_MAX_LEN or EBF
+ * stdout rejects the write.
+ *
+ * @note This function shall not be called from an active EBF critical section.
+ * See @ref emf_stdout_critical_section_precondition.
+ *
  * @param[in] fmt Null-terminated format string.
  * @param[in] args Pointer to array of arguments, or NULL.
  */
@@ -180,6 +190,16 @@ void EMF_print(const char* fmt, const uintptr_t* args);
  * This would require extending the representation (e.g., using uint64_t or a
  * wider union) to handle types larger than uintptr_t, while ensuring
  * portability on both 32-bit and 64-bit systems.
+ */
+
+/**
+ * @anchor emf_stdout_critical_section_precondition
+ * @par Standard-output critical-section precondition
+ *
+ * Formatted output is written through EBF stdout. The @c EBF_stdoutWrite()
+ * implementation shall protect stdout internally with an EBF critical section.
+ * Nested EBF critical sections are not supported. Therefore, functions relying
+ * on EBF stdout shall not be called from an active EBF critical section.
  */
 
 #endif /* EMF_PRINT_H */

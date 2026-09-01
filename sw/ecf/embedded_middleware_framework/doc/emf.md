@@ -4,6 +4,8 @@ EMF is a lightweight, platform-agnostic middleware framework designed to run on 
 - Lightweight middleware optimized for embedded environments.
 - Deterministic and low-overhead execution.
 
+All configuration options for this library are documented in the "EMF default configuration" section of [CMakeLists.txt](../../../../CMakeLists.txt).
+
 # Glossary
 
 | Term | Definition |

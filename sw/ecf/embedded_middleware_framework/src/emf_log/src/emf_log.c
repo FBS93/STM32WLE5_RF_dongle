@@ -30,6 +30,7 @@
  * Project-specific headers
  * -------------------------------------------------------------------------- */
 #include "emf_log.h"
+#include "emf_config.h"
 #include "emf_print.h"
 #include "eaf.h"
 
@@ -69,9 +70,65 @@ static EMF_log_level_t logLevel;
  * Private function declarations
  * -------------------------------------------------------------------------- */
 
+/**
+ * @brief Gets the length of a null-terminated string up to a maximum length.
+ *
+ * @param[in] str Pointer to a null-terminated string.
+ * @param[in] max_len Maximum permitted string length.
+ * @return String length, or max_len plus one if it is exceeded.
+ */
+static size_t getStrLen(const char* str, size_t max_len);
+
+/**
+ * @brief Concatenates two strings with their specified lengths.
+ *
+ * @param[out] dst Destination buffer.
+ * @param[in] first First string.
+ * @param[in] first_len Length of the first string.
+ * @param[in] second Second string.
+ * @param[in] second_len Length of the second string.
+ */
+static void concatStr(char* dst,
+                      const char* first,
+                      size_t first_len,
+                      const char* second,
+                      size_t second_len);
+
 /* -----------------------------------------------------------------------------
  * Private function definitions
  * -------------------------------------------------------------------------- */
+
+static size_t getStrLen(const char* str, size_t max_len)
+{
+  size_t len;
+
+  len = 0U;
+  while ((len <= max_len) && (str[len] != '\0'))
+  {
+    len++;
+  }
+
+  return len;
+}
+
+static void concatStr(char* dst,
+                      const char* first,
+                      size_t first_len,
+                      const char* second,
+                      size_t second_len)
+{
+  size_t index;
+
+  for (index = 0U; index < first_len; index++)
+  {
+    dst[index] = first[index];
+  }
+  for (index = 0U; index < second_len; index++)
+  {
+    dst[first_len + index] = second[index];
+  }
+  dst[first_len + second_len] = '\0';
+}
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS
@@ -89,6 +146,11 @@ void EMF_log_setLevel(EMF_log_level_t log_level)
 
 void EMF_log(EMF_log_level_t log_level, const char* fmt, const uintptr_t* args)
 {
+  const char* prefix;
+  size_t prefix_len;
+  size_t format_len;
+  char log_format[EMF_PRINT_MAX_LEN + 1U];
+
   EAF_ASSERT(fmt != NULL);
 
   if (log_level <= logLevel)
@@ -97,31 +159,41 @@ void EMF_log(EMF_log_level_t log_level, const char* fmt, const uintptr_t* args)
     {
       case LOG_LEVEL_ERROR:
       {
-        EMF_print("[ERROR] ", NULL);
+        prefix = "[ERROR] ";
         break;
       }
       case LOG_LEVEL_WARNING:
       {
-        EMF_print("[WARNING] ", NULL);
+        prefix = "[WARNING] ";
         break;
       }
       case LOG_LEVEL_INFO:
       {
-        EMF_print("[INFO] ", NULL);
+        prefix = "[INFO] ";
         break;
       }
       case LOG_LEVEL_DEBUG:
       {
-        EMF_print("[DEBUG] ", NULL);
+        prefix = "[DEBUG] ";
         break;
       }
       default:
       {
         EAF_ERROR();
-        break;
+        return;
       }
     }
 
-    EMF_print(fmt, args);
+    // Get and validate prefix and format lengths.
+    prefix_len = getStrLen(prefix, EMF_PRINT_MAX_LEN);
+    EAF_ASSERT(prefix_len <= EMF_PRINT_MAX_LEN);
+    format_len = getStrLen(fmt, EMF_PRINT_MAX_LEN - prefix_len);
+    EAF_ASSERT(format_len <= (EMF_PRINT_MAX_LEN - prefix_len));
+
+    // Concatenate prefix and format string.
+    concatStr(log_format, prefix, prefix_len, fmt, format_len);
+
+    // Print full log message.
+    EMF_print(log_format, args);
   }
 }

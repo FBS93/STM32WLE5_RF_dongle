@@ -62,7 +62,8 @@
 /**
  * @brief Enters a critical section.
  *
- * @note Nested critical sections not supported.
+ * @note Nested critical sections are not supported; an attempted nested entry
+ * activates EAF assert.
  */
 #define EBF_CRITICAL_SECTION_ENTRY() EBF_entryCriticalSection()
 
@@ -109,12 +110,12 @@ typedef void (*EBF_stdin_t)(const uint8_t* data, uint16_t len);
 extern pthread_mutex_t EBF_critSecMutex;
 
 /**
- * @brief Tracks critical section nesting depth.
+ * @brief Tracks critical section nesting depth for the calling thread.
  *
  * Used to detect unbalanced entry/exit. Nesting is not supported (must be 0 or
  * 1).
  */
-extern int8_t EBF_critSecNestCnt;
+extern _Thread_local int8_t EBF_critSecNestCnt;
 #endif  // (EBF_CORE == EBF_CORE_OS)
 
 /*******************************************************************************
@@ -124,8 +125,12 @@ extern int8_t EBF_critSecNestCnt;
 /**
  * @brief Registers a callback to receive standard input data.
  *
- * Defined as weak, so it can be overridden by a custom implementation
- * if needed.
+ * @note Defined as weak by default, allowing a custom implementation to
+ * override it.
+ *
+ * @note Depending on the stdin implementation, the listener may be called from
+ * an ISR context when input data is received. If so, the listener
+ * implementation shall be treated as ISR code.
  *
  * @param[in] listener Function to be called with incoming data.
  */
@@ -134,24 +139,26 @@ void EBF_setStdinListener(EBF_stdin_t listener);
 /**
  * @brief Sends data to the standard output.
  *
- * Defined as weak, so it can be overridden by a custom implementation
- * if needed.
+ * @note Defined as weak by default, allowing a custom implementation to
+ * override it.
+ *
+ * @note Since standard output may be a shared resource, all implementations
+ * shall be protected using EBF_CRITICAL_SECTION_ENTRY() and
+ * EBF_CRITICAL_SECTION_EXIT(). Therefore, Calling EBF_stdoutWrite() from an
+ * active EBF critical section violates the contract, as nested critical
+ * sections are not supported.
+ *
+ * @note Supported message length is implementation dependent.
+ *
+ * @note A false return value indicates that the data cannot be serialized
+ * and shall be handled explicitly by the caller, preferably using EAF asserts.
+ * Silently discarding the data is highly discouraged.
  *
  * @param[in] data Pointer to data to be sent.
  * @param[in] len Length of the data in bytes.
+ * @return true if all data was accepted for transmission; false otherwise.
  */
-void EBF_stdoutWrite(const uint8_t* data, uint16_t len);
-
-/**
- * @brief Checks if the output is ready to send the specified number of bytes.
- *
- * Defined as weak, so it can be overridden by a custom implementation
- * if needed.
- *
- * @param[in] len Number of bytes to check for availability.
- * @return true if ready, false otherwise.
- */
-bool EBF_stdoutIsReadyToWrite(uint16_t len);
+bool EBF_stdoutWrite(const uint8_t* data, uint16_t len);
 
 /**
  * @brief Entry critical section.

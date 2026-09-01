@@ -92,6 +92,14 @@ if(EBF_PORT MATCHES "^EBF_PORT_POSIX")
 endif()
 
 # ==============================================================================
+# EMF default configuration.
+# ==============================================================================
+
+if(NOT DEFINED EMF_PRINT_MAX_LEN)
+    set(EMF_PRINT_MAX_LEN "256" CACHE STRING "Maximum EMF formatted print message length in bytes (1-65535)")
+endif()
+
+# ==============================================================================
 # EDF default configuration.
 # ==============================================================================
 

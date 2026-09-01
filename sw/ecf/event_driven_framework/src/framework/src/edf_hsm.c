@@ -230,7 +230,7 @@ static void EDF_hsm_getTransitionPath(EDF_hsm_t* me,
     state_ret = DISPATCH_RESERVED_EVENT(e_path[*e_idx], EDF_HSM_EMPTY_SIGNAL);
 
     // -1: exclude top state.
-    while ((state_ret == RET_SUPER) && (*e_idx < (EDF_HSM_MAX_DEPTH - 1)))
+    while ((state_ret == RET_SUPER) && (*e_idx < ((int)EDF_HSM_MAX_DEPTH - 1)))
     {
       (*e_idx)++;
       e_path[*e_idx] = me->temp_state;  // Store the entry path.
@@ -262,7 +262,7 @@ static void EDF_hsm_getTransitionPath(EDF_hsm_t* me,
     state_ret = DISPATCH_RESERVED_EVENT(x_path[*x_idx], EDF_HSM_EMPTY_SIGNAL);
 
     // -1: exclude top state.
-    while ((state_ret == RET_SUPER) && (*x_idx < (EDF_HSM_MAX_DEPTH - 1)))
+    while ((state_ret == RET_SUPER) && (*x_idx < ((int)EDF_HSM_MAX_DEPTH - 1)))
     {
       (*x_idx)++;
 
@@ -318,9 +318,9 @@ static void EDF_hsm_executeTransition(EDF_hsm_t* me,
   EAF_ASSERT_BLOCK_BEGIN();
   EAF_ASSERT_IN_BLOCK(me != NULL);
   EAF_ASSERT_IN_BLOCK(e_path != NULL);
-  EAF_ASSERT_IN_BLOCK(e_idx < EDF_HSM_MAX_DEPTH);
+  EAF_ASSERT_IN_BLOCK(e_idx < (int)EDF_HSM_MAX_DEPTH);
   EAF_ASSERT_IN_BLOCK(x_path != NULL);
-  EAF_ASSERT_IN_BLOCK(x_idx < EDF_HSM_MAX_DEPTH);
+  EAF_ASSERT_IN_BLOCK(x_idx < (int)EDF_HSM_MAX_DEPTH);
   EAF_ASSERT_BLOCK_END();
 
   // Execute exit actions.
@@ -351,7 +351,8 @@ static void EDF_hsm_executeTransition(EDF_hsm_t* me,
     (void)DISPATCH_RESERVED_EVENT(me->temp_state, EDF_HSM_EMPTY_SIGNAL);
 
     // Build the entry path of the initial transition.
-    while ((me->temp_state != aux_state) && (e_idx < (EDF_HSM_MAX_DEPTH - 1)))
+    while ((me->temp_state != aux_state) &&
+           (e_idx < ((int)EDF_HSM_MAX_DEPTH - 1)))
     {
       e_idx++;
       e_path[e_idx] = me->temp_state;
@@ -421,7 +422,7 @@ void EDF_hsm_start(EDF_hsm_t* me, const EDF_event_t* e)
 
   e_idx = 1;  // Initialize entry path index; index 0 is already set.
   while ((me->temp_state != ((EDF_hsm_stateHandler_t)(&EDF_hsm_top))) &&
-         (e_idx < EDF_HSM_MAX_DEPTH))
+         (e_idx < (int)EDF_HSM_MAX_DEPTH))
   {
     // Store next ancestor state in the entry path.
     e_path[e_idx] = me->temp_state;
@@ -459,7 +460,7 @@ void EDF_hsm_dispatch(EDF_hsm_t* me, const EDF_event_t* e)
 
   // Process the event hierarchically.
   me->temp_state = me->current_state;  // Set current state.
-  for (int_fast8_t i = EDF_HSM_MAX_DEPTH; i > 0; i--)
+  for (int_fast8_t i = (int_fast8_t)EDF_HSM_MAX_DEPTH; i > 0; i--)
   {
     aux_state = me->temp_state;
 

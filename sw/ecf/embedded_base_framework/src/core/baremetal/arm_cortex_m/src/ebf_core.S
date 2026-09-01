@@ -81,25 +81,31 @@ EBF_entryCriticalSection:
 EBF_entryCriticalSectionError:
     LDR     r0, =.Lfile
     LDR     r1, =__LINE__
-    BL      EAF_onError
+    MOVS    r2, #0
+    B       EAF_onError
 .size EBF_entryCriticalSection, .-EBF_entryCriticalSection
 
 .global EBF_exitCriticalSection
 .type EBF_exitCriticalSection, %function
 EBF_exitCriticalSection:
     MRS     r0, PRIMASK // r0 = current PRIMASK value.
-    CMP     r0, #0      // Were interrupts disabled?
-    BEQ     EBF_exitCriticalSectionError // If not, go to error handler.
+    CMP     r0, #1      // Were interrupts disabled?
+    BNE     EBF_exitCriticalSectionError // If not, go to error handler.
     LDR     r1, =.LisInCriticalSection
+    LDRB    r2, [r1]
+    CMP     r2, #1 // Is an EBF critical section active?
+    BNE     EBF_exitCriticalSectionError // If not, go to error handler.
     MOVS    r2, #0
-    STRB    r2, [r1]    // .LisInCriticalSection = false
-    CPSIE   i // Enable interrupts globally.
-    ISB       // Synchronize after enabling IRQs.
+    STRB    r2, [r1] // .LisInCriticalSection = false
+    CPSIE   i        // Enable interrupts globally.
+    ISB              // Synchronize after enabling IRQs.
     BX      lr
 EBF_exitCriticalSectionError:
+    CPSID   i // Ensure global interrupts are disabled before error handling.
     LDR     r0, =.Lfile
     LDR     r1, =__LINE__
-    BL      EAF_onError
+    MOVS    r2, #0
+    B       EAF_onError
 .size EBF_exitCriticalSection, .-EBF_exitCriticalSection
 
 .global EBF_isInCriticalSection

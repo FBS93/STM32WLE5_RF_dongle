@@ -68,7 +68,7 @@ This registers the events that shall be fuzzed. Once the fuzzing port is selecte
 - EDF injects the selected fuzzed event and executes the kernel until quiescence before advancing to the next fuzzed event.
 
 Important notes:
-- The port owns `EAF_onError()`. User application code shall not redefine `EAF_onError()` for this port (e.g., guard another implementation with conditional compilation on `EBF_PORT`). In fuzzing mode, controlled asserts are treated as defined behavior, so the port logs the error location and terminates the testcase with `exit(0)` instead of surfacing them as AFL++ crashes.
+- The port owns `EAF_onError()`. User application code shall not redefine `EAF_onError()` for this port (e.g., guard another implementation with conditional compilation on `EBF_PORT`). In fuzzing mode, controlled asserts are treated as defined behavior, so the port terminates the testcase with `exit(0)` instead of surfacing them as AFL++ crashes.
 - `ECF_TEST=ON` is not supported with the `EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ` port.
 - To enable the ECF fuzzing example, set `EDF_EXAMPLE_FUZZ=ON`, `EBF_CORE=EBF_CORE_OS` and `EBF_PORT=EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ`.
 - The devcontainer fuzzing integration approach prioritizes zero host configuration so the setup remains plug-and-play. For this reason it exports `AFL_SKIP_CPUFREQ=1` to skip the host CPU frequency governor check, `AFL_NO_AFFINITY=1` to disable AFL++ CPU pinning and `AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1` to bypass the `core_pattern` sanity check. These settings improve portability inside the container but can hide host-side performance issues or reduce fuzzing throughput. If better results are needed, review these variables and tune the host accordingly.
