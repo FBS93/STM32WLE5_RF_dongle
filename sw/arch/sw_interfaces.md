@@ -39,12 +39,14 @@ Published events:
 - TX_CONTINUOUS_PREAMBLE
 - STOP
 - GET_DIAGNOSTICS_REQUEST
+- HOST_DATA_AVAILABLE
 
 Subscribed events:
 - GET_CONFIG_RESPONSE
 - GET_DIAGNOSTICS_RESPONSE
 - RX_PACKET
 - CAD_DETECTED
+- HOST_DATA_AVAILABLE
 
 Upstream traceability:
 - [SW_REQ_CONTROLLER_1](../req/sw_controller.md#sw_req_controller_1)
@@ -63,6 +65,7 @@ Published events:
 - GET_DIAGNOSTICS_RESPONSE
 - RX_PACKET
 - CAD_DETECTED
+- OPERATION_COMPLETE
 
 Subscribed events:
 - GET_CONFIG_REQUEST
@@ -75,6 +78,7 @@ Subscribed events:
 - TX_CONTINUOUS_PREAMBLE
 - STOP
 - GET_DIAGNOSTICS_REQUEST
+- OPERATION_COMPLETE
 
 Upstream traceability:
 - [SW_REQ_CONTROLLER_1](../req/sw_controller.md#sw_req_controller_1)

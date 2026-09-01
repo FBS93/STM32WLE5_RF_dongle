@@ -47,6 +47,10 @@ Events:
     - `rx_packet_payload`: [RX Packet Payload](../../sys/req/sys_interfaces.md#rx-packet-payload).
 - `CAD_DETECTED`
   - Description: Represents the [CAD_DETECTED](../../sys/req/sys_interfaces.md#cad-detected) command.
+- `OPERATION_COMPLETE`
+  - Description: Indicates that the active RF operation has completed.
+- `HOST_DATA_AVAILABLE`
+  - Description: Indicates that data received from the host is available for processing.
 
 Upstream traceability:
 - [SW_REQ_CLI_1](../req/sw_cli.md#sw_req_cli_1)
