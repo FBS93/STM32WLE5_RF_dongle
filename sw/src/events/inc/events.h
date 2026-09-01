@@ -2,8 +2,8 @@
  * @brief Project event signals and typed event parameters.
  *
  * The event parameter types preserve the semantics and numeric encodings of
- * SW_ARCH_DESIGN_1 and its traced system parameters. These types are internal
- * software objects and do not define a serialized or packed wire layout.
+ * SW_ARCH_DESIGN_1. These types are internal software objects and do not define
+ * a serialized or packed wire layout.
  *
  * @copyright
  * Copyright (c) 2026 FBS93.
@@ -88,8 +88,8 @@ typedef struct
  */
 typedef struct
 {
-  EDF_event_t super;    //!< EDF event base.
-  rfTypes_configuration_t configuration;  //!< Complete semantic RF configuration.
+  EDF_event_t super;                      //!< EDF event base.
+  rfTypes_configuration_t configuration;  //!< RF configuration.
 } events_setConfig_t;
 
 /**
@@ -97,15 +97,13 @@ typedef struct
  */
 typedef struct
 {
-  EDF_event_t super;  //!< EDF event base.
-  uint8_t
-    image_calibration_lower_frequency_hz;  //!< sysp_imageCalibrationLowerFrequencyHz;
-                                           //!< 152..960 MHz in 4 MHz
-                                           //!< units.
-  uint8_t
-    image_calibration_upper_frequency_hz;  //!< sysp_imageCalibrationUpperFrequencyHz;
-                                           //!< 152..960 MHz in 4 MHz
-                                           //!< units.
+  EDF_event_t super;                             //!< EDF event base.
+  uint8_t image_calibration_lower_frequency_hz;  //!< Image calibration
+                                                 //!< lowerFrequencyHz; 152..960
+                                                 //!< MHz in 4 MHz units.
+  uint8_t image_calibration_upper_frequency_hz;  //!< Image calibration
+                                                 //!< upperFrequencyHz; 152..960
+                                                 //!< MHz in 4 MHz units.
 } events_calibrate_t;
 
 /**
@@ -113,11 +111,8 @@ typedef struct
  */
 typedef struct
 {
-  EDF_event_t super;                                 //!< EDF event base.
-  uint8_t packet_data[RF_TYPES_PACKET_DATA_CAPACITY];  //!< sysp_txPacketData;
-                                                     //!< valid bytes equal
-                                                     //!< configured payload
-                                                     //!< length.
+  EDF_event_t super;                                   //!< EDF event base.
+  uint8_t packet_data[RF_TYPES_PACKET_DATA_CAPACITY];  //!< TX packet data.
 } events_txPacket_t;
 
 /**
@@ -173,8 +168,8 @@ typedef struct
  */
 typedef struct
 {
-  EDF_event_t super;    //!< EDF event base.
-  rfTypes_configuration_t configuration;  //!< Complete semantic RF configuration.
+  EDF_event_t super;                      //!< EDF event base.
+  rfTypes_configuration_t configuration;  //!< RF configuration.
 } events_getConfigResponse_t;
 
 /**
@@ -182,9 +177,9 @@ typedef struct
  */
 typedef struct
 {
-  EDF_event_t super;            //!< EDF event base.
-  rfTypes_operation_t active_rf_operation;  //!< sysp_activeRfOperation encoding 0..6.
-  uint16_t radio_errors;  //!< sysp_radioErrors bit field; zero means no error.
+  EDF_event_t super;                        //!< EDF event base.
+  rfTypes_operation_t active_rf_operation;  //!< Current RF configuration
+  uint16_t radio_errors;  //!< Radio errors bit field; zero means no error.
 } events_getDiagnosticsResponse_t;
 
 /**
@@ -193,11 +188,11 @@ typedef struct
 typedef struct
 {
   EDF_event_t super;                     //!< EDF event base.
-  uint8_t received_packet_length_bytes;  //!< sysp_receivedPacketLengthBytes;
+  uint8_t received_packet_length_bytes;  //!< Received packetLengthBytes;
                                          //!< 0..255 bytes.
-  uint8_t packet_data[RF_TYPES_PACKET_DATA_CAPACITY];  //!< sysp_rxPacketData
-                                                      //!< valid prefix.
-  rfTypes_packetStatus_t packet_status;  //!< RSSI plus LoRa SNR or FSK/GFSK status flags.
+  uint8_t packet_data[RF_TYPES_PACKET_DATA_CAPACITY];  //!< RX packet data.
+  rfTypes_packetStatus_t packet_status;  //!< RSSI plus LoRa SNR or FSK/GFSK
+                                         //!< status flags.
 } events_rxPacket_t;
 
 /**

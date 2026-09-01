@@ -43,9 +43,9 @@
 /** @brief RF manager active object and its persistent state. */
 typedef struct
 {
-  EDF_activeObject_t super;                 //!< EDF active-object base.
-  rfTypes_configuration_t configuration;    //!< Current stored configuration.
-  rfTypes_operation_t active_operation;     //!< Host-visible RF operation.
+  EDF_activeObject_t super;               //!< EDF active-object base.
+  rfTypes_configuration_t configuration;  //!< Current stored configuration.
+  rfTypes_operation_t active_operation;   //!< Host-visible RF operation.
 } rfManager_t;
 
 /*******************************************************************************

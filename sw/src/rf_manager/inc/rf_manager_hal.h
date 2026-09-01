@@ -124,8 +124,8 @@ void rfManagerHal_stop(void);
  * @return Number of packet bytes read.
  */
 uint8_t rfManagerHal_readReceivedPacket(uint8_t* data,
-                                         uint8_t capacity,
-                                         rfTypes_packetStatus_t* status);
+                                        uint8_t capacity,
+                                        rfTypes_packetStatus_t* status);
 
 /**
  * @brief Gets currently recorded radio device errors.
