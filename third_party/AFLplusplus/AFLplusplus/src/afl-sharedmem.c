@@ -62,7 +62,231 @@
   #include <sys/shm.h>
 #endif
 
+/* Drop the SysV segment the moment it is attached so a SIGKILLed tool cannot
+   leak it. Linux only, and deliberately so: only Linux still lets a process
+   shmat() a segment that is already marked for destruction. On the BSDs and
+   macOS the IPC_RMID would make the target's shmat() fail, so those platforms
+   get the same "nothing survives" guarantee from the POSIX shared memory /
+   descriptor handover below (see afl_shm_handover_fd) instead. */
+
+#if defined(__linux__) && !defined(__ANDROID__) && !defined(USEMMAP)
+  #define AFL_SHM_AUTO_RECLAIM(id) shmctl((id), IPC_RMID, NULL)
+#else
+  #define AFL_SHM_AUTO_RECLAIM(id) ((void)0)
+#endif
+
 static list_t shm_list = {.element_prealloc_count = 0};
+
+#ifdef USEMMAP
+
+/* Should the POSIX shared memory objects keep their name for the lifetime of
+   the session? Set AFL_SHM_KEEP_NAME=1 when the target was built by an afl-cc
+   that predates the descriptor handover: such a target only knows how to
+   shm_open() the name from SHM_ENV_VAR and cannot find an unlinked object. */
+
+static u8 afl_shm_keep_name(void) {
+
+  static s8 keep = -1;
+
+  if (keep < 0) {
+
+    char *ptr = getenv("AFL_SHM_KEEP_NAME");
+    keep = (ptr && *ptr && *ptr != '0') ? 1 : 0;
+
+  }
+
+  return (u8)keep;
+
+}
+
+/* Move a freshly created shared map onto a descriptor the target can inherit.
+
+   The duplicate is allocated at or above SHM_FD_MIN so it can never collide
+   with the forkserver pipes on FORKSRV_FD / FORKSRV_FD + 1, and FD_CLOEXEC is
+   cleared on it so it survives the execv() into the target. The original
+   descriptor is closed on success.
+
+   Returns the new descriptor, or -1 if the map has to be handed over by name
+   after all - in which case the caller keeps the object linked. */
+
+static int afl_shm_reserve_fd(int fd) {
+
+  if (fd < 0) { return -1; }
+
+  int new_fd = fcntl(fd, F_DUPFD, SHM_FD_MIN);
+
+  if (new_fd < 0 && (errno == EMFILE || errno == EINVAL)) {
+
+    /* The soft descriptor limit is below our range - OpenBSD hands root a
+       soft limit of 128, macOS defaults to 256. Raise it once and retry. */
+
+    struct rlimit r;
+
+    if (!getrlimit(RLIMIT_NOFILE, &r) &&
+        r.rlim_cur < (rlim_t)(SHM_FD_MIN + SHM_FD_COUNT)) {
+
+      rlim_t want = (rlim_t)(SHM_FD_MIN + SHM_FD_COUNT);
+
+      if (r.rlim_max != RLIM_INFINITY && want > r.rlim_max) {
+
+        want = r.rlim_max;
+
+      }
+
+      if (want > r.rlim_cur) {
+
+        r.rlim_cur = want;
+        if (!setrlimit(RLIMIT_NOFILE, &r)) {
+
+          new_fd = fcntl(fd, F_DUPFD, SHM_FD_MIN);
+
+        }
+
+      }
+
+    }
+
+  }
+
+  if (new_fd < 0) { return -1; }
+
+  /* F_DUPFD already hands out a descriptor with FD_CLOEXEC clear, but the whole
+     point of this descriptor is that it survives the exec, so be explicit.
+     Clear it before dropping the original, so that a failure here hands the
+     caller back exactly the descriptor it came in with. */
+
+  if (fcntl(new_fd, F_SETFD, 0) < 0) {
+
+    close(new_fd);
+    return -1;
+
+  }
+
+  close(fd);
+
+  return new_fd;
+
+}
+
+/* Hand a just-mmap()ed POSIX shared memory object to the target as an
+   inherited descriptor and drop its name right away, so neither a SIGKILL nor
+   a crash of this process can leave anything behind in /dev/shm.
+
+   On success *map_fd holds the inheritable descriptor and the object is
+   unlinked. On failure - or when AFL_SHM_KEEP_NAME asks for it - *map_fd is
+   closed and set to -1 and the object keeps its name, which is how targets
+   built by an older afl-cc reach the map. afl_shm_deinit() uses exactly that
+   distinction to decide whether an unlink is still owed. */
+
+static void afl_shm_handover_fd(int *map_fd, const char *path) {
+
+  int fd = afl_shm_keep_name() ? -1 : afl_shm_reserve_fd(*map_fd);
+
+  if (fd < 0) {
+
+    if (*map_fd >= 0) { close(*map_fd); }
+    *map_fd = -1;
+    return;
+
+  }
+
+  *map_fd = fd;
+  shm_unlink(path);
+
+}
+
+#endif                                                          /* ^USEMMAP */
+
+/* Export the number of an inheritable shared map descriptor. */
+
+void afl_shm_env_set_fd(const char *env, int fd) {
+
+#ifdef USEMMAP
+
+  if (!env || fd < 0) { return; }
+
+  u8 *fd_str = alloc_printf("%d", fd);
+  setenv(env, (char *)fd_str, 1);
+  ck_free(fd_str);
+
+#else
+
+  (void)env;
+  (void)fd;
+
+#endif
+
+}
+
+/* Export the handover of the shared memory test case map. Unlike the coverage
+   map this one is created in non_instrumented_mode - so that afl_shm_init()
+   does not clobber SHM_ENV_VAR with it - and therefore has to publish itself
+   here, once the caller has settled on it. */
+
+void afl_shm_fuzz_env_set(sharedmem_t *shm) {
+
+  if (!shm) { return; }
+
+#ifdef USEMMAP
+
+  setenv(SHM_FUZZ_ENV_VAR, shm->g_shm_file_path, 1);
+  afl_shm_env_set_fd(SHM_FUZZ_FD_ENV_VAR, shm->g_shm_fd);
+
+#else
+
+  u8 *shm_str = alloc_printf("%d", shm->shm_id);
+  setenv(SHM_FUZZ_ENV_VAR, (char *)shm_str, 1);
+  ck_free(shm_str);
+
+#endif
+
+}
+
+void afl_shm_vp_env_unset(void) {
+
+  unsetenv(VP_SHM_ENV_VAR);
+#ifdef USEMMAP
+  unsetenv(VP_SHM_FD_ENV_VAR);
+#endif
+
+}
+
+void afl_shm_vp_env_set(sharedmem_t *shm) {
+
+  if (!shm || !shm->vp_mode || !shm->vp_map) { return; }
+
+#ifdef USEMMAP
+
+  if (shm->vp_g_shm_file_path[0]) {
+
+    setenv(VP_SHM_ENV_VAR, shm->vp_g_shm_file_path, 1);
+
+  }
+
+  afl_shm_env_set_fd(VP_SHM_FD_ENV_VAR, shm->vp_g_shm_fd);
+
+#else
+
+  u8 *shm_str = alloc_printf("%d", shm->vp_shm_id);
+  setenv(VP_SHM_ENV_VAR, shm_str, 1);
+  ck_free(shm_str);
+
+#endif
+
+}
+
+void afl_shm_deinit_all(void) {
+
+  element_t *head = get_head(&shm_list);
+  if (!head->next) { return; }
+
+  while (head->next != head) {
+
+    afl_shm_deinit((sharedmem_t *)head->next->data);
+
+  }
+
+}
 
 /* Get rid of shared memory. */
 
@@ -74,43 +298,58 @@ void afl_shm_deinit(sharedmem_t *shm) {
 
     unsetenv(SHM_FUZZ_ENV_VAR);
     unsetenv(SHM_FUZZ_MAP_SIZE_ENV_VAR);
+#ifdef USEMMAP
+    unsetenv(SHM_FUZZ_FD_ENV_VAR);
+#endif
 
   } else {
 
     unsetenv(SHM_ENV_VAR);
+#ifdef USEMMAP
+    unsetenv(SHM_FD_ENV_VAR);
+#endif
 
   }
+
+  if (shm->vp_mode) { afl_shm_vp_env_unset(); }
 
 #ifdef USEMMAP
   if (shm->map != NULL) {
 
-    munmap(shm->map, shm->map_size);
+    munmap(shm->map, shm->map_alloc_size);
     shm->map = NULL;
+    shm->map_alloc_size = 0;
+    shm->child_sync = NULL;
+    shm->child_sync_offset = 0;
 
   }
+
+  /* A live descriptor means the object was already unlinked at creation and
+     only the last reference has to go; otherwise the name is still there. */
 
   if (shm->g_shm_fd != -1) {
 
     close(shm->g_shm_fd);
     shm->g_shm_fd = -1;
 
-  }
-
-  if (shm->g_shm_file_path[0]) {
+  } else if (shm->g_shm_file_path[0]) {
 
     shm_unlink(shm->g_shm_file_path);
-    shm->g_shm_file_path[0] = 0;
 
   }
+
+  shm->g_shm_file_path[0] = 0;
 
   if (shm->cmplog_mode) {
 
     unsetenv(CMPLOG_SHM_ENV_VAR);
+    unsetenv(CMPLOG_SHM_FD_ENV_VAR);
 
     if (shm->cmp_map != NULL) {
 
-      munmap(shm->cmp_map, shm->map_size);
+      munmap(shm->cmp_map, shm->cmp_map_alloc_size);
       shm->cmp_map = NULL;
+      shm->cmp_map_alloc_size = 0;
 
     }
 
@@ -119,27 +358,76 @@ void afl_shm_deinit(sharedmem_t *shm) {
       close(shm->cmplog_g_shm_fd);
       shm->cmplog_g_shm_fd = -1;
 
-    }
-
-    if (shm->cmplog_g_shm_file_path[0]) {
+    } else if (shm->cmplog_g_shm_file_path[0]) {
 
       shm_unlink(shm->cmplog_g_shm_file_path);
-      shm->cmplog_g_shm_file_path[0] = 0;
 
     }
+
+    shm->cmplog_g_shm_file_path[0] = 0;
+
+  }
+
+  if (shm->vp_mode) {
+
+    if (shm->vp_map != NULL) {
+
+      munmap(shm->vp_map, sizeof(vp_map_t));
+      shm->vp_map = NULL;
+
+    }
+
+    if (shm->vp_g_shm_fd != -1) {
+
+      close(shm->vp_g_shm_fd);
+      shm->vp_g_shm_fd = -1;
+
+    } else if (shm->vp_g_shm_file_path[0]) {
+
+      shm_unlink(shm->vp_g_shm_file_path);
+
+    }
+
+    shm->vp_g_shm_file_path[0] = 0;
 
   }
 
 #else
   shmctl(shm->shm_id, IPC_RMID, NULL);
   if (shm->cmplog_mode) { shmctl(shm->cmplog_shm_id, IPC_RMID, NULL); }
+  if (shm->vp_mode) { shmctl(shm->vp_shm_id, IPC_RMID, NULL); }
 #endif
 
   shm->map = NULL;
+  shm->cmp_map = NULL;
+  shm->vp_map = NULL;
   shm->child_sync = NULL;
   shm->child_sync_offset = 0;
 
 }
+
+#ifndef USEMMAP
+/* Release every SysV segment created so far. Called from the failure paths in
+   afl_shm_init(), which PFATAL before the map is registered in shm_list, so
+   at_exit() cleanup would never see them. Unset ids are -1 and skipped. */
+static void afl_shm_release_partial(sharedmem_t *shm) {
+
+  if (shm->shm_id >= 0) { shmctl(shm->shm_id, IPC_RMID, NULL); }
+  if (shm->cmplog_mode && shm->cmplog_shm_id >= 0) {
+
+    shmctl(shm->cmplog_shm_id, IPC_RMID, NULL);
+
+  }
+
+  if (shm->vp_mode && shm->vp_shm_id >= 0) {
+
+    shmctl(shm->vp_shm_id, IPC_RMID, NULL);
+
+  }
+
+}
+
+#endif
 
 /* Configure shared memory.
    Returns a pointer to shm->map for ease of use.
@@ -153,6 +441,12 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
   shm->map = NULL;
   shm->cmp_map = NULL;
+  shm->vp_map = NULL;
+#ifndef USEMMAP
+  shm->shm_id = -1;
+  shm->cmplog_shm_id = -1;
+  shm->vp_shm_id = -1;
+#endif
 
   shm->child_sync_offset = 0;
   shm->child_sync = NULL;
@@ -176,6 +470,9 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
   shm->g_shm_fd = -1;
   shm->cmplog_g_shm_fd = -1;
+  shm->vp_g_shm_fd = -1;
+  shm->map_alloc_size = 0;
+  shm->cmp_map_alloc_size = 0;
 
   const int shmflags = O_RDWR | O_EXCL;
 
@@ -258,12 +555,26 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
   }
 
+  shm->map_alloc_size = alloc_size;
+
+  /* Hand the map over as an inheritable descriptor and drop its name, so a
+     SIGKILLed tool leaves nothing behind in /dev/shm. The shmem input map
+     (non_instrumented_mode, see setup_testcase_shmem) exports its descriptor
+     later through afl_shm_fuzz_env_set(). */
+
+  afl_shm_handover_fd(&shm->g_shm_fd, shm->g_shm_file_path);
+
   /* If somebody is asking us to fuzz instrumented binaries in non-instrumented
      mode, we don't want them to detect instrumentation, since we won't be
      sending fork server commands. This should be replaced with better
      auto-detection later on, perhaps? */
 
-  if (!non_instrumented_mode) setenv(SHM_ENV_VAR, shm->g_shm_file_path, 1);
+  if (!non_instrumented_mode) {
+
+    setenv(SHM_ENV_VAR, shm->g_shm_file_path, 1);
+    afl_shm_env_set_fd(SHM_FD_ENV_VAR, shm->g_shm_fd);
+
+  }
 
   if (shm->map == (void *)-1 || !shm->map) PFATAL("mmap() failed");
 
@@ -289,7 +600,11 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
     if (shm->cmplog_g_shm_fd == -1) { PFATAL("shm_open() failed"); }
     if (gid != -1) {
 
-      if (fchown(shm->g_shm_fd, -1, gid) == -1) { PFATAL("fchown() failed"); }
+      if (fchown(shm->cmplog_g_shm_fd, -1, gid) == -1) {
+
+        PFATAL("fchown() failed");
+
+      }
 
     }
 
@@ -313,16 +628,68 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
     }
 
+    afl_shm_handover_fd(&shm->cmplog_g_shm_fd, shm->cmplog_g_shm_file_path);
+
+    shm->cmp_map_alloc_size = sizeof(struct cmp_map);
+
     /* If somebody is asking us to fuzz instrumented binaries in
        non-instrumented mode, we don't want them to detect instrumentation,
        since we won't be sending fork server commands. This should be replaced
        with better auto-detection later on, perhaps? */
 
-    if (!non_instrumented_mode)
+    if (!non_instrumented_mode) {
+
       setenv(CMPLOG_SHM_ENV_VAR, shm->cmplog_g_shm_file_path, 1);
+      afl_shm_env_set_fd(CMPLOG_SHM_FD_ENV_VAR, shm->cmplog_g_shm_fd);
+
+    }
 
     if (shm->cmp_map == (void *)-1 || !shm->cmp_map)
       PFATAL("cmplog mmap() failed");
+
+  }
+
+  if (shm->vp_mode) {
+
+    snprintf(shm->vp_g_shm_file_path, L_tmpnam, "/afl_vp_%d_%ld", getpid(),
+             random());
+
+    shm->vp_g_shm_fd = shm_open(shm->vp_g_shm_file_path,
+                                O_CREAT | O_RDWR | O_EXCL, permission);
+    if (shm->vp_g_shm_fd == -1) { PFATAL("shm_open() failed"); }
+    if (gid != -1) {
+
+      if (fchown(shm->vp_g_shm_fd, -1, gid) == -1) {
+
+        PFATAL("fchown() failed");
+
+      }
+
+    }
+
+    if (ftruncate(shm->vp_g_shm_fd, sizeof(vp_map_t))) {
+
+      PFATAL("setup_shm(): vp ftruncate() failed");
+
+    }
+
+    shm->vp_map = mmap(0, sizeof(vp_map_t), PROT_READ | PROT_WRITE, MAP_SHARED,
+                       shm->vp_g_shm_fd, 0);
+    if (shm->vp_map == MAP_FAILED) {
+
+      close(shm->vp_g_shm_fd);
+      shm->vp_g_shm_fd = -1;
+      shm_unlink(shm->vp_g_shm_file_path);
+      shm->vp_g_shm_file_path[0] = 0;
+      PFATAL("vp mmap() failed");
+
+    }
+
+    afl_shm_handover_fd(&shm->vp_g_shm_fd, shm->vp_g_shm_file_path);
+
+    memset((void *)shm->vp_map, 0, sizeof(vp_map_t));
+
+    if (shm->vp_map == (void *)-1 || !shm->vp_map) PFATAL("vp mmap() failed");
 
   }
 
@@ -341,6 +708,7 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
       shmget(IPC_PRIVATE, alloc_size, IPC_CREAT | IPC_EXCL | permission);
   if (shm->shm_id < 0) {
 
+    afl_shm_release_partial(shm);
     PFATAL("shmget() failed, try running afl-system-config");
 
   }
@@ -349,6 +717,7 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
     if (shmctl(shm->shm_id, IPC_STAT, &shmid_ds) == -1) {
 
+      afl_shm_release_partial(shm);
       PFATAL("shmctl(IPC_STAT) failed");
 
     }
@@ -356,6 +725,7 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
     shmid_ds.shm_perm.gid = (gid_t)gid;
     if (shmctl(shm->shm_id, IPC_SET, &shmid_ds) == -1) {
 
+      afl_shm_release_partial(shm);
       PFATAL("shmctl(IPC_SET) failed");
 
     }
@@ -369,7 +739,7 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
     if (shm->cmplog_shm_id < 0) {
 
-      shmctl(shm->shm_id, IPC_RMID, NULL);  // do not leak shmem
+      afl_shm_release_partial(shm);
       PFATAL("shmget() failed, try running afl-system-config");
 
     }
@@ -378,6 +748,7 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
       if (shmctl(shm->cmplog_shm_id, IPC_STAT, &shmid_ds) == -1) {
 
+        afl_shm_release_partial(shm);
         PFATAL("shmctl(IPC_STAT) failed");
 
       }
@@ -385,6 +756,40 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
       shmid_ds.shm_perm.gid = (gid_t)gid;
       if (shmctl(shm->cmplog_shm_id, IPC_SET, &shmid_ds) == -1) {
 
+        afl_shm_release_partial(shm);
+        PFATAL("shmctl(IPC_SET) failed");
+
+      }
+
+    }
+
+  }
+
+  if (shm->vp_mode) {
+
+    shm->vp_shm_id = shmget(IPC_PRIVATE, sizeof(vp_map_t),
+                            IPC_CREAT | IPC_EXCL | permission);
+
+    if (shm->vp_shm_id < 0) {
+
+      afl_shm_release_partial(shm);
+      PFATAL("shmget() failed, try running afl-system-config");
+
+    }
+
+    if (gid != -1) {
+
+      if (shmctl(shm->vp_shm_id, IPC_STAT, &shmid_ds) == -1) {
+
+        afl_shm_release_partial(shm);
+        PFATAL("shmctl(IPC_STAT) failed");
+
+      }
+
+      shmid_ds.shm_perm.gid = (gid_t)gid;
+      if (shmctl(shm->vp_shm_id, IPC_SET, &shmid_ds) == -1) {
+
+        afl_shm_release_partial(shm);
         PFATAL("shmctl(IPC_SET) failed");
 
       }
@@ -422,17 +827,12 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
   if (shm->map == (void *)-1 || !shm->map) {
 
-    shmctl(shm->shm_id, IPC_RMID, NULL);  // do not leak shmem
-
-    if (shm->cmplog_mode) {
-
-      shmctl(shm->cmplog_shm_id, IPC_RMID, NULL);  // do not leak shmem
-
-    }
-
+    afl_shm_release_partial(shm);
     PFATAL("shmat() failed");
 
   }
+
+  AFL_SHM_AUTO_RECLAIM(shm->shm_id);
 
   if (shm->cmplog_mode) {
 
@@ -444,9 +844,30 @@ u8 *afl_shm_init(sharedmem_t *shm, size_t map_size,
 
       shmctl(shm->cmplog_shm_id, IPC_RMID, NULL);  // do not leak shmem
 
+      if (shm->vp_mode) { shmctl(shm->vp_shm_id, IPC_RMID, NULL); }
+
       PFATAL("shmat() failed");
 
     }
+
+    AFL_SHM_AUTO_RECLAIM(shm->cmplog_shm_id);
+
+  }
+
+  if (shm->vp_mode) {
+
+    shm->vp_map = shmat(shm->vp_shm_id, NULL, 0);
+
+    if (shm->vp_map == (void *)-1 || !shm->vp_map) {
+
+      afl_shm_release_partial(shm);
+      PFATAL("shmat() failed");
+
+    }
+
+    AFL_SHM_AUTO_RECLAIM(shm->vp_shm_id);
+
+    memset((void *)shm->vp_map, 0, sizeof(vp_map_t));
 
   }
 
