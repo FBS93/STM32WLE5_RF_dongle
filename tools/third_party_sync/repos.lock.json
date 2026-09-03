@@ -8,11 +8,11 @@
       "tarball_url": "https://api.github.com/repos/AndreasAugustin/actions-template-sync/tarball/v2.5.3"
     },
     "aflplusplus": {
-      "published_at": "2026-06-29T09:18:40Z",
-      "resolved_commit": "011cd189801830253c66ecd3cd6919ec01b46c34",
-      "resolved_release": "v5.02c",
+      "published_at": "2026-09-02T09:41:42Z",
+      "resolved_commit": "dbaf11913c1b2702dee5b4d3dcfffd52f1defe50",
+      "resolved_release": "v5.03c",
       "source": "release",
-      "tarball_url": "https://api.github.com/repos/AFLplusplus/AFLplusplus/tarball/v5.02c"
+      "tarball_url": "https://api.github.com/repos/AFLplusplus/AFLplusplus/tarball/v5.03c"
     }
   }
 }

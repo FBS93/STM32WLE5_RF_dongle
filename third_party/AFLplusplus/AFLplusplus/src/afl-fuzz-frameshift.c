@@ -24,6 +24,19 @@
 // Hard time budget for frameshift analysis per input (milliseconds)
 #define FRAMESHIFT_TIME_BUDGET_MS 2000
 
+#define FRAMESHIFT_MIN_SLICE_MS 200
+
+// Maximum number of inflection-point anchors probed per candidate field.
+#define FRAMESHIFT_MAX_INFLECTION_PROBES 64
+
+enum {
+
+  FRAMESHIFT_RUN_SKIPPED,
+  FRAMESHIFT_RUN_OK,
+  FRAMESHIFT_RUN_DEADLINE
+
+};
+
 // Update the relation based on the given insertion.
 //
 // Returns 0 on success, 1 on error.
@@ -35,13 +48,12 @@ int rel_on_insert(fs_relation_t *rel, u64 idx, u64 size) {
   // Check if we should update the value of the field.
   if (idx >= rel->anchor && idx <= rel->insert) {
 
-    u64 pre = rel->val;
+    u64 max = rel->size < 8 ? (1ULL << (rel->size * 8)) - 1 : UINT64_MAX;
+
+    // Check before adding: masking first misses increments that wrap by a
+    // complete field width, such as adding 256 to an 8-bit length.
+    if (size > max - rel->val) { return 1; }
     rel->val += size;
-
-    if (rel->size < 8) { rel->val &= (1ULL << (rel->size * 8)) - 1; }
-
-    // Check if we overflowed the field.
-    if (rel->val < pre) { return 1; }
 
   }
 
@@ -258,12 +270,18 @@ void fs_track_delete(fs_meta_t *meta, u64 idx, u64 data_size) {
 
 }
 
-void fs_sanitize(fs_meta_t *meta, u8 *buf) {
+void fs_sanitize(fs_meta_t *meta, u8 *buf, u32 len) {
 
   // Apply the relations in reverse order.
   for (u32 i = meta->rel_count - 1; i != (u32)-1; i--) {
 
     if (!meta->relations[i].enabled) { continue; }
+
+    if (unlikely(meta->relations[i].pos + meta->relations[i].size > len)) {
+
+      continue;
+
+    }
 
     rel_apply(buf, &meta->relations[i]);
 
@@ -338,16 +356,49 @@ fs_meta_t *fs_new_meta(u32 size) {
 
 }
 
-void lightweight_run(afl_state_t *afl, u8 *out_buf, u32 len) {
+u8 lightweight_run(afl_state_t *afl, u8 *out_buf, u32 len) {
+
+  u64 now = get_cur_time();
+  if (unlikely(now >= afl->frameshift_deadline)) {
+
+    return FRAMESHIFT_RUN_DEADLINE;
+
+  }
+
+  u32 written = write_to_testcase(afl, (void **)&out_buf, len, 0);
+  if (unlikely(written == 0)) { return FRAMESHIFT_RUN_SKIPPED; }
+
+  now = get_cur_time();
+  if (unlikely(now >= afl->frameshift_deadline)) {
+
+    return FRAMESHIFT_RUN_DEADLINE;
+
+  }
+
+  /* The stage deadline bounds how long frameshift may keep going, not how
+     long the target is allowed to take. Cutting an execution short at the
+     remaining budget makes a target that runs in milliseconds return
+     FSRV_RUN_TMOUT, and save_if_interesting() then files the input as a hang.
+     Run with the timeout the user asked for and let the deadline checks above
+     and below end the stage - the overrun is one execution, as in every other
+     stage. */
 
   afl->fs_stats.search_tests++;
 
-  u32 written = write_to_testcase(afl, (void **)&out_buf, len, 0);
-  if (unlikely(written == 0)) { return; }
-
-  u8 fault = fuzz_run_target(afl, &afl->fsrv, afl->fsrv.exec_tmout);
+  fsrv_run_result_t fault =
+      fuzz_run_target(afl, &afl->fsrv, afl->fsrv.exec_tmout);
 
   afl->queued_discovered += save_if_interesting(afl, out_buf, written, fault);
+
+  if (unlikely(get_cur_time() >= afl->frameshift_deadline)) {
+
+    return FRAMESHIFT_RUN_DEADLINE;
+
+  }
+
+  if (unlikely(fault != afl->crash_mode)) { return FRAMESHIFT_RUN_SKIPPED; }
+
+  return FRAMESHIFT_RUN_OK;
 
 }
 
@@ -407,6 +458,17 @@ u64 decode_value(u8 *buf, u8 size, u8 le) {
 
 }
 
+// Pick a shift amount that tests the given field size without overflowing
+// the field itself.
+u64 frameshift_shift_amount(u8 size, u64 curr_size) {
+
+  u64 field_max = size < 8 ? (1ULL << (size * 8)) - 1 : UINT64_MAX;
+  if (curr_size >= field_max) { return 0; }
+
+  return MIN(size == 1 ? (u64)0x20 : (u64)0xff, field_max - curr_size);
+
+}
+
 int is_blocked(fs_meta_t *meta, u32 pos, u8 size) {
 
   for (u32 i = 0; i < size; i++) {
@@ -419,25 +481,30 @@ int is_blocked(fs_meta_t *meta, u32 pos, u8 size) {
 
 }
 
-void check_anchor(afl_state_t *afl, u32 anchor, u32 len, u32 curr_size,
-                  u32 field_pos, u8 *buf, fs_meta_t *meta, u8 *trace_bits,
-                  u32 *loss_buffer, u32 loss_count, u8 *scratch,
-                  u32 shift_amount, fs_relation_t *potential_rel,
-                  double *curr_recover) {
+u8 check_anchor(afl_state_t *afl, u32 anchor, u32 len, u32 curr_size, u8 *buf,
+                fs_meta_t *meta, u8 *trace_bits, u32 *loss_buffer,
+                u32 loss_count, u8 *scratch, u8 *repeat_buffer,
+                u32 shift_amount, fs_relation_t *potential_rel,
+                double *curr_recover) {
+
+  // Respect the absolute time budget on every probe.
+  if (unlikely(get_cur_time() >= afl->frameshift_deadline)) { return 1; }
 
   // Check if the anchor is valid.
-  if (anchor > len) { return; }
+  if (anchor > len) { return 0; }
 
   u32 insertion = anchor + curr_size;
-  if (insertion > len) { return; }
+  if (insertion > len) { return 0; }
 
   // Construct testcase with valid insertion.
   memcpy(scratch, buf, insertion);
   memset(scratch + insertion, 0x41, shift_amount);
   memcpy(scratch + insertion + shift_amount, buf + insertion, len - insertion);
 
-  // Handle on_insert for the prospective relation manually.
-  if (insertion < potential_rel->pos) {
+  // Handle on_insert for the prospective relation manually. Match the
+  // idx <= pos semantics used by rel_on_insert.
+  u64 saved_pos = potential_rel->pos;
+  if (insertion <= potential_rel->pos) {
 
     // Temporarily shift the relation to apply on the scratch buffer.
     potential_rel->pos += shift_amount;
@@ -445,27 +512,56 @@ void check_anchor(afl_state_t *afl, u32 anchor, u32 len, u32 curr_size,
   }
 
   rel_apply(scratch, potential_rel);
-  potential_rel->pos = field_pos;
+  potential_rel->pos = saved_pos;
 
   fs_save(meta);
   u8 res = fs_track_insert(meta, insertion, shift_amount, 0);
-  fs_sanitize(meta, scratch);
+  fs_sanitize(meta, scratch, len + shift_amount);
   fs_restore(meta);
   if (res) {
 
     // Invalid insertion, return.
-    return;
+    return 0;
 
   }
 
-  // Measure recovery.
-  lightweight_run(afl, scratch, len + shift_amount);
+  // Measure recovery. Abort the probe if the run was skipped so we do not
+  // read a stale trace.
+  u8 ran = lightweight_run(afl, scratch, len + shift_amount);
+  if (unlikely(ran == FRAMESHIFT_RUN_DEADLINE)) { return 1; }
+  if (unlikely(ran != FRAMESHIFT_RUN_OK)) { return 0; }
 
   u64 recover_count = 0;
-  for (u32 j = 0; j < loss_count; j++) {
+  if (afl->queue_cur->var_behavior) {
 
-    u32 idx = loss_buffer[j];
-    if (trace_bits[idx] > 0) { recover_count++; }
+    for (u32 j = 0; j < loss_count; ++j) {
+
+      repeat_buffer[j] = trace_bits[loss_buffer[j]] > 0;
+
+    }
+
+    ran = lightweight_run(afl, scratch, len + shift_amount);
+    if (unlikely(ran == FRAMESHIFT_RUN_DEADLINE)) { return 1; }
+    if (unlikely(ran != FRAMESHIFT_RUN_OK)) { return 0; }
+
+    for (u32 j = 0; j < loss_count; ++j) {
+
+      if (repeat_buffer[j] && trace_bits[loss_buffer[j]] > 0) {
+
+        ++recover_count;
+
+      }
+
+    }
+
+  } else {
+
+    for (u32 j = 0; j < loss_count; j++) {
+
+      u32 idx = loss_buffer[j];
+      if (trace_bits[idx] > 0) { recover_count++; }
+
+    }
 
   }
 
@@ -483,6 +579,25 @@ void check_anchor(afl_state_t *afl, u32 anchor, u32 len, u32 curr_size,
 
   }
 
+  return 0;
+
+}
+
+u64 frameshift_slice_budget(u64 spent_ms, u64 allowed_ms) {
+
+  if (spent_ms >= allowed_ms) { return 0; }
+
+  u64 remaining = allowed_ms - spent_ms;
+  if (remaining < FRAMESHIFT_MIN_SLICE_MS) { return 0; }
+
+  if (remaining > FRAMESHIFT_TIME_BUDGET_MS) {
+
+    return FRAMESHIFT_TIME_BUDGET_MS;
+
+  }
+
+  return remaining;
+
 }
 
 void frameshift_stage(afl_state_t *afl) {
@@ -491,8 +606,18 @@ void frameshift_stage(afl_state_t *afl) {
   printf("Frameshift stage\n");
 #endif
 
-  u64  time_start = get_cur_time();
+  u64 time_start = get_cur_time();
+  u64 total_runtime_ms = afl->prev_run_time + time_start - afl->start_time;
+  u64 allowed_ms = (u64)((double)total_runtime_ms *
+                         afl->afl_env.afl_frameshift_max_overhead);
+  u64 budget_ms =
+      frameshift_slice_budget(afl->fs_stats.total_time_ms, allowed_ms);
+  if (!budget_ms) { return; }
+
+  afl->frameshift_deadline = time_start + budget_ms;
   u32 *inflection_points = NULL;
+  u32 *loss_buffer = NULL;
+  u8  *repeat_buffer = NULL;
 
   if (unlikely(!afl->frameshift_index_buffer)) {
 
@@ -530,21 +655,46 @@ void frameshift_stage(afl_state_t *afl) {
   fs_meta_t *meta = fs_new_meta(len);
   afl->queue_cur->fs_meta = meta;
 
+  if (len < 2) { goto cleanup; }
+
   // Compute base coverage for this testcase.
   u8 *trace_bits = afl->fsrv.trace_bits;
   u32 map_size = afl->fsrv.map_size;
 
   // Compute coverage of this testcase.
-  lightweight_run(afl, buf, len);
+  u8 ran = lightweight_run(afl, buf, len);
+  if (unlikely(ran != FRAMESHIFT_RUN_OK)) { goto cleanup; }
   for (u32 i = 0; i < map_size; i++) {
 
-    if (trace_bits[i] > 0) { index_buf[index_count++] = i; }
+    if (trace_bits[i] > 0 && (!afl->var_bytes || !afl->var_bytes[i])) {
+
+      index_buf[index_count++] = i;
+
+    }
+
+  }
+
+  if (afl->queue_cur->var_behavior) {
+
+    ran = lightweight_run(afl, buf, len);
+    if (unlikely(ran != FRAMESHIFT_RUN_OK)) { goto cleanup; }
+
+    u32 write_idx = 0;
+    for (u32 i = 0; i < index_count; ++i) {
+
+      u32 idx = index_buf[i];
+      if (trace_bits[idx] > 0) { index_buf[write_idx++] = idx; }
+
+    }
+
+    index_count = write_idx;
 
   }
 
   // Compute base coverage for an invalid testcase.
   // Keep only indices that are found in the current testcase and not the base.
-  lightweight_run(afl, "a", 1);
+  ran = lightweight_run(afl, "a", 1);
+  if (unlikely(ran != FRAMESHIFT_RUN_OK)) { goto cleanup; }
   u32 write_idx = 0;
   for (u32 i = 0; i < index_count; i++) {
 
@@ -555,12 +705,37 @@ void frameshift_stage(afl_state_t *afl) {
 
   index_count = write_idx;
 
-  u32 *loss_buffer = NULL;
+  if (afl->queue_cur->var_behavior) {
+
+    ran = lightweight_run(afl, "a", 1);
+    if (unlikely(ran != FRAMESHIFT_RUN_OK)) { goto cleanup; }
+
+    write_idx = 0;
+    for (u32 i = 0; i < index_count; ++i) {
+
+      u32 idx = index_buf[i];
+      if (trace_bits[idx] == 0) { index_buf[write_idx++] = idx; }
+
+    }
+
+    index_count = write_idx;
+
+  }
+
+  if (!index_count) { goto cleanup; }
+
   if (index_count) {
 
     loss_buffer = malloc(index_count * sizeof(u32));
     if (loss_buffer == NULL) { goto cleanup; }
     memset(loss_buffer, 0, index_count * sizeof(u32));
+
+    if (afl->queue_cur->var_behavior) {
+
+      repeat_buffer = malloc(index_count);
+      if (!repeat_buffer) { goto cleanup; }
+
+    }
 
   }
 
@@ -602,8 +777,7 @@ void frameshift_stage(afl_state_t *afl) {
 
         }
 
-        if (unlikely(get_cur_time() - time_start >=
-                     FRAMESHIFT_TIME_BUDGET_MS)) {
+        if (unlikely(get_cur_time() >= afl->frameshift_deadline)) {
 
           goto cleanup;
 
@@ -614,15 +788,8 @@ void frameshift_stage(afl_state_t *afl) {
         // Does this look like a size/offset field?
         if (curr_size == 0 || curr_size > len) { continue; }
 
-        // Pick a shift amount that will test this field size.
-        u64 shift_amount = 0xff;  // overflow the field boundary
-        if (size == 1) {
-
-          u64 max_shift = 0xff - curr_size;
-          if (max_shift == 0) { continue; }
-          shift_amount = MIN((u64)0x20, max_shift);
-
-        }
+        u64 shift_amount = frameshift_shift_amount(size, curr_size);
+        if (!shift_amount) { continue; }
 
         // Check if the field is blocked.
         if (is_blocked(meta, field_pos, size)) {
@@ -646,18 +813,57 @@ void frameshift_stage(afl_state_t *afl) {
 
         loss_count = 0;
 
-        lightweight_run(afl, buf, len);
-        for (u32 j = 0; j < index_count; j++) {
+        ran = lightweight_run(afl, buf, len);
+        if (likely(ran == FRAMESHIFT_RUN_OK)) {
 
-          u32 idx = index_buf[j];
-          if (trace_bits[idx] == 0) { loss_buffer[loss_count++] = idx; }
+          for (u32 j = 0; j < index_count; j++) {
+
+            u32 idx = index_buf[j];
+            if (trace_bits[idx] == 0) { loss_buffer[loss_count++] = idx; }
+
+          }
 
         }
 
-        // Undo the change to the buffer.
-        potential_rel.val -= shift_amount;
-        rel_apply(buf, &potential_rel);
-        potential_rel.val += shift_amount;
+        if (unlikely(ran != FRAMESHIFT_RUN_OK)) {
+
+          potential_rel.val -= shift_amount;
+          rel_apply(buf, &potential_rel);
+          potential_rel.val += shift_amount;
+          if (ran == FRAMESHIFT_RUN_DEADLINE) { goto cleanup; }
+          continue;
+
+        }
+
+        if (afl->queue_cur->var_behavior) {
+
+          ran = lightweight_run(afl, buf, len);
+
+          potential_rel.val -= shift_amount;
+          rel_apply(buf, &potential_rel);
+          potential_rel.val += shift_amount;
+
+          if (unlikely(ran == FRAMESHIFT_RUN_DEADLINE)) { goto cleanup; }
+          if (unlikely(ran != FRAMESHIFT_RUN_OK)) { continue; }
+
+          write_idx = 0;
+          for (u32 j = 0; j < loss_count; ++j) {
+
+            u32 idx = loss_buffer[j];
+            if (trace_bits[idx] == 0) { loss_buffer[write_idx++] = idx; }
+
+          }
+
+          loss_count = write_idx;
+
+        } else {
+
+          // Undo the change to the buffer.
+          potential_rel.val -= shift_amount;
+          rel_apply(buf, &potential_rel);
+          potential_rel.val += shift_amount;
+
+        }
 
         if (loss_count < loss_threshold) { continue; }
 
@@ -668,72 +874,64 @@ void frameshift_stage(afl_state_t *afl) {
         // Next, we iterate over inflection points to find the best anchor.
         double curr_recover = FRAMESHIFT_RECOVER_PCT / 100.0;
 
+#define CHECK_FRAMESHIFT_ANCHOR(_anchor)                                    \
+  do {                                                                      \
+                                                                            \
+    if (check_anchor(afl, (_anchor), len, curr_size, buf, meta, trace_bits, \
+                     loss_buffer, loss_count, scratch, repeat_buffer,       \
+                     shift_amount, &potential_rel, &curr_recover)) {        \
+                                                                            \
+      goto cleanup;                                                         \
+                                                                            \
+    }                                                                       \
+                                                                            \
+  } while (0)
+
         if (size == 1) {
 
-          check_anchor(afl, field_pos + size, len, curr_size, field_pos, buf,
-                       meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size);
 
         } else if (size == 2) {
 
-          check_anchor(afl, 0, len, curr_size, field_pos, buf, meta, trace_bits,
-                       loss_buffer, loss_count, scratch, shift_amount,
-                       &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos, len, curr_size, field_pos, buf, meta,
-                       trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos + size, len, curr_size, field_pos, buf,
-                       meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
+          CHECK_FRAMESHIFT_ANCHOR(0);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size);
 
         } else {
 
-          check_anchor(afl, field_pos + size + 7, len, curr_size, field_pos,
-                       buf, meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos + size + 6, len, curr_size, field_pos,
-                       buf, meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos + size + 5, len, curr_size, field_pos,
-                       buf, meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos + size + 4, len, curr_size, field_pos,
-                       buf, meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos + size + 3, len, curr_size, field_pos,
-                       buf, meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos + size + 2, len, curr_size, field_pos,
-                       buf, meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos + size + 1, len, curr_size, field_pos,
-                       buf, meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, 0, len, curr_size, field_pos, buf, meta, trace_bits,
-                       loss_buffer, loss_count, scratch, shift_amount,
-                       &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos, len, curr_size, field_pos, buf, meta,
-                       trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
-          check_anchor(afl, field_pos + size, len, curr_size, field_pos, buf,
-                       meta, trace_bits, loss_buffer, loss_count, scratch,
-                       shift_amount, &potential_rel, &curr_recover);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size + 7);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size + 6);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size + 5);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size + 4);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size + 3);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size + 2);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size + 1);
+          CHECK_FRAMESHIFT_ANCHOR(0);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos);
+          CHECK_FRAMESHIFT_ANCHOR(field_pos + size);
 
           if (potential_rel.anchor == (u64)-1) {
 
-            // Check other inflection points.
-            for (u32 j = 0; j < inflection_points_count; j++) {
+            // Check other inflection points, bounded by a probe cap.
+            u32 probe_cap = inflection_points_count;
+            if (probe_cap > FRAMESHIFT_MAX_INFLECTION_PROBES) {
+
+              probe_cap = FRAMESHIFT_MAX_INFLECTION_PROBES;
+
+            }
+
+            for (u32 j = 0; j < probe_cap; j++) {
 
               u32 anchor = inflection_points[j];
-              check_anchor(afl, anchor, len, curr_size, field_pos, buf, meta,
-                           trace_bits, loss_buffer, loss_count, scratch,
-                           shift_amount, &potential_rel, &curr_recover);
+              CHECK_FRAMESHIFT_ANCHOR(anchor);
 
             }
 
           }
 
         }
+
+#undef CHECK_FRAMESHIFT_ANCHOR
 
         // Check if we have a valid relation.
         if (potential_rel.anchor == (u64)-1) {
@@ -794,6 +992,7 @@ void frameshift_stage(afl_state_t *afl) {
   }
 
 cleanup:
+  if (repeat_buffer) free(repeat_buffer);
   if (loss_buffer) free(loss_buffer);
   if (scratch) free(scratch);
   if (inflection_points) free(inflection_points);

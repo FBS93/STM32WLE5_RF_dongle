@@ -43,7 +43,7 @@ The implementation of each software unit shall:
 - Use a library name matching the software unit name defined in the detailed design, using `lower_snake_case`.
 - Follow the rules defined in [embedded_c_guidelines.md](../resources/embedded_c_coding_guidelines.md).
 - For each header file (`.h`) that requires implementation, implement a source file (`.c`) using the same name as the corresponding header file.
-- Implement modeled behavior exactly as defined by the corresponding [MBSE](https://github.com/FBS93/mbse) models in the software detailed design.
+- Implement modeled behavior exactly as defined by the corresponding behavioral model in the software detailed design.
 
 The [Embedded C Framework (ECF)](../../../../sw/ecf/doc/ecf.md) shall be used as a reference for the implementation of the software units.
 
@@ -63,21 +63,21 @@ The implementation of software units defined as active objects shall:
 
 #### Platform package implementation
 
-If the software detailed design specifies a platform package, its implementation shall be reused from [Embedded C Framework (ECF)](../../../../sw/ecf/doc/ecf.md) when available. If not available, it shall be implemented within ECF based on the corresponding platform package software detailed design and upstream elements.
+If the software detailed design specifies a platform package, its implementation and location shall follow the [platform package detailed design policy](sw-detailed-design.md#platform-package-detailed-design).
 
 The platform package root folder shall deviate from the standard [software unit folder structure](../software_domain_overview.md#work-products-organization) and shall contain:
-- `sw/ecf/platform/<platform_name>/doc/` containing the software detailed design Markdown document.
-- `sw/ecf/platform/<platform_name>/cmake/` containing the platform-specific CMake configuration files.
-- `sw/ecf/platform/<platform_name>/linker/` containing the linker script files.
-- `sw/ecf/platform/<platform_name>/startup/` containing the startup source files.
-- `sw/ecf/platform/<platform_name>/svd/` containing the SVD file, which shall always be provided by upstream elements and shall never be implemented from scratch.
-- `sw/ecf/platform/<platform_name>/stdio/` containing the `stdio` software unit implementation providing [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md) stdin/stdout integration as specified in the platform software design and software detailed design. The `stdio` software unit implementation deviates from the standard software unit structure and shall:
-  - Contain `sw/ecf/platform/<platform_name>/stdio/doc/` with the software detailed design Markdown document.
-  - Contain `sw/ecf/platform/<platform_name>/stdio/src/` with the source file implementation providing strong implementations of the weak functions defined in [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md).
+- `doc/` containing the software detailed design Markdown document.
+- `cmake/` containing the platform-specific CMake configuration files.
+- `linker/` containing the linker script files.
+- `startup/` containing the startup source files.
+- `svd/` containing the SVD file, which shall always be provided by upstream elements and shall never be implemented from scratch.
+- `stdio/` containing the `stdio` software unit implementation providing [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md) stdin/stdout integration as specified in the platform software design and software detailed design. The `stdio` software unit implementation deviates from the standard software unit structure and shall:
+  - Contain `stdio/doc/` with its Markdown document.
+  - Contain `stdio/src/` with the source file implementation providing strong implementations of the weak functions defined in [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md).
   - Follow the integration strategy defined in the platform software design.
   - Not define `inc/` or `u_test/` folders.
 
-The platform package shall be integrated into the build system using the mechanisms provided by [Embedded C Framework (ECF)](../../../../sw/ecf/doc/ecf.md), ensuring that all platform-specific elements are applied to all relevant embedded target executables.
+An ECF platform package shall be integrated into the build system using the mechanisms provided by [Embedded C Framework (ECF)](../../../../sw/ecf/doc/ecf.md). A project-specific platform package shall use a project-specific build integration. In both cases, all platform-specific elements shall be applied to all relevant embedded target executables.
 
 The [STM32F103C8Tx platform package](../../../../sw/ecf/platform/stm32f103c8tx/doc/stm32f103c8tx_platform_package.md) shall be used as a reference for platform package implementation.
 
