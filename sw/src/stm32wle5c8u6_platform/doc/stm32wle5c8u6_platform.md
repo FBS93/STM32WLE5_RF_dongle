@@ -9,11 +9,14 @@ Upstream traceability:
 
 Hardware resources:
 - STM32WLE5C8U6 MCU: Target resources and connections are defined by the [HW/SW interfaces](../../../../hw/cross_domain_interfaces/hw_sw_interface.md).
+- ITM, TPIU, and PB3/SWO: Provide the target stdout path; the board connection is defined by [HW_SW_INTERFACE_4](../../../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_4), and MCU operation is defined by [EHW_DOC_1](../../../../spec/external_hw_docs.md#ehw_doc_1).
+- TIM2: Provides the periodic interrupt used to drain the TX FIFO.
 
 External dependencies:
-- None.
+- [Embedded Base Framework (EBF)](../../../ecf/embedded_base_framework/doc/ebf.md): Provides the stdout override API, weak stdin behavior, and critical-section contract.
+- [Embedded Assert Framework (EAF)](../../../ecf/embedded_assert_framework/doc/eaf.md): Provides assertions to enforce DbC in all undefined fault handling cases.
 
-Status: not approved
+Status: approved
 
 ## Glossary
 

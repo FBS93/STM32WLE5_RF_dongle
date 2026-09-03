@@ -42,7 +42,7 @@ External dependencies:
 
 @todo Add specific link to the official Semtech package when the third-party library is downloaded and incorporated into the project.
 
-Status: not approved
+Status: approved
 
 ## Glossary
 

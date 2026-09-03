@@ -35,7 +35,7 @@ External dependencies:
 - Embedded Middleware Framework (EMF): Provides COBS encoding/decoding, CRC-16/XMODEM, little-endian conversion, and byte FIFO buffering for UART reception.
 - [events](../../events/doc/events.md): Provides the shared project-specific event definitions.
 
-Status: not approved
+Status: approved
 
 ## Glossary
 

@@ -16,7 +16,7 @@ External dependencies:
 - Event Driven Framework (EDF): Provides `EDF_event_t` as the common event base and signal type.
 - [rf_types](../../rf_types/doc/rf_types.md): Provides project-specific shared RF types.
 
-Status: not approved
+Status: approved
 
 ## Glossary
 

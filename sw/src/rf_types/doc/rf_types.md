@@ -13,7 +13,7 @@ Hardware resources:
 External dependencies:
 - None.
 
-Status: not approved
+Status: approved
 
 ## Glossary
 
