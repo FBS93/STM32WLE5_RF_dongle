@@ -62,14 +62,17 @@ typedef uint128_t         u128;
 /* Target appended a bug-pass map tail (MAP_SIZE_BUG_BYTES) to
  * __afl_set_map_size; the fuzzer subtracts it before treating the
  * region as coverage. parameter: none */
-#define FS_NEW_OPT_BUG_MAP 0x00000010
-#define FS_NEW_OPT_AUTODICT 0x00000800  // autodictionary data
+#define FS_NEW_OPT_BUG_MAP 0x00000010        // parameter: none
+#define FS_NEW_OPT_VALUE_PROFILE 0x00000020  // parameter: none
+#define FS_NEW_OPT_AUTODICT 0x00000800       // autodictionary data
 
 #if defined(__linux__) || defined(__APPLE__)
 /* Protocol phases for the futex-based forkserver handshake.
    A single 32-bit shared-memory word (child_sync) carries these values so
    that afl-fuzz and the persistent target child can coordinate each execution
-   cycle without going through the normal pipe path. */
+   cycle without going through the normal pipe path. The word is embedded in
+   the last bytes of the trace_bits shared map (see afl_shm_init), so it needs
+   no separate shared memory segment. */
 typedef enum {
 
   AFL_CHILD_IDLE = 0,  /* child not started, or dead                        */

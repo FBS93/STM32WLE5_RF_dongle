@@ -33,6 +33,10 @@ VERSION     = $(shell grep '^ *$(HASH)define VERSION ' ./config.h | cut -d '"' -
 
 SYS = $(shell uname -s)
 
+ifneq "$(filter Linux GNU%,$(SYS))" ""
+  override LDFLAGS += -lrt
+endif
+
 override LLVM_TOO_NEW_DEFAULT := 23
 override LLVM_TOO_OLD_DEFAULT := 14
 
@@ -224,11 +228,23 @@ endif
 ifeq "$(shell echo 'int main() {return 0; }' | $(CLANG_BIN) -x c - -flto=full -o .test 2>/dev/null && echo 1 || echo 0 ; rm -f .test )" "1"
         AFL_CLANG_FLTO ?= -flto=full
 else
- ifeq "$(shell echo 'int main() {return 0; }' | $(CLANG_BIN) -x c - -flto=thin -o .test 2>/dev/null && echo 1 || echo 0 ; rm -f .test )" "1"
-        AFL_CLANG_FLTO ?= -flto=thin
+ ifeq "$(shell echo 'int main() {return 0; }' | $(CLANG_BIN) -x c - -flto=full -fuse-ld=lld -o .test 2>/dev/null && echo 1 || echo 0 ; rm -f .test )" "1"
+        AFL_CLANG_FLTO ?= -flto=full
  else
-  ifeq "$(shell echo 'int main() {return 0; }' | $(CLANG_BIN) -x c - -flto -o .test 2>/dev/null && echo 1 || echo 0 ; rm -f .test )" "1"
+  ifeq "$(shell echo 'int main() {return 0; }' | $(CLANG_BIN) -x c - -flto=thin -o .test 2>/dev/null && echo 1 || echo 0 ; rm -f .test )" "1"
+        AFL_CLANG_FLTO ?= -flto=thin
+  else
+   ifeq "$(shell echo 'int main() {return 0; }' | $(CLANG_BIN) -x c - -flto=thin -fuse-ld=lld -o .test 2>/dev/null && echo 1 || echo 0 ; rm -f .test )" "1"
+        AFL_CLANG_FLTO ?= -flto=thin
+   else
+    ifeq "$(shell echo 'int main() {return 0; }' | $(CLANG_BIN) -x c - -flto -o .test 2>/dev/null && echo 1 || echo 0 ; rm -f .test )" "1"
         AFL_CLANG_FLTO ?= -flto
+    else
+     ifeq "$(shell echo 'int main() {return 0; }' | $(CLANG_BIN) -x c - -flto -fuse-ld=lld -o .test 2>/dev/null && echo 1 || echo 0 ; rm -f .test )" "1"
+        AFL_CLANG_FLTO ?= -flto
+     endif
+    endif
+   endif
   endif
  endif
 endif
@@ -283,6 +299,14 @@ ifeq "$(LLVM_LTO)" "1"
 endif
 
 IS_IOS          := $(findstring ios, $(shell $(CC) --version 2>/dev/null))
+
+ifneq "$(findstring sanitize,$(CFLAGS) $(CXXFLAGS))" ""
+ ifneq "$(findstring fuzzer,$(CFLAGS) $(CXXFLAGS))" ""
+  $(info [!] -fsanitize=...fuzzer found in CFLAGS/CXXFLAGS, ignoring these for the AFL++ build)
+  override undefine CFLAGS
+  override undefine CXXFLAGS
+ endif
+endif
 
 CFLAGS          ?= -O3 -funroll-loops -fPIC
 # -D_FORTIFY_SOURCE=1
@@ -353,30 +377,41 @@ ifeq "$(SYS)" "OpenBSD"
   CLANG_CPPFL += -mno-retpoline
   CFLAGS += -mno-retpoline
   # Needed for unwind symbols
-  LDFLAGS += -lc++abi -lpthread
+  override LDFLAGS += -lc++abi -lpthread
 endif
 
 # needed for backtrace under FreeBSD
 ifeq "$(SYS)" "FreeBSD"
-  LDFLAGS += -lexecinfo
+  override LDFLAGS += -lexecinfo
 endif
 
 ifeq "$(shell echo '$(HASH)include <sys/ipc.h>@$(HASH)include <sys/shm.h>@int main() { int _id = shmget(IPC_PRIVATE, 65536, IPC_CREAT | IPC_EXCL | 0600); shmctl(_id, IPC_RMID, 0); return 0;}' | tr @ '\n' | $(CC) -x c - -o .test2 2>/dev/null && echo 1 || echo 0 ; rm -f .test2 )" "1"
         SHMAT_OK=1
 else
         SHMAT_OK=0
-        CFLAGS_SAFE += -DUSEMMAP=1
-        LDFLAGS += -Wno-deprecated-declarations
+        override CFLAGS_SAFE += -DUSEMMAP=1
+        override LDFLAGS += -Wno-deprecated-declarations
+endif
+
+# macOS is deliberately moved off SysV shared memory even though shmat() works
+# there: kern.sysv.shmseg caps a process at 8 segments by default, and a
+# segment can no longer be attached once it is marked for destruction, so a
+# SIGKILLed tool leaks it. POSIX shared memory handed to the target as an
+# inherited descriptor (see SHM_FD_ENV_VAR) has neither problem.
+ifeq "$(SYS)" "Darwin"
+        SHMAT_OK=0
+        override CFLAGS_SAFE += -DUSEMMAP=1
+        override LDFLAGS += -Wno-deprecated-declarations
 endif
 
 ifeq "$(TEST_MMAP)" "1"
         SHMAT_OK=0
-        CFLAGS_SAFE += -DUSEMMAP=1
-        LDFLAGS += -Wno-deprecated-declarations
+        override CFLAGS_SAFE += -DUSEMMAP=1
+        override LDFLAGS += -Wno-deprecated-declarations
 endif
 
 PROGS_ALWAYS = ./afl-cc ./afl-compiler-rt.o ./afl-compiler-rt-32.o ./afl-compiler-rt-64.o
-PROGS        = $(PROGS_ALWAYS) ./afl-llvm-pass.so ./afl-c11-pass.so ./afl-llvm-ijon-pass.so ./SanitizerCoveragePCGUARD.so ./split-compares-pass.so ./split-switches-pass.so ./cmplog-routines-pass.so ./cmplog-instructions-pass.so ./cmplog-switches-pass.so ./afl-llvm-dict2file.so ./compare-transform-pass.so ./afl-ld-lto ./afl-llvm-lto-instrumentlist.so ./SanitizerCoverageLTO.so ./injection-pass.so ./afl-llvm-bug-pass.so
+PROGS        = $(PROGS_ALWAYS) ./afl-c11-pass.so ./afl-llvm-ijon-pass.so ./SanitizerCoveragePCGUARD.so ./split-compares-pass.so ./split-switches-pass.so ./cmplog-routines-pass.so ./cmplog-instructions-pass.so ./cmplog-switches-pass.so ./afl-llvm-dict2file.so ./compare-transform-pass.so ./afl-ld-lto ./afl-llvm-lto-instrumentlist.so ./SanitizerCoverageLTO.so ./injection-pass.so ./afl-llvm-bug-pass.so
 
 # If prerequisites are not given, warn, do not build anything, and exit with code 0
 ifeq "$(LLVMVER)" ""
@@ -430,7 +465,7 @@ endif
 	@test -f ./afl-showmap || ( echo "[-] Oops, can't find './afl-showmap'. Be sure to compile AFL first."; exit 1 )
 	@echo "[+] All set and ready to build."
 
-instrumentation/afl-common.o: ./src/afl-common.c
+instrumentation/afl-common.o: ./src/afl-common.c ./include/envs.h ./include/forkserver.h ./include/common.h ./include/config.h ./include/types.h ./include/debug.h ./include/alloc-inl.h
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@ $(LDFLAGS)
 
 ./afl-cc: src/afl-cc.c instrumentation/afl-common.o
@@ -456,15 +491,6 @@ endif
 
 instrumentation/afl-llvm-common.o: instrumentation/afl-llvm-common.cc instrumentation/afl-llvm-common.h
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) $$($(LLVM_CONFIG) --cxxflags) -fno-rtti -fPIC -std=$(LLVM_STDCXX) -c $< -o $@
-
-./afl-llvm-pass.so: instrumentation/afl-llvm-pass.so.cc instrumentation/afl-llvm-common.o | test_deps
-ifeq "$(LLVM_MIN_4_0_1)" "0"
-	$(info [!] N-gram branch coverage instrumentation is not available for llvm version $(LLVMVER))
-endif
-	$(CXX) $(CLANG_CPPFL) -Wdeprecated -Wno-deprecated-copy-dtor -Wno-deprecated-copy-with-dtor -fno-rtti -fPIC -std=$(LLVM_STDCXX) -shared $< -o $@ $(CLANG_LFL) instrumentation/afl-llvm-common.o
-ifdef IS_IOS
-	@ldid -Sentitlements.plist $@ && echo "[+] Signed $@" || { echo "[-] Failed to sign $@"; }
-endif
 
 ./afl-c11-pass.so: instrumentation/afl-c11-pass.so.cc instrumentation/afl-llvm-common.o | test_deps
 	$(CXX) $(CLANG_CPPFL) -Wdeprecated -Wno-deprecated-copy-dtor -Wno-deprecated-copy-with-dtor -fno-rtti -fPIC -std=$(LLVM_STDCXX) -shared $< -o $@ $(CLANG_LFL) instrumentation/afl-llvm-common.o
@@ -619,8 +645,8 @@ install: all
 	@if [ -f ./afl-ld-lto ]; then set -e; install -m 755 ./afl-ld-lto $${DESTDIR}$(BIN_PATH); fi
 	@if [ -f ./afl-compiler-rt-32.o ]; then set -e; install -m 755 ./afl-compiler-rt-32.o $${DESTDIR}$(HELPER_PATH); fi
 	@if [ -f ./afl-compiler-rt-64.o ]; then set -e; install -m 755 ./afl-compiler-rt-64.o $${DESTDIR}$(HELPER_PATH); fi
-	@if [ -f ./compare-transform-pass.so ]; then set -e; install -m 755 ./*.so $${DESTDIR}$(HELPER_PATH); fi
-	@if [ -f ./compare-transform-pass.so ]; then set -e; ln -sf afl-cc $${DESTDIR}$(BIN_PATH)/afl-clang-fast ; ln -sf ./afl-c++ $${DESTDIR}$(BIN_PATH)/afl-clang-fast++ ; ln -sf afl-cc $${DESTDIR}$(BIN_PATH)/afl-clang ; ln -sf ./afl-c++ $${DESTDIR}$(BIN_PATH)/afl-clang++ ; fi
+	@if [ -f ./SanitizerCoveragePCGUARD.so ]; then set -e; install -m 755 ./*.so $${DESTDIR}$(HELPER_PATH); fi
+	@if [ -f ./SanitizerCoveragePCGUARD.so ]; then set -e; ln -sf afl-cc $${DESTDIR}$(BIN_PATH)/afl-clang-fast ; ln -sf ./afl-c++ $${DESTDIR}$(BIN_PATH)/afl-clang-fast++ ; ln -sf afl-cc $${DESTDIR}$(BIN_PATH)/afl-clang ; ln -sf ./afl-c++ $${DESTDIR}$(BIN_PATH)/afl-clang++ ; fi
 	@if [ -f ./SanitizerCoverageLTO.so ]; then set -e; ln -sf afl-cc $${DESTDIR}$(BIN_PATH)/afl-clang-lto ; ln -sf ./afl-c++ $${DESTDIR}$(BIN_PATH)/afl-clang-lto++ ; fi
 	set -e; install -m 644 ./dynamic_list.txt $${DESTDIR}$(HELPER_PATH)
 	install -m 644 instrumentation/README.*.md $${DESTDIR}$(DOC_PATH)/

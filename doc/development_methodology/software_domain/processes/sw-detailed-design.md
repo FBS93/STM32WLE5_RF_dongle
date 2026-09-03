@@ -51,7 +51,9 @@ Each project-specific software unit shall have its own software detailed design 
     - A list of external library dependencies, including their usage.
   - A status indicating the approval state of the software unit detailed design. Shall use exactly one of these values: `not approved`, `approved`.
   - The remaining chapters of the [library/module documentation](../resources/embedded_c_coding_guidelines.md#librarymodule-documentation) template shall follow this project-specific content in their original order.
-- An [MBSE](https://github.com/FBS93/mbse) project, when required, to define executable HSMs (Hierarchical State Machines) or activity diagrams. The MBSE project and model JSON files shall be the source of truth from which the models are visualized or executed.
+- A behavioral model, when required. Each software unit that requires behavioral modeling shall have exactly one representation, selected as follows:
+  - Mermaid shall be used for manual design, review and implementation. Mermaid models shall be `.md` files containing `mermaid` blocks and may define HSMs using `stateDiagram-v2` and activities using `flowchart`, as needed.
+  - [MBSE](https://github.com/FBS93/mbse) shall be used when model execution, automated semantic validation or generation is required.
 - All header files of the software unit. One header file named `<sw_unit_name>.h` shall define the main public header file of the software unit. Additional header files, if any, shall be named following the pattern `<sw_unit_name>_<header_specific_suffix>.h` and are intended to support the internal structure and detailed design of the software unit. All header files of the software unit shall follow the rules defined in [embedded_c_guidelines.md](../resources/embedded_c_coding_guidelines.md).
 
 The following additions to the Markdown document template shall be applied to project-specific software units, in addition to the template defined in [embedded_c_guidelines.md](../resources/embedded_c_coding_guidelines.md#librarymodule-documentation):
@@ -100,23 +102,25 @@ The software detailed design of software units implemented as active objects sha
 The software detailed design of software units implemented as active objects shall be aligned with the capabilities and features of the [Event Driven Framework (EDF)](../../../../sw/ecf/event_driven_framework/doc/edf.md). As this framework will be used for their implementation, it shall be listed as a dependency in the software detailed design.
 
 The software detailed design of a software unit implemented as an active object shall contain the following information in addition to the generic software unit detailed design:
-- The definition of its Hierarchical State Machine (HSM) and activities using [MBSE](https://github.com/FBS93/mbse).
+- The definition of its Hierarchical State Machine (HSM) and activities in its behavioral model.
   - The HSM definition shall be kept as simple as possible. It shall only extract event parameters and apply minimal logic to trigger specific functions (activities) based on the received event. Functional logic shall not be implemented directly in the HSM.
   - All activities and states defined in the HSM shall correspond to function names to be implemented. These function names shall follow the naming conventions defined in [embedded_c_guidelines.md](../resources/embedded_c_coding_guidelines.md#naming-conventions).
   - Activities defined in the HSM shall be declared in a header file named `<sw_unit_name>_activities.h` to allow unit testing when required.
 
 #### Platform package detailed design
 
-If the software architecture specifies the platform as a software design, a software unit of type platform package shall be defined to implement all platform-reusable aspects. Project-dependent platform aspects of the platform software design shall not be implemented in the platform package and shall instead be implemented in project-specific software units with established traceability to them.
+If the software architecture specifies the platform as a software design, a software unit of type platform package shall be defined. Existing platform packages in [Embedded C Framework (ECF)](../../../../sw/ecf/doc/ecf.md) shall be reviewed first and reused when available. A new platform package may be project-specific at `sw/src/<platform_name>_platform/`; when it shows actual reuse potential, it may be promoted to `sw/ecf/platform/<platform_name>/`. Only one canonical active implementation shall be used, so promotion shall replace the project-specific implementation rather than copy it.
 
-Platform package implementations shall be reused from [Embedded C Framework (ECF)](../../../../sw/ecf/doc/ecf.md) when available. If not available, they shall be implemented as reusable software units within ECF rather than as project-specific software units.
+A project-specific platform package shall use the project-specific software unit template defined above. A reusable ECF platform package shall use only the [library/module documentation](../resources/embedded_c_coding_guidelines.md#librarymodule-documentation) template and shall not contain project-specific traceability.
 
-As platform packages are not project-specific software units, their software detailed design shall be derived from the corresponding platform software design and upstream elements as a reusable and generic solution and shall not define project-specific traceability.
+A software unit named `stdio` shall be defined within the platform package to implement [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md) stdin/stdout integration as specified in the platform software design. Whether within a project-specific or ECF platform package, its documentation shall use only the template defined in [embedded_c_guidelines.md](../resources/embedded_c_coding_guidelines.md#librarymodule-documentation).
 
-A platform package shall be identified by `<platform_name>`, which shall be a descriptive identifier reflecting the scope of the platform package (e.g., MCU family, board, execution environment, ...).
+For a reused or promoted ECF platform package, the project shall retain a software detailed design Markdown document based on the project-specific software unit template defined above. Only its `<Description>` placeholder shall be specialized, using exactly the following text:
 
-A software unit named `stdio` shall be defined within the platform package to implement [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md) stdin/stdout integration as specified in the platform software design.
+```md
+This software unit is implemented by the [<platform_name> ECF platform package](<link_to_ECF_platform_package_markdown_document>).
+```
 
-The content structures of the platform package and the `stdio` software unit deviate from the standard project-specific software unit structure. Their software detailed design shall consist only of the Markdown document based on the template defined in [embedded_c_guidelines.md](../resources/embedded_c_coding_guidelines.md#librarymodule-documentation).
+A platform package shall be identified by `<platform_name>`, which shall be a descriptive identifier reflecting its scope (e.g., MCU family, board, execution environment, ...). In ECF platform packages, `ECF_TARGET_PLATFORM` name shall equal the ECF platform package folder name `<platform_name>`.
 
-The [STM32F103C8Tx platform package](../../../../sw/ecf/platform/stm32f103c8tx/doc/stm32f103c8tx_platform_package.md) shall be used as a reference for platform package detailed designs.
+The [STM32F103C8Tx platform package](../../../../sw/ecf/platform/stm32f103c8tx/doc/stm32f103c8tx_platform_package.md) shall be used as the reference example for platform packages.

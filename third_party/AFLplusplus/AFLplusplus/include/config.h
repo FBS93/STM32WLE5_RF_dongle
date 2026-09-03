@@ -28,7 +28,26 @@
 /* Version string: */
 
 // c = release, a = volatile github dev, e = experimental branch
-#define VERSION "++5.02c"
+#define VERSION "++5.03c"
+
+/* Which flavour of shared memory the tools and the target agree on. USEMMAP
+   selects POSIX shared memory (shm_open/mmap), otherwise SysV segments are
+   used. macOS is deliberately kept off SysV even though shmat() works there:
+   kern.sysv.shmseg caps a process at 8 segments and kern.sysv.shmmax a
+   segment at 4 MB by default (CmpLog alone needs ~145 MB), and a segment can
+   no longer be attached once it is marked for destruction, so a SIGKILLed
+   tool leaks it. POSIX shared memory handed over as an inherited descriptor
+   (see SHM_FD_ENV_VAR) has none of those problems.
+
+   This lives here rather than only in the makefiles so that every consumer of
+   config.h agrees - the struct in sharedmem.h has a different layout for each
+   flavour, so a build where only some objects got -DUSEMMAP would corrupt
+   memory. The makefiles still set it for the platforms detected at build
+   time, which is why this is guarded. */
+
+#if defined(__APPLE__) && !defined(USEMMAP)
+  #define USEMMAP 1
+#endif
 
 /******************************************************
  *                                                    *
@@ -45,11 +64,20 @@
    Default: 8MB (defined in bytes) */
 #define DEFAULT_SHMEM_SIZE (8 * 1024 * 1024)
 
+#define SAN_DEDUP_DEFAULT_MB 8
+#define SAN_DEDUP_MAX_MB 4096
+
 /* Default time until when no more coverage finds are happening afl-fuzz
    switches to exploitation mode. It automatically switches back when new
    coverage is found.
-   Default: 300 (seconds) */
+   Default: 1000 (seconds) */
 #define STRATEGY_SWITCH_TIME 1000
+#define STARVE_EDGE_EXECS (5000000ULL)
+#define SWITCH_EXECS (6000000ULL)
+#define CMPLOG_I2S_EXECS (2000000ULL)
+#define SKIPDET_DECAY_EXECS (9000000ULL)
+#define MAX_EFF_EXECS (5500000ULL)
+#define MAX_DET_EXECS (8000000ULL)
 
 /* Default file permission umode when creating directories */
 #define DEFAULT_DIRS_PERMISSION 0700
@@ -72,14 +100,7 @@
 /* SkipDet's global configuration */
 
 #define MINIMAL_BLOCK_SIZE 64
-#define SMALL_DET_TIME (60 * 1000 * 1000U)
-#define MAXIMUM_INF_EXECS (16 * 1024U)
 #define MAXIMUM_QUICK_EFF_EXECS (64 * 1024U)
-#define THRESHOLD_DEC_TIME (20 * 60 * 1000U)
-
-/* Set the Prob of selecting eff_bytes 3 times more than original,
-   Now disabled */
-#define EFF_HAVOC_RATE 3
 
 /* CMPLOG/REDQUEEN TUNING
  *
@@ -174,6 +195,15 @@
 /* Timeout rounding factor when auto-scaling (milliseconds): */
 
 #define EXEC_TM_ROUND 20U
+
+/* Rate limit for every -t <n>+ timeout probe that may run for the full
+   ceiling (milliseconds). The effective interval is the larger of this and
+   100x the -t ceiling, which bounds the probe overhead at 1% of wall clock
+   time: */
+
+#ifndef TMOUT_PROBE_INTERVAL
+  #define TMOUT_PROBE_INTERVAL 60000U
+#endif
 
 /* 64bit arch MACRO */
 #if (defined(__x86_64__) || defined(__arm64__) || defined(__aarch64__) ||    \
@@ -314,21 +344,6 @@
 #define USE_AUTO_EXTRAS 4096
 #define MAX_AUTO_EXTRAS (USE_AUTO_EXTRAS * 8)
 
-/* Scaling factor for the effector map used to skip some of the more
-   expensive deterministic steps. The actual divisor is set to
-   2^EFF_MAP_SCALE2 bytes: */
-
-#define EFF_MAP_SCALE2 3
-
-/* Minimum input file length at which the effector logic kicks in: */
-
-#define EFF_MIN_LEN 128
-
-/* Maximum effector density past which everything is just fuzzed
-   unconditionally (%): */
-
-#define EFF_MAX_PERC 90
-
 /* UI refresh frequency (Hz): */
 
 #define UI_TARGET_HZ 5
@@ -438,14 +453,23 @@ and the mapping size to the called program. */
 #define SHM_FUZZ_ENV_VAR "__AFL_SHM_FUZZ_ID"
 #define SHM_FUZZ_MAP_SIZE_ENV_VAR "__AFL_SHM_FUZZ_MAP_SIZE"
 
+/* Environment variables carrying the *descriptor* of a shared map instead of
+   a name or a SysV id. Wherever the maps are POSIX shared memory (USEMMAP
+   builds, which includes macOS) the fuzzer shm_open()s them, mmap()s them and
+   shm_unlink()s the name straight away, so a SIGKILLed tool cannot leave
+   anything behind. What the target gets is the still-open descriptor, whose
+   number is passed here. A target built by an older afl-cc does not know
+   these variables and falls back to SHM_ENV_VAR & co. */
+
+#define SHM_FD_ENV_VAR "__AFL_SHM_FD"
+#define SHM_FUZZ_FD_ENV_VAR "__AFL_SHM_FUZZ_FD"
+
 /* Default size of the shared memory fuzz map.
 We add 4 byte for one u32 length field. */
 #define SHM_FUZZ_MAP_SIZE_DEFAULT (MAX_FILE + 4)
 
 /* Other less interesting, internal-only variables. */
 
-#define CLANG_ENV_VAR "__AFL_CLANG_MODE"
-#define AS_LOOP_ENV_VAR "__AFL_AS_LOOPCHECK"
 #define PERSIST_ENV_VAR "__AFL_PERSISTENT"
 #define DEFER_ENV_VAR "__AFL_DEFER_FORKSRV"
 
@@ -471,6 +495,14 @@ We add 4 byte for one u32 length field. */
 
 #define FORKSRV_FD 198
 
+/* Lowest descriptor number a shared map may be handed over on (see
+   SHM_FD_ENV_VAR). Starting above FORKSRV_FD + 1 keeps the maps clear of the
+   forkserver control and status pipes; SHM_FD_COUNT is how many slots the
+   range reserves (trace, cmplog, value profile, state, shmem input, spare). */
+
+#define SHM_FD_MIN (FORKSRV_FD + 2)
+#define SHM_FD_COUNT 8
+
 /* Fork server init timeout multiplier: we'll wait the user-selected
    timeout plus this much for the fork server to spin up. */
 
@@ -486,6 +518,20 @@ We add 4 byte for one u32 length field. */
 /* Number of chances to calibrate a case before giving up: */
 
 #define CAL_CHANCES 3
+
+/* Upper bound on how many queue entries may be skipped in a row before the
+   queue driver returns to the main loop. Skipping is normal, but the main
+   loop is where the -V / -E limits, cull_queue() and the alias table live,
+   so it must always be reachable: */
+
+#define QUEUE_SKIP_STREAK_MAX 1024
+
+/* How often the coverage of an entry that failed calibration is handed back
+   to virgin_bits, counted per map byte. A path that can never be calibrated
+   would otherwise be rediscovered and requeued without bound, so beyond this
+   the claim stays in place: */
+
+#define CAL_RECLAIM_MAX 3
 
 /* Map size for the traced binary (2^MAP_SIZE_POW2). Must be greater than
    2; you probably want to keep it under 18 or so for performance reasons
@@ -557,6 +603,17 @@ We add 4 byte for one u32 length field. */
 /* AFL RedQueen */
 
 #define CMPLOG_SHM_ENV_VAR "__AFL_CMPLOG_SHM_ID"
+#define VP_SHM_ENV_VAR "__AFL_VP_SHM_ID"
+
+/* Descriptor-passing variants of the two above (see SHM_FD_ENV_VAR) */
+#define CMPLOG_SHM_FD_ENV_VAR "__AFL_CMPLOG_SHM_FD"
+#define VP_SHM_FD_ENV_VAR "__AFL_VP_SHM_FD"
+
+#define VP_FOCUS_TARGET_SITES 4096U
+
+#define VP_IDLE_RETIRE_CYCLES 4U
+
+#define VP_FRONTIER_WEIGHT_MULT 16.0
 
 /* ASAN SHM ID */
 #define AFL_ASAN_FUZZ_SHM_ENV_VAR "__AFL_ASAN_SHM_ID"
@@ -596,18 +653,6 @@ We add 4 byte for one u32 length field. */
    as "is_ascii"? */
 
 #define AFL_TXT_MIN_PERCENT 99
-
-/* How often to perform ASCII mutations 0 = disable, 1-8 are good values */
-
-#define AFL_TXT_BIAS 6
-
-/* Maximum length of a string to tamper with */
-
-#define AFL_TXT_STRING_MAX_LEN 1024
-
-/* Maximum mutations on a string */
-
-#define AFL_TXT_STRING_MAX_MUTATIONS 6
 
 #endif                                                  /* ! _HAVE_CONFIG_H */
 

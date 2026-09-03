@@ -2,15 +2,19 @@
 
 ## Must
 
- - Review `mutation_array = ` in src/afl-fuzz-one.c
+ - hand the shared maps to the target as an inherited fd instead of a name or
+   a SysV id, so they can be unlinked at creation and nothing survives a
+   SIGKILLed tool: fuzzer does shm_open -> ftruncate -> mmap -> shm_unlink and
+   exports the fd number (keep clear of FORKSRV_FD 198/199), afl-compiler-rt
+   mmap()s that fd and falls back to shm_open(path)/shmat(id) when the env var
+   is missing (targets built by an older afl-cc). This is what MacOS, the BSDs
+   and the USEMMAP builds need - they cannot attach after IPC_RMID/shm_unlink,
+   so AFL_SHM_AUTO_RECLAIM in afl-sharedmem.c is Linux only. It also moves
+   MacOS off SysV and its kern.sysv.shmseg ceiling. Android needs nothing, its
+   ashmem shim is already fd based.
+ - remove -n mode
  - find a solution that SAYF now prints to stderr (help!)
- - afl_fsrv_deinit cmplog
  - hardened_usercopy=0 page_alloc.shuffle=0
- - add value_profile but only enable after 15 minutes without finds
- - cmplog max items env?
- - cmplog rtn sanity check on fixed length? currently we ignore the length
- - when trimming perform crash detection, new cov?
-
 
 ## Should
 

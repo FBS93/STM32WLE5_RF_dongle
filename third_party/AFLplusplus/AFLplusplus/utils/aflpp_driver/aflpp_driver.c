@@ -218,16 +218,25 @@ static void dup_and_close_stderr() {
   int output_fileno = fileno(output_file);
   int output_fd = dup(output_fileno);
   if (output_fd <= 0) abort();
-  FILE *new_output_file = fdopen(output_fd, "w");
-  if (!new_output_file) abort();
-  if (!__sanitizer_set_report_fd) return;
-  __sanitizer_set_report_fd((void *)(long int)output_fd);
+  if (__sanitizer_set_report_fd) {
+
+    __sanitizer_set_report_fd((void *)(long int)output_fd);
+
+  } else {
+
+    close(output_fd);
+
+  }
+
   discard_output(output_fileno);
 
 }
 
-// Close stdout and/or stderr if user asks for it.
-static void maybe_close_fd_mask() {
+// Close stdout and/or stderr if the user asks for it, but only while actually
+// fuzzing and not when AFL_DEBUG or AFL_CRASH_TRACES need the output visible.
+static void maybe_close_fd_mask(bool in_afl) {
+
+  if (!in_afl || getenv("AFL_DEBUG") || getenv("AFL_CRASH_TRACES")) return;
 
   char *fd_mask_str = getenv("AFL_DRIVER_CLOSE_FD_MASK");
   if (!fd_mask_str) return;
@@ -242,6 +251,9 @@ static void maybe_close_fd_mask() {
 __attribute__((weak)) size_t LLVMFuzzerMutate(uint8_t *Data, size_t Size,
                                               size_t MaxSize) {
 
+  (void)(Data);
+  (void)(Size);
+  (void)(MaxSize);
   // assert(false && "LLVMFuzzerMutate should not be called from afl_driver");
   return 0;
 
@@ -366,7 +378,10 @@ __attribute__((weak)) int LLVMFuzzerRunDriver(
 
   }
 
-  bool in_afl = !(!getenv(SHM_FUZZ_ENV_VAR) || !getenv(SHM_ENV_VAR) ||
+  /* The shared maps arrive either by name or - with a tool that unlinks them
+     at creation - as an inherited descriptor, so accept both. */
+  bool in_afl = !((!getenv(SHM_FUZZ_ENV_VAR) && !getenv(SHM_FUZZ_FD_ENV_VAR)) ||
+                  (!getenv(SHM_ENV_VAR) && !getenv(SHM_FD_ENV_VAR)) ||
                   fcntl(FORKSRV_FD, F_GETFD) == -1 ||
                   fcntl(FORKSRV_FD + 1, F_GETFD) == -1);
 
@@ -374,7 +389,7 @@ __attribute__((weak)) int LLVMFuzzerRunDriver(
 
   output_file = stderr;
   maybe_duplicate_stderr();
-  maybe_close_fd_mask();
+  maybe_close_fd_mask(in_afl);
 
   if (LLVMFuzzerInitialize) {
 
