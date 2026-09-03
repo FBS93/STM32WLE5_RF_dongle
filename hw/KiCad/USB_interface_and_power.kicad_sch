@@ -7114,7 +7114,7 @@
 				)
 			)
 		)
-		(property "Description" "USB-A (USB TYPE-A) USB 2.0 Plug Connector 4 Position Surface Mount, Right Angle; Through Hole"
+		(property "Description" "USB-A (USB TYPE-A) USB 2.0 Plug Connector 4 Position Surface Mount, Right Angle; Through Hole; footprint based on TE 1-1734028-1"
 			(at 21.59 52.07 0)
 			(hide yes)
 			(show_name no)

@@ -5453,7 +5453,7 @@
 				)
 			)
 		)
-		(property "Description" "1 kOhms @ 100 MHz 1 Signal Line Ferrite Bead 0402 (1005 Metric) 250mA 1.1Ohm"
+		(property "Description" "1.4 kOhms @ 1 GHz 1 Signal Line Ferrite Bead 0402 (1005 Metric) 250mA 1.1Ohm"
 			(at 275.59 168.91 0)
 			(hide yes)
 			(show_name no)
