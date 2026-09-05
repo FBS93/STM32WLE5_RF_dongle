@@ -62,10 +62,12 @@ function(ecf_create_mock_from_file header_path mock_directory_path)
   set(mock_name "${header_filename}_mock")
 
   # Create folder structure for the mock - per mock subdirectory
-  file(MAKE_DIRECTORY
-    ${mock_directory_abs}/mock/${mock_name}
-    ${mock_directory_abs}/mock/${mock_name}/src
-    ${mock_directory_abs}/mock/${mock_name}/inc)
+  file(
+    MAKE_DIRECTORY
+      ${mock_directory_abs}/mock/${mock_name}
+      ${mock_directory_abs}/mock/${mock_name}/src
+      ${mock_directory_abs}/mock/${mock_name}/inc
+  )
 
   # Define expected output files
   set(mock_src ${mock_directory_abs}/mock/${mock_name}/src/${mock_name}.c)
@@ -74,20 +76,19 @@ function(ecf_create_mock_from_file header_path mock_directory_path)
   # Generate the mock source and header using the EFF Python script
   add_custom_command(
     OUTPUT ${mock_src} ${mock_hdr}
-    COMMAND ${PYTHON_EXECUTABLE}
-            ${eff_gen_tool}
-            -i ${header_abs_path}
-            -o ${mock_directory_abs}/mock/${mock_name}
-    DEPENDS ${header_abs_path} ${eff_gen_tool})
+    COMMAND
+      ${PYTHON_EXECUTABLE} ${eff_gen_tool} -i ${header_abs_path} -o
+      ${mock_directory_abs}/mock/${mock_name}
+    DEPENDS ${header_abs_path} ${eff_gen_tool}
+  )
 
   # Create the mock library
   add_library(${mock_name} ${mock_src})
-  target_include_directories(${mock_name}
-    PUBLIC ${header_folder}
-    PUBLIC ${mock_directory_abs}/mock/${mock_name}/inc)
-  target_link_libraries(${mock_name}
-    PUBLIC eff
-    PRIVATE ${ARGN})
+  target_include_directories(
+    ${mock_name}
+    PUBLIC ${header_folder} ${mock_directory_abs}/mock/${mock_name}/inc
+  )
+  target_link_libraries(${mock_name} PUBLIC eff PRIVATE ${ARGN})
 endfunction()
 
 #------------------------------------------------------------------------------
@@ -150,10 +151,12 @@ function(ecf_create_mock_from_dir mock_lib_name headers_dir mock_directory_path)
   get_filename_component(mock_directory_abs ${mock_directory_path} ABSOLUTE)
 
   # Create output directories (if they don't exist)
-  file(MAKE_DIRECTORY
-    ${mock_directory_abs}/mock/${mock_lib_name}
-    ${mock_directory_abs}/mock/${mock_lib_name}/src
-    ${mock_directory_abs}/mock/${mock_lib_name}/inc)
+  file(
+    MAKE_DIRECTORY
+      ${mock_directory_abs}/mock/${mock_lib_name}
+      ${mock_directory_abs}/mock/${mock_lib_name}/src
+      ${mock_directory_abs}/mock/${mock_lib_name}/inc
+  )
 
   # Glob all header files (*.h) in the absolute headers directory
   file(GLOB header_files "${headers_dir_abs}/*.h")
@@ -171,8 +174,14 @@ function(ecf_create_mock_from_dir mock_lib_name headers_dir mock_directory_path)
     set(mock_name "${header_filename}_mock")
 
     # Define the expected paths for the generated mock source (.c) and header (.h) files
-    set(mock_src "${mock_directory_abs}/mock/${mock_lib_name}/src/${mock_name}.c")
-    set(mock_hdr "${mock_directory_abs}/mock/${mock_lib_name}/inc/${mock_name}.h")
+    set(
+      mock_src
+      "${mock_directory_abs}/mock/${mock_lib_name}/src/${mock_name}.c"
+    )
+    set(
+      mock_hdr
+      "${mock_directory_abs}/mock/${mock_lib_name}/inc/${mock_name}.h"
+    )
 
     # Append the expected output files to the list of outputs
     list(APPEND mock_outputs ${mock_src} ${mock_hdr})
@@ -184,19 +193,17 @@ function(ecf_create_mock_from_dir mock_lib_name headers_dir mock_directory_path)
   # Generate the mock source and header using the EFF Python script
   add_custom_command(
     OUTPUT ${mock_outputs}
-    COMMAND ${PYTHON_EXECUTABLE}
-            ${eff_gen_tool}
-            -i ${headers_dir_abs}
-            -o ${mock_directory_abs}/mock/${mock_lib_name}
+    COMMAND
+      ${PYTHON_EXECUTABLE} ${eff_gen_tool} -i ${headers_dir_abs} -o
+      ${mock_directory_abs}/mock/${mock_lib_name}
     DEPENDS ${header_files} ${eff_gen_tool}
   )
 
   # Create the mock library
   add_library(${mock_lib_name} ${mock_sources})
-  target_include_directories(${mock_lib_name}
-    PUBLIC ${headers_dir_abs}
-    PUBLIC ${mock_directory_abs}/mock/${mock_lib_name}/inc)
-  target_link_libraries(${mock_lib_name}
-    PUBLIC eff
-    PRIVATE ${ARGN})
+  target_include_directories(
+    ${mock_lib_name}
+    PUBLIC ${headers_dir_abs} ${mock_directory_abs}/mock/${mock_lib_name}/inc
+  )
+  target_link_libraries(${mock_lib_name} PUBLIC eff PRIVATE ${ARGN})
 endfunction()

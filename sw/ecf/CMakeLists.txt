@@ -1,6 +1,6 @@
 if(DEFINED ECF_TARGET_PLATFORM)
-    # Add target platform specific source directory.
-    add_subdirectory(platform/${ECF_TARGET_PLATFORM})
+  # Add target platform specific source directory.
+  add_subdirectory(platform/${ECF_TARGET_PLATFORM})
 endif()
 
 add_subdirectory(embedded_assert_framework)

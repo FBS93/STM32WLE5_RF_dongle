@@ -71,10 +71,10 @@ PendSV_Handler:
     STR     r1, [r2]    // Clear PendSV pending bit.
 
     // Prepare return from exception into Thread mode -> EDF_core_activate().
-    LSR     r3, r1, #3             // r3 := (r1 >> 3), sets T (Thumb) bit in xPSR.
+    LSR     r3, r1, #3             // r3 := (r1 >> 3); sets xPSR T (Thumb) bit.
     LDR     r2, =EDF_core_activate // Address of EDF_core_activate.
-    SUB     r2, r2, #1             // Align Thumb address of EDF_core_activate (clear bit0).
-    LDR     r1, =EDF_core_preemptedContextReturn // Return address after EDF_core_activate.
+    SUB     r2, r2, #1             // Align Thumb address; clear bit 0.
+    LDR     r1, =EDF_core_preemptedContextReturn // Ret after EDF_core_activate.
 
     // Reserve 8 words for fabricated exception frame.
     SUB    sp, sp, #(8*4)

@@ -1,0 +1,6 @@
+line_length: 80
+indent: 2
+list_expansion: favour-inlining
+definitions:
+  - tools/cmake/functions
+  - sw/ecf/tools/cmake/functions
