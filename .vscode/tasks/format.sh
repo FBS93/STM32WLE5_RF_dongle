@@ -14,15 +14,15 @@ workspace_root="$2"
 mode="${3-}"
 clang_format_bin=""
 clang_format_config="${workspace_root}/.clang-format"
-cmake_format_bin=""
-cmake_format_config="${workspace_root}/.cmake-format.yaml"
+gersemi_bin=""
+gersemi_config="${workspace_root}/.gersemirc"
 asm_formatter="${workspace_root}/tools/asm_format/asm_format.py"
 ruff_bin=""
 ruff_config="${workspace_root}/pyproject.toml"
 reports_dir="${workspace_root}/build/format"
 clang_report="${reports_dir}/clang_format_report.txt"
 asm_report="${reports_dir}/asm_format_report.txt"
-cmake_report="${reports_dir}/cmake_format_report.txt"
+gersemi_report="${reports_dir}/gersemi_report.txt"
 python_report="${reports_dir}/python_format_report.txt"
 format_status=0
 
@@ -79,17 +79,17 @@ if [ ! -x "${asm_formatter}" ]; then
     exit 1
 fi
 
-if command -v cmake-format >/dev/null 2>&1; then
-    cmake_format_bin="$(command -v cmake-format)"
+if command -v gersemi >/dev/null 2>&1; then
+    gersemi_bin="$(command -v gersemi)"
 fi
 
-if [ -z "${cmake_format_bin}" ] || [ ! -x "${cmake_format_bin}" ]; then
-    echo "❌ Error: Cmake-format not found."
+if [ -z "${gersemi_bin}" ] || [ ! -x "${gersemi_bin}" ]; then
+    echo "❌ Error: Gersemi not found."
     exit 1
 fi
 
-if [ ! -f "${cmake_format_config}" ]; then
-    echo "❌ Error: Cmake-format config file not found: ${cmake_format_config}"
+if [ ! -f "${gersemi_config}" ]; then
+    echo "❌ Error: Gersemi config file not found: ${gersemi_config}"
     exit 1
 fi
 
@@ -114,13 +114,13 @@ else
 fi
 echo "Clang-format: ${clang_format_bin}"
 echo "ASM formatter: ${asm_formatter}"
-echo "Cmake-format: ${cmake_format_bin}"
+echo "Gersemi: ${gersemi_bin}"
 echo "Ruff formatter: ${ruff_bin}"
 
 mkdir -p "${reports_dir}"
 : > "${clang_report}"
 : > "${asm_report}"
-: > "${cmake_report}"
+: > "${gersemi_report}"
 : > "${python_report}"
 
 cd "${source_dir}"
@@ -135,7 +135,7 @@ if [ "${mode}" = "--check" ]; then
 
     # Check CMake files across the workspace without modifying files.
     find "${workspace_root}" -type f \( -name 'CMakeLists.txt' -o -name '*.cmake' \) ! -path '*/build/*' ! -path '*/third_party/*' \
-        -exec "${cmake_format_bin}" --check --config-files "${cmake_format_config}" {} + >> "${cmake_report}" 2>&1 || format_status=$?
+        -exec "${gersemi_bin}" --check --warnings-as-errors --no-cache --config "${gersemi_config}" -- {} + >> "${gersemi_report}" 2>&1 || format_status=$?
 
     # Check Python formatting without modifying files.
     "${ruff_bin}" format --check --config "${ruff_config}" "${workspace_root}" >> "${python_report}" 2>&1 || format_status=$?
@@ -149,7 +149,7 @@ else
 
     # Format CMake files across the workspace.
     find "${workspace_root}" -type f \( -name 'CMakeLists.txt' -o -name '*.cmake' \) ! -path '*/build/*' ! -path '*/third_party/*' \
-        -exec "${cmake_format_bin}" --in-place --config-files "${cmake_format_config}" {} + >> "${cmake_report}" 2>&1 || format_status=$?
+        -exec "${gersemi_bin}" --in-place --warnings-as-errors --no-cache --config "${gersemi_config}" -- {} + >> "${gersemi_report}" 2>&1 || format_status=$?
 
     # Format Python files across the workspace using the repository Ruff config.
     "${ruff_bin}" format --config "${ruff_config}" "${workspace_root}" >> "${python_report}" 2>&1 || format_status=$?
@@ -163,7 +163,7 @@ fi
 echo "Reports:"
 echo "  - Clang-format: ${clang_report}"
 echo "  - ASM formatter: ${asm_report}"
-echo "  - Cmake-format: ${cmake_report}"
+echo "  - Gersemi: ${gersemi_report}"
 echo "  - Ruff formatter: ${python_report}"
 
 if [ "${format_status}" -eq 0 ]; then

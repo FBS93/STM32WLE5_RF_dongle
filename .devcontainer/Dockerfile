@@ -115,7 +115,7 @@ ENV PATH="/opt/arm-gnu-toolchain-arm-none-eabi/bin:${PATH}"
 # is a controlled development container image rather than a shared host Python
 # installation.
 RUN python -m pip install --break-system-packages \
-    cmakelang==0.6.13
+    gersemi==0.28.1
 
 ################################################################################
 # Hardware domain

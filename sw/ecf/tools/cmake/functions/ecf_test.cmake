@@ -50,7 +50,13 @@ function(ecf_create_etf_test test_name test_src)
   set(options)
   set(oneValueArgs)
   set(multiValueArgs LINKS INCLUDES)
-  cmake_parse_arguments(CT "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  cmake_parse_arguments(
+    CT
+    "${options}"
+    "${oneValueArgs}"
+    "${multiValueArgs}"
+    ${ARGN}
+  )
 
   # Resolve the absolute path of the test source file
   get_filename_component(test_src_absolute ${test_src} REALPATH)
@@ -66,18 +72,13 @@ function(ecf_create_etf_test test_name test_src)
     add_test(
       NAME ${test_name}
       COMMAND
-        python3
-        ${PROJECT_SOURCE_DIR}/tools/run_target_test/run_target_test.py
+        python3 ${PROJECT_SOURCE_DIR}/tools/run_target_test/run_target_test.py
         $<TARGET_FILE:${test_name}>
     )
-    set_tests_properties(${test_name} PROPERTIES
-      RESOURCE_LOCK hil_target
-    )
+    set_tests_properties(${test_name} PROPERTIES RESOURCE_LOCK hil_target)
   else()
     # Host tests: run directly on host machine.
-    add_test(
-      NAME ${test_name}
-      COMMAND ${test_name})
+    add_test(NAME ${test_name} COMMAND ${test_name})
   endif()
 endfunction()
 
@@ -131,7 +132,13 @@ function(ecf_create_edf_test test_name test_src)
   set(options)
   set(oneValueArgs)
   set(multiValueArgs LINKS INCLUDES)
-  cmake_parse_arguments(CT "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  cmake_parse_arguments(
+    CT
+    "${options}"
+    "${oneValueArgs}"
+    "${multiValueArgs}"
+    ${ARGN}
+  )
 
   # Resolve the absolute path of the test source file
   get_filename_component(test_src_absolute ${test_src} REALPATH)
@@ -147,17 +154,12 @@ function(ecf_create_edf_test test_name test_src)
     add_test(
       NAME ${test_name}
       COMMAND
-        python3
-        ${PROJECT_SOURCE_DIR}/tools/run_target_test/run_target_test.py
+        python3 ${PROJECT_SOURCE_DIR}/tools/run_target_test/run_target_test.py
         $<TARGET_FILE:${test_name}>
     )
-    set_tests_properties(${test_name} PROPERTIES
-      RESOURCE_LOCK hil_target
-    )
+    set_tests_properties(${test_name} PROPERTIES RESOURCE_LOCK hil_target)
   else()
     # Host tests: run directly on host machine.
-    add_test(
-      NAME ${test_name}
-      COMMAND ${test_name})
+    add_test(NAME ${test_name} COMMAND ${test_name})
   endif()
 endfunction()
