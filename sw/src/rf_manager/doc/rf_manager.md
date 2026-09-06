@@ -30,6 +30,7 @@ Upstream traceability:
 
 Hardware resources:
 - MCU-integrated sub-GHz radio: Used by `rf_manager` for system RF functionality; see [HW_SW_INTERFACE_9](../../../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_9).
+- SUBGHZSPI: Used by `rf_manager_hal` to transfer commands and data over the MCU-internal connection to the integrated sub-GHz radio; see [HW_SW_INTERFACE_9](../../../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_9).
 - PA4 `RF_SWITCH_CTRL`: Used by `rf_manager` to control the RF front-end path; see [HW_SW_INTERFACE_10](../../../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_10).
 - Integrated-radio `RFO_HP` RF path: Used by `rf_manager` for the RF front-end PA path; see [HW_SW_INTERFACE_12](../../../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_12).
 
@@ -38,9 +39,7 @@ External dependencies:
 - Event Driven Framework (EDF): Provides the active-object HSM and publish-subscribe event delivery.
 - [rf_types](../../rf_types/doc/rf_types.md): Provides project-specific shared RF types.
 - [events](../../events/doc/events.md): Provides the shared project-specific event definitions.
-- Semtech Sub-GHz radio software package: Abstracts low-level control of the STM32WLE5-integrated Sub-GHz radio.
-
-@todo Add specific link to the official Semtech package when the third-party library is downloaded and incorporated into the project.
+- [Semtech SX126X driver v2.5.0](../../../ext_libs/sx126x_driver-2.5.0/README.md): Provides the low-level command API for the STM32WLE5-integrated sub-GHz radio.
 
 Status: approved
 
