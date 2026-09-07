@@ -14,12 +14,14 @@ inputs:
     required: false
     default: ${{ github.token }}
   github_token:
-    deprecationMessage: 'please use source_gh_token instead to have a declarative name'
+    deprecationMessage: "please use source_gh_token instead to have a declarative name"
     description: 'GitHub Token for the repo to be synced from. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
     required: false
   source_repo_path:
     description: "Repository path of the template"
     required: true
+  source_branch:
+    description: "[optional] branch of the source repository to synchronize"
   upstream_branch:
     description: "The target branch"
   source_repo_ssh_private_key:
@@ -37,6 +39,8 @@ inputs:
     default: "template_sync"
   pr_reviewers:
     description: "[optional] comma separated list of pull request reviewers"
+  pr_assignees:
+    description: "[optional] comma separated list of pull request assignees"
   pr_commit_msg:
     description: "[optional] the commit message of the template merge"
     default: "chore(template): merge template changes :up:"
@@ -86,6 +90,12 @@ inputs:
   is_with_tags:
     description: "[optional] set to true if tags should be synced"
     default: "false"
+  is_sync_to_latest_semver:
+    description: "[optional] set to true to sync to the latest semantic version tag from the source repository"
+    default: "false"
+  is_include_prerelease:
+    description: "[optional] set to true to include prerelease tags when syncing to the latest semantic version"
+    default: "false"
 outputs:
   pr_number:
     description: "The number of the PR created"
@@ -112,6 +122,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github_token }}
         #
         SOURCE_REPO_PATH: ${{ inputs.source_repo_path }}
+        SOURCE_BRANCH: ${{ inputs.source_branch }}
         UPSTREAM_BRANCH: ${{ inputs.upstream_branch }}
         SSH_PRIVATE_KEY_SRC: ${{ inputs.source_repo_ssh_private_key }}
         PR_BRANCH_NAME_PREFIX: ${{ inputs.pr_branch_name_prefix }}
@@ -119,6 +130,7 @@ runs:
         PR_BODY: ${{ inputs.pr_body }}
         PR_LABELS: ${{ inputs.pr_labels }}
         PR_REVIEWERS: ${{ inputs.pr_reviewers }}
+        PR_ASSIGNEES: ${{ inputs.pr_assignees }}
         PR_COMMIT_MSG: ${{ inputs.pr_commit_msg }}
         HOSTNAME: ${{ inputs.hostname }}
         IS_DRY_RUN: ${{ inputs.is_dry_run }}
@@ -138,3 +150,5 @@ runs:
         STEPS: ${{ inputs.steps }}
         TEMPLATE_SYNC_IGNORE_FILE_PATH: ${{ inputs.template_sync_ignore_file_path }}
         IS_WITH_TAGS: ${{ inputs.is_with_tags }}
+        IS_SYNC_TO_LATEST_SEMVER: ${{ inputs.is_sync_to_latest_semver }}
+        IS_INCLUDE_PRERELEASE: ${{ inputs.is_include_prerelease }}
