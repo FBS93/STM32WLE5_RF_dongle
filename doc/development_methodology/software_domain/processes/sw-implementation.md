@@ -39,7 +39,7 @@ The implementation of each software unit shall:
 - Be implemented as a CMake `INTERFACE` library if defined as header-only.
 - Link dependencies using `PRIVATE` visibility whenever possible.
 - Use and link only the external dependencies defined in the software detailed design.
-- Expose all header files as `PUBLIC` whenever possible, to allow full validation of the software detailed design. The `<sw_unit_name>.h` header shall be the primary interface intended for usage by other software units.
+- Expose all header files as `PUBLIC` whenever possible, to allow full validation of the software detailed design. If present, `<sw_unit_name>.h` shall be the primary interface intended for use by other software units.
 - Use a library name matching the software unit name defined in the detailed design, using `lower_snake_case`.
 - Follow the rules defined in [embedded_c_guidelines.md](../resources/embedded_c_coding_guidelines.md).
 - For each header file (`.h`) that requires implementation, implement a source file (`.c`) using the same name as the corresponding header file.

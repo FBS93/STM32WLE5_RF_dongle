@@ -86,6 +86,27 @@ void EMF_endian_u16ReadBuffBE(const uint8_t* buff, uint16_t* out);
 void EMF_endian_u16WriteBuffBE(uint8_t* buff, const uint16_t* in);
 
 /**
+ * @brief Reads a 24-bit unsigned integer from a buffer in big-endian format.
+ *
+ * The unused most-significant bits of the output container are zeroed.
+ *
+ * @param[in] buff Pointer to the input byte buffer.
+ * @param[out] out Pointer to the 32-bit output container.
+ */
+void EMF_endian_u24ReadBuffBE(const uint8_t* buff, uint32_t* out);
+
+/**
+ * @brief Writes a 24-bit unsigned integer to a buffer in big-endian format.
+ *
+ * Serializes the least-significant 3 input bytes and leaves subsequent
+ * output-buffer bytes untouched.
+ *
+ * @param[out] buff Pointer to the output byte buffer.
+ * @param[in] in Pointer to the 32-bit input container.
+ */
+void EMF_endian_u24WriteBuffBE(uint8_t* buff, const uint32_t* in);
+
+/**
  * @brief Reads a 32-bit unsigned integer from a buffer in big-endian format.
  *
  * @param[in] buff Pointer to the input byte buffer.
@@ -100,6 +121,69 @@ void EMF_endian_u32ReadBuffBE(const uint8_t* buff, uint32_t* out);
  * @param[in] in Pointer to the input variable.
  */
 void EMF_endian_u32WriteBuffBE(uint8_t* buff, const uint32_t* in);
+
+/**
+ * @brief Reads a 40-bit unsigned integer from a buffer in big-endian format.
+ *
+ * The unused most-significant bits of the output container are zeroed.
+ *
+ * @param[in] buff Pointer to the input byte buffer.
+ * @param[out] out Pointer to the 64-bit output container.
+ */
+void EMF_endian_u40ReadBuffBE(const uint8_t* buff, uint64_t* out);
+
+/**
+ * @brief Writes a 40-bit unsigned integer to a buffer in big-endian format.
+ *
+ * Serializes the least-significant 5 input bytes and leaves subsequent
+ * output-buffer bytes untouched.
+ *
+ * @param[out] buff Pointer to the output byte buffer.
+ * @param[in] in Pointer to the 64-bit input container.
+ */
+void EMF_endian_u40WriteBuffBE(uint8_t* buff, const uint64_t* in);
+
+/**
+ * @brief Reads a 48-bit unsigned integer from a buffer in big-endian format.
+ *
+ * The unused most-significant bits of the output container are zeroed.
+ *
+ * @param[in] buff Pointer to the input byte buffer.
+ * @param[out] out Pointer to the 64-bit output container.
+ */
+void EMF_endian_u48ReadBuffBE(const uint8_t* buff, uint64_t* out);
+
+/**
+ * @brief Writes a 48-bit unsigned integer to a buffer in big-endian format.
+ *
+ * Serializes the least-significant 6 input bytes and leaves subsequent
+ * output-buffer bytes untouched.
+ *
+ * @param[out] buff Pointer to the output byte buffer.
+ * @param[in] in Pointer to the 64-bit input container.
+ */
+void EMF_endian_u48WriteBuffBE(uint8_t* buff, const uint64_t* in);
+
+/**
+ * @brief Reads a 56-bit unsigned integer from a buffer in big-endian format.
+ *
+ * The unused most-significant bits of the output container are zeroed.
+ *
+ * @param[in] buff Pointer to the input byte buffer.
+ * @param[out] out Pointer to the 64-bit output container.
+ */
+void EMF_endian_u56ReadBuffBE(const uint8_t* buff, uint64_t* out);
+
+/**
+ * @brief Writes a 56-bit unsigned integer to a buffer in big-endian format.
+ *
+ * Serializes the least-significant 7 input bytes and leaves subsequent
+ * output-buffer bytes untouched.
+ *
+ * @param[out] buff Pointer to the output byte buffer.
+ * @param[in] in Pointer to the 64-bit input container.
+ */
+void EMF_endian_u56WriteBuffBE(uint8_t* buff, const uint64_t* in);
 
 /**
  * @brief Reads a 64-bit unsigned integer from a buffer in big-endian format.
@@ -152,6 +236,27 @@ void EMF_endian_u16ReadBuffLE(const uint8_t* buff, uint16_t* out);
 void EMF_endian_u16WriteBuffLE(uint8_t* buff, const uint16_t* in);
 
 /**
+ * @brief Reads a 24-bit unsigned integer from a buffer in little-endian format.
+ *
+ * The unused most-significant bits of the output container are zeroed.
+ *
+ * @param[in] buff Pointer to the input byte buffer.
+ * @param[out] out Pointer to the 32-bit output container.
+ */
+void EMF_endian_u24ReadBuffLE(const uint8_t* buff, uint32_t* out);
+
+/**
+ * @brief Writes a 24-bit unsigned integer to a buffer in little-endian format.
+ *
+ * Serializes the least-significant 3 input bytes and leaves subsequent
+ * output-buffer bytes untouched.
+ *
+ * @param[out] buff Pointer to the output byte buffer.
+ * @param[in] in Pointer to the 32-bit input container.
+ */
+void EMF_endian_u24WriteBuffLE(uint8_t* buff, const uint32_t* in);
+
+/**
  * @brief Reads a 32-bit unsigned integer from a buffer in little-endian format.
  *
  * @param[in] buff Pointer to the input byte buffer.
@@ -166,6 +271,69 @@ void EMF_endian_u32ReadBuffLE(const uint8_t* buff, uint32_t* out);
  * @param[in] in Pointer to the input variable.
  */
 void EMF_endian_u32WriteBuffLE(uint8_t* buff, const uint32_t* in);
+
+/**
+ * @brief Reads a 40-bit unsigned integer from a buffer in little-endian format.
+ *
+ * The unused most-significant bits of the output container are zeroed.
+ *
+ * @param[in] buff Pointer to the input byte buffer.
+ * @param[out] out Pointer to the 64-bit output container.
+ */
+void EMF_endian_u40ReadBuffLE(const uint8_t* buff, uint64_t* out);
+
+/**
+ * @brief Writes a 40-bit unsigned integer to a buffer in little-endian format.
+ *
+ * Serializes the least-significant 5 input bytes and leaves subsequent
+ * output-buffer bytes untouched.
+ *
+ * @param[out] buff Pointer to the output byte buffer.
+ * @param[in] in Pointer to the 64-bit input container.
+ */
+void EMF_endian_u40WriteBuffLE(uint8_t* buff, const uint64_t* in);
+
+/**
+ * @brief Reads a 48-bit unsigned integer from a buffer in little-endian format.
+ *
+ * The unused most-significant bits of the output container are zeroed.
+ *
+ * @param[in] buff Pointer to the input byte buffer.
+ * @param[out] out Pointer to the 64-bit output container.
+ */
+void EMF_endian_u48ReadBuffLE(const uint8_t* buff, uint64_t* out);
+
+/**
+ * @brief Writes a 48-bit unsigned integer to a buffer in little-endian format.
+ *
+ * Serializes the least-significant 6 input bytes and leaves subsequent
+ * output-buffer bytes untouched.
+ *
+ * @param[out] buff Pointer to the output byte buffer.
+ * @param[in] in Pointer to the 64-bit input container.
+ */
+void EMF_endian_u48WriteBuffLE(uint8_t* buff, const uint64_t* in);
+
+/**
+ * @brief Reads a 56-bit unsigned integer from a buffer in little-endian format.
+ *
+ * The unused most-significant bits of the output container are zeroed.
+ *
+ * @param[in] buff Pointer to the input byte buffer.
+ * @param[out] out Pointer to the 64-bit output container.
+ */
+void EMF_endian_u56ReadBuffLE(const uint8_t* buff, uint64_t* out);
+
+/**
+ * @brief Writes a 56-bit unsigned integer to a buffer in little-endian format.
+ *
+ * Serializes the least-significant 7 input bytes and leaves subsequent
+ * output-buffer bytes untouched.
+ *
+ * @param[out] buff Pointer to the output byte buffer.
+ * @param[in] in Pointer to the 64-bit input container.
+ */
+void EMF_endian_u56WriteBuffLE(uint8_t* buff, const uint64_t* in);
 
 /**
  * @brief Reads a 64-bit unsigned integer from a buffer in little-endian format.

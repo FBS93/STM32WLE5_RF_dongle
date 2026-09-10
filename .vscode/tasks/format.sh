@@ -127,11 +127,13 @@ cd "${source_dir}"
 
 if [ "${mode}" = "--check" ]; then
     # Check C source formatting recursively without modifying files.
-    find . -type f \( -name '*.c' -o -name '*.h' \) \
+    find . -type d \( -name build -o -name third_party \) -prune -o \
+        -type f \( -name '*.c' -o -name '*.h' \) \
         -exec "${clang_format_bin}" --style=file --dry-run --Werror {} + >> "${clang_report}" 2>&1 || format_status=$?
 
     # Check assembler source formatting recursively without modifying files.
-    "${asm_formatter}" --check . >> "${asm_report}" 2>&1 || format_status=$?
+    find . -type d \( -name build -o -name third_party \) -prune -o \
+        -type f -name '*.S' -exec "${asm_formatter}" --check {} + >> "${asm_report}" 2>&1 || format_status=$?
 
     # Check CMake files across the workspace without modifying files.
     find "${workspace_root}" -type f \( -name 'CMakeLists.txt' -o -name '*.cmake' \) ! -path '*/build/*' ! -path '*/third_party/*' \
@@ -141,11 +143,13 @@ if [ "${mode}" = "--check" ]; then
     "${ruff_bin}" format --check --config "${ruff_config}" "${workspace_root}" >> "${python_report}" 2>&1 || format_status=$?
 else
     # Format C source files recursively.
-    find . -type f \( -name '*.c' -o -name '*.h' \) \
+    find . -type d \( -name build -o -name third_party \) -prune -o \
+        -type f \( -name '*.c' -o -name '*.h' \) \
         -exec "${clang_format_bin}" --style=file -i {} + >> "${clang_report}" 2>&1 || format_status=$?
 
     # Format assembler source files recursively.
-    find . -type f -name '*.S' -exec "${asm_formatter}" {} + >> "${asm_report}" 2>&1 || format_status=$?
+    find . -type d \( -name build -o -name third_party \) -prune -o \
+        -type f -name '*.S' -exec "${asm_formatter}" {} + >> "${asm_report}" 2>&1 || format_status=$?
 
     # Format CMake files across the workspace.
     find "${workspace_root}" -type f \( -name 'CMakeLists.txt' -o -name '*.cmake' \) ! -path '*/build/*' ! -path '*/third_party/*' \

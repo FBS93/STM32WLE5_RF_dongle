@@ -1,4 +1,9 @@
-if(DEFINED ECF_TARGET_PLATFORM)
+if(
+  DEFINED ECF_TARGET_PLATFORM
+  AND
+    EXISTS
+      "${CMAKE_CURRENT_SOURCE_DIR}/platform/${ECF_TARGET_PLATFORM}/CMakeLists.txt"
+)
   # Add target platform specific source directory.
   add_subdirectory(platform/${ECF_TARGET_PLATFORM})
 endif()
