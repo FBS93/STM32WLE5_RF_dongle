@@ -424,7 +424,7 @@ The following template shall be used for `.S` files
 
 All code elements shall be documented using **Doxygen** comments.
 
-The following Doxygen tags are allowed: `@brief`, `@param`, `@return`, `@note`, `@todo`, `@ref`, `@c`, `@par`, `@anchor`, `@warning`
+The following Doxygen tags are allowed: `@brief`, `@param`, `@return`, `@note`, `@todo`, `@ref`, `@c`, `@par`, `@anchor`, `@warning`, `@name`, `@{`, `@}`
 
 When a documentation fragment needs to be referenced, the following format shall be used:
 

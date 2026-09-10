@@ -129,6 +129,11 @@ EDF_event_t* EDF_event_initMutable(uint_fast16_t e_size, int sig)
      * and this failure cannot be tolerated.
      */
     EAF_ERROR();
+
+    /**
+     * @todo Evaluate allocating from larger fitting pools, if exists, before
+     * failing when the selected pool is exhausted.
+     */
   }
 
   return e;

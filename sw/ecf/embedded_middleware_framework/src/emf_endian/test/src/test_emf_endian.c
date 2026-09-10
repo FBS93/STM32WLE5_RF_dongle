@@ -101,6 +101,24 @@ ETF_TEST_SUITE(test_emf_endian)
     ETF_VERIFY(output_16 == input_16);
   }
 
+  ETF_TEST(big_endian_u24_roundtrip)
+  {
+    uint32_t input_24 = 0xFF123456U;
+    uint32_t output_24 = UINT32_MAX;
+    uint8_t expected_24[3U] = {0x12U, 0x34U, 0x56U};
+    uint8_t buffer_24[4U] = {0U, 0U, 0U, 0xA5U};
+    uint8_t maximum_24[3U] = {0xFFU, 0xFFU, 0xFFU};
+
+    EMF_endian_u24WriteBuffBE(buffer_24, &input_24);
+    verifyBuff(expected_24, buffer_24, 3U);
+    ETF_VERIFY(buffer_24[3U] == 0xA5U);
+
+    EMF_endian_u24ReadBuffBE(buffer_24, &output_24);
+    ETF_VERIFY(output_24 == 0x123456U);
+    EMF_endian_u24ReadBuffBE(maximum_24, &output_24);
+    ETF_VERIFY(output_24 == 0xFFFFFFU);
+  }
+
   ETF_TEST(big_endian_u32_roundtrip)
   {
     uint32_t input_32 = 0x89ABCDEFU;
@@ -113,6 +131,60 @@ ETF_TEST_SUITE(test_emf_endian)
 
     EMF_endian_u32ReadBuffBE(buffer_32, &output_32);
     ETF_VERIFY(output_32 == input_32);
+  }
+
+  ETF_TEST(big_endian_u40_roundtrip)
+  {
+    uint64_t input_40 = 0xFFFFFF123456789AULL;
+    uint64_t output_40 = UINT64_MAX;
+    uint8_t expected_40[5U] = {0x12U, 0x34U, 0x56U, 0x78U, 0x9AU};
+    uint8_t buffer_40[6U] = {0U, 0U, 0U, 0U, 0U, 0xA5U};
+    uint8_t maximum_40[5U] = {0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU};
+
+    EMF_endian_u40WriteBuffBE(buffer_40, &input_40);
+    verifyBuff(expected_40, buffer_40, 5U);
+    ETF_VERIFY(buffer_40[5U] == 0xA5U);
+
+    EMF_endian_u40ReadBuffBE(buffer_40, &output_40);
+    ETF_VERIFY(output_40 == 0x123456789AULL);
+    EMF_endian_u40ReadBuffBE(maximum_40, &output_40);
+    ETF_VERIFY(output_40 == 0xFFFFFFFFFFULL);
+  }
+
+  ETF_TEST(big_endian_u48_roundtrip)
+  {
+    uint64_t input_48 = 0xFFFF123456789ABCULL;
+    uint64_t output_48 = UINT64_MAX;
+    uint8_t expected_48[6U] = {0x12U, 0x34U, 0x56U, 0x78U, 0x9AU, 0xBCU};
+    uint8_t buffer_48[7U] = {0U, 0U, 0U, 0U, 0U, 0U, 0xA5U};
+    uint8_t maximum_48[6U] = {0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU};
+
+    EMF_endian_u48WriteBuffBE(buffer_48, &input_48);
+    verifyBuff(expected_48, buffer_48, 6U);
+    ETF_VERIFY(buffer_48[6U] == 0xA5U);
+
+    EMF_endian_u48ReadBuffBE(buffer_48, &output_48);
+    ETF_VERIFY(output_48 == 0x123456789ABCULL);
+    EMF_endian_u48ReadBuffBE(maximum_48, &output_48);
+    ETF_VERIFY(output_48 == 0xFFFFFFFFFFFFULL);
+  }
+
+  ETF_TEST(big_endian_u56_roundtrip)
+  {
+    uint64_t input_56 = 0xFF123456789ABCDEULL;
+    uint64_t output_56 = UINT64_MAX;
+    uint8_t expected_56[7U] = {0x12U, 0x34U, 0x56U, 0x78U, 0x9AU, 0xBCU, 0xDEU};
+    uint8_t buffer_56[8U] = {0U, 0U, 0U, 0U, 0U, 0U, 0U, 0xA5U};
+    uint8_t maximum_56[7U] = {0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU};
+
+    EMF_endian_u56WriteBuffBE(buffer_56, &input_56);
+    verifyBuff(expected_56, buffer_56, 7U);
+    ETF_VERIFY(buffer_56[7U] == 0xA5U);
+
+    EMF_endian_u56ReadBuffBE(buffer_56, &output_56);
+    ETF_VERIFY(output_56 == 0x123456789ABCDEULL);
+    EMF_endian_u56ReadBuffBE(maximum_56, &output_56);
+    ETF_VERIFY(output_56 == 0xFFFFFFFFFFFFFFULL);
   }
 
   ETF_TEST(big_endian_u64_roundtrip)
@@ -140,6 +212,24 @@ ETF_TEST_SUITE(test_emf_endian)
     ETF_VERIFY(output_16 == input_16);
   }
 
+  ETF_TEST(little_endian_u24_roundtrip)
+  {
+    uint32_t input_24 = 0xFF123456U;
+    uint32_t output_24 = UINT32_MAX;
+    uint8_t expected_24[3U] = {0x56U, 0x34U, 0x12U};
+    uint8_t buffer_24[4U] = {0U, 0U, 0U, 0xA5U};
+    uint8_t maximum_24[3U] = {0xFFU, 0xFFU, 0xFFU};
+
+    EMF_endian_u24WriteBuffLE(buffer_24, &input_24);
+    verifyBuff(expected_24, buffer_24, 3U);
+    ETF_VERIFY(buffer_24[3U] == 0xA5U);
+
+    EMF_endian_u24ReadBuffLE(buffer_24, &output_24);
+    ETF_VERIFY(output_24 == 0x123456U);
+    EMF_endian_u24ReadBuffLE(maximum_24, &output_24);
+    ETF_VERIFY(output_24 == 0xFFFFFFU);
+  }
+
   ETF_TEST(little_endian_u32_roundtrip)
   {
     uint32_t input_32 = 0x89ABCDEFU;
@@ -152,6 +242,60 @@ ETF_TEST_SUITE(test_emf_endian)
 
     EMF_endian_u32ReadBuffLE(buffer_32, &output_32);
     ETF_VERIFY(output_32 == input_32);
+  }
+
+  ETF_TEST(little_endian_u40_roundtrip)
+  {
+    uint64_t input_40 = 0xFFFFFF123456789AULL;
+    uint64_t output_40 = UINT64_MAX;
+    uint8_t expected_40[5U] = {0x9AU, 0x78U, 0x56U, 0x34U, 0x12U};
+    uint8_t buffer_40[6U] = {0U, 0U, 0U, 0U, 0U, 0xA5U};
+    uint8_t maximum_40[5U] = {0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU};
+
+    EMF_endian_u40WriteBuffLE(buffer_40, &input_40);
+    verifyBuff(expected_40, buffer_40, 5U);
+    ETF_VERIFY(buffer_40[5U] == 0xA5U);
+
+    EMF_endian_u40ReadBuffLE(buffer_40, &output_40);
+    ETF_VERIFY(output_40 == 0x123456789AULL);
+    EMF_endian_u40ReadBuffLE(maximum_40, &output_40);
+    ETF_VERIFY(output_40 == 0xFFFFFFFFFFULL);
+  }
+
+  ETF_TEST(little_endian_u48_roundtrip)
+  {
+    uint64_t input_48 = 0xFFFF123456789ABCULL;
+    uint64_t output_48 = UINT64_MAX;
+    uint8_t expected_48[6U] = {0xBCU, 0x9AU, 0x78U, 0x56U, 0x34U, 0x12U};
+    uint8_t buffer_48[7U] = {0U, 0U, 0U, 0U, 0U, 0U, 0xA5U};
+    uint8_t maximum_48[6U] = {0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU};
+
+    EMF_endian_u48WriteBuffLE(buffer_48, &input_48);
+    verifyBuff(expected_48, buffer_48, 6U);
+    ETF_VERIFY(buffer_48[6U] == 0xA5U);
+
+    EMF_endian_u48ReadBuffLE(buffer_48, &output_48);
+    ETF_VERIFY(output_48 == 0x123456789ABCULL);
+    EMF_endian_u48ReadBuffLE(maximum_48, &output_48);
+    ETF_VERIFY(output_48 == 0xFFFFFFFFFFFFULL);
+  }
+
+  ETF_TEST(little_endian_u56_roundtrip)
+  {
+    uint64_t input_56 = 0xFF123456789ABCDEULL;
+    uint64_t output_56 = UINT64_MAX;
+    uint8_t expected_56[7U] = {0xDEU, 0xBCU, 0x9AU, 0x78U, 0x56U, 0x34U, 0x12U};
+    uint8_t buffer_56[8U] = {0U, 0U, 0U, 0U, 0U, 0U, 0U, 0xA5U};
+    uint8_t maximum_56[7U] = {0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU};
+
+    EMF_endian_u56WriteBuffLE(buffer_56, &input_56);
+    verifyBuff(expected_56, buffer_56, 7U);
+    ETF_VERIFY(buffer_56[7U] == 0xA5U);
+
+    EMF_endian_u56ReadBuffLE(buffer_56, &output_56);
+    ETF_VERIFY(output_56 == 0x123456789ABCDEULL);
+    EMF_endian_u56ReadBuffLE(maximum_56, &output_56);
+    ETF_VERIFY(output_56 == 0xFFFFFFFFFFFFFFULL);
   }
 
   ETF_TEST(little_endian_u64_roundtrip)
