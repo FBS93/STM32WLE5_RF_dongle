@@ -34,6 +34,7 @@ The software architecture shall be aligned with the capabilities and features of
 
 The software design defining the use of the event-driven architecture model shall contain:
 - A justification of the selection of the event-driven model and the use of EDF with a fixed sentence.
+- Architectural decisions specific to the use of the event-driven model, such as active-object priorities (including preemption-threshold relationships when applicable), event-pool sizing, time-event usage, and other applicable model-specific decisions.
 - The definition of the complete set of available software events. Each event shall be specified with:
   - An event name in UPPER_SNAKE_CASE. The event name shall be unique, as it is used as the event identifier.
   - A description defining the event. The description shall include all necessary information to fully specify the event, written in a clear and concise manner.
@@ -45,16 +46,16 @@ The following template shall be used for the description of this software design
 
 ```md
 This architecture shall follow an event-driven model using Event Driven Framework (EDF).
+<Event-driven model architectural decisions>.
 
-## Events
-
-### <EVENT_NAME>
-
-<Event description>.
-
-Parameters:
-- <param_name>: <Parameter description>.
+Events:
+- `<EVENT_NAME>`
+  - Description: <Event description>.
+  - Parameters:
+    - `<param_name>`: <Parameter description>.
 ```
+
+The `Parameters` subsection shall be included only when the event has parameters.
 
 In this architecture model, all project-specific software components shall be defined as active objects. Each active object shall:
 - Encapsulate its own state and behavior.
@@ -105,6 +106,8 @@ The platform software design shall contain:
     - `target_<platform>_debug`: Target embedded execution in debug configuration.
     - `target_<platform>_hard_debug`: Target embedded execution in debug configuration with preprocessed source code available for inspection.
   - If build flags for the selected toolchain are not explicitly defined or are not self-evident, they shall be defined here, including the presets to which they apply.
+- ISR integration strategy:
+  - Architectural decisions for ISR integration, including interrupt sources, ownership, priority ordering and other applicable ISR-specific decisions.
 - Memory layout:
   - A memory layout divided into RAM layout, ROM layout (e.g., program flash, ...) and NVM layout (e.g., persistent parameters, persistent data, ...). Each memory layout shall be represented as a Markdown table. Each row of this table represents a memory region of the memory layout and may describe any level of granularity, ranging from a memory block to individual parameters. Each memory region shall be specified with:
     - A memory region name in lower_snake_case. The memory region name shall be unique across all memory layouts, as it is used as the memory region identifier.
@@ -124,39 +127,33 @@ The following template shall be used for the description of this software design
 ```md
 The platform shall be defined as follows:
 
-## Toolchains
+Toolchains:
+- <Design decisions related to the selected toolchains>.
 
-<Design decisions related to the selected toolchains>.
+Build configuration:
+- <Design decisions related to the selected build configuration>.
 
-## Build configuration
+ISR integration strategy:
+- <Design decisions related to the ISR integration strategy>.
 
-<Design decisions related to the selected build configuration>.
-
-## Memory layout
-
-### RAM layout
-
+RAM layout:
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-### ROM layout
-
+ROM layout:
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-### NVM layout
-
+NVM layout:
 | Name | Description | Start address | End address |
 |---|---|---|---|
 | <memory_region_name> | <Description>. | <Start address in hexadecimal format> | <End address in hexadecimal format> |
 
-## Debug configuration
+Debug configuration:
+- <Design decisions related to the selected debug configuration>.
 
-<Design decisions related to the selected debug configuration>.
-
-## Embedded C Framework (ECF) integration
-
-<Design decisions related to the Embedded C Framework (ECF) integration strategy>.
+Embedded C Framework (ECF) integration:
+- <Design decisions related to the Embedded C Framework (ECF) integration strategy>.
 ```

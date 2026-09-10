@@ -27,3 +27,9 @@ The host environment shall provide the following:
   - `Settings > Actions > General > Pull request workflows > Allow GitHub Actions to create and approve pull requests`
 8. See [vscode_workflow.md](vscode_workflow.md) for repository task entry points.
 9. Use the [AI-assisted development workflow](ai_assisted_development_workflow.md) and [V-model methodology](../development_methodology/development_methodology_overview.md) as the entry points for generating project-specific engineering work products.
+
+## Template conventions
+
+- `build/` folders contain non-versioned outputs from builds, tests, analysis and documentation generation.
+- `third_party/` folder contains snapshots of external repositories. Its contents shall be excluded from the repository's own formatting, linting and documentation generation.
+

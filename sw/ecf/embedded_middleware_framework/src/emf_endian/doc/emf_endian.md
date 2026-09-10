@@ -1,6 +1,6 @@
 # EMF endian overview
 
-EMF endian provides buffer-oriented big-endian and little-endian conversion helpers for generic values and selected fixed-width integer types. It is useful when a protocol format shall remain independent from the host CPU endianness.
+EMF endian provides buffer-oriented big-endian and little-endian conversion helpers for generic values and selected fixed-width integers. It is useful when a protocol format shall remain independent from the host CPU endianness.
 
 # Glossary
 
