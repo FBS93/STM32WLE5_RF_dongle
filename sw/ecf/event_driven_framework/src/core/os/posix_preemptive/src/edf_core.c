@@ -25,7 +25,6 @@
  * -------------------------------------------------------------------------- */
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <signal.h>
@@ -218,7 +217,7 @@ void EDF_init(void)
   EDF_framework_init();
 
   // set SIGINT (Ctrl-C) signal callback
-  (void)memset(&sig_act, 0, sizeof(sig_act));
+  EMF_utils_clear(&sig_act, sizeof(sig_act));
   sig_act.sa_handler = &sigIntHandler;
   (void)sigaction(SIGINT, &sig_act, NULL);
 }

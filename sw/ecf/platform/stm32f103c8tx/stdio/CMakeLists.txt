@@ -1,5 +1,5 @@
 # This library provides strong symbol definitions that override weak ones from other libraries.
-# It is implemented as an OBJECT + INTERFACE library to ensure strong symbols are never discarded.
+# It is implemented as an OBJECT + INTERFACE library to ensure strong symbols are used.
 # See: <project_root_dir>/src/doc/technical_notes/CMake_weak_symbol_oddities.md
 add_library(stdio_obj OBJECT src/stdio.c)
 target_link_libraries(stdio_obj PRIVATE ebf eaf)
