@@ -123,7 +123,7 @@ typedef struct
 typedef struct
 {
   uint32_t bit_rate_bps;            //!< Generic bitRateBps; 24-bit bit/s.
-  uint32_t frequency_deviation_hz;  //!< Generic frequencyDeviationHz; 24-bit.
+  uint32_t frequency_deviation_hz;  //!< Frequency deviation in PLL steps.
   uint8_t pulse_shape;              //!< Generic pulseShape encoding.
   uint8_t receive_bandwidth_khz;    //!< FSK receiveBandwidthKHz encoding.
   uint16_t preamble_length;         //!< preambleLength; 8..65535 bits.
@@ -190,26 +190,18 @@ typedef struct
 {
   uint8_t packet_type;           //!< One RF_TYPES_PACKET_TYPE_* value.
   uint32_t rf_frequency_hz;      //!< Encoded RF frequency.
-  uint8_t payload_length_bytes;  //!< Configured payload length.
+  uint8_t payload_length_bytes;  //!< Configured RX payload length.
   int8_t tx_output_power_dbm;    //!< Requested TX output power.
   rfTypes_configurationPacketType_t packet_type_configuration;
   //!< Configuration block selected by packet_type.
 } rfTypes_configuration_t;
 
-/** @brief Packet-type-specific information for a received packet. */
-typedef union
-{
-  int8_t lora_snr_db;  //!< Raw signed quarter-dB LoRa SNR encoding.
-  uint8_t fsk_status;  //!< Generic FSK/GFSK packet-status flags.
-} rfTypes_receivedPacketInfo_t;
-
 /** @brief Raw RSSI and packet-type-specific information for the last received
  * packet. */
 typedef struct
 {
-  uint8_t rssi;  //!< Raw RSSI encoding, with -0.5 dBm per count.
-  rfTypes_receivedPacketInfo_t
-    packet_info;  //!< Selected by configured packet type.
+  uint8_t rssi;         //!< Raw RSSI encoding, with -0.5 dBm per count.
+  uint8_t packet_info;  //!< Signed quarter-dB LoRa SNR or FSK/GFSK status byte.
 } rfTypes_packetStatus_t;
 
 /*******************************************************************************

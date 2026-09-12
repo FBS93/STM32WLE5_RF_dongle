@@ -52,7 +52,7 @@ typedef struct
   void (*tx_timeout)(void* context);  //!< Packet transmission timed out.
   void (*rx_done)(void* context);     //!< A packet was received.
   void (*rx_timeout)(void* context);  //!< Receive operation timed out.
-  void (*rx_error)(void* context);    //!< Receive operation failed.
+  void (*rx_error)(void* context);    //!< Received packet was rejected.
   void (*cad_done)(void* context,
                    bool detected);  //!< CAD scan completed.
 } rfManagerHal_callbacks_t;
@@ -68,14 +68,14 @@ typedef struct
 /**
  * @brief Initializes the radio abstraction and registers indication callbacks.
  *
- * @param[in] callbacks Pointer to callbacks retained by the HAL.
+ * @param[in] registered_callbacks Pointer to callbacks retained by the HAL.
  * @param[in,out] context Caller context passed to each callback.
  */
-void rfManagerHal_init(const rfManagerHal_callbacks_t* callbacks,
+void rfManagerHal_init(const rfManagerHal_callbacks_t* registered_callbacks,
                        void* context);
 
 /**
- * @brief Applies a complete semantic radio configuration.
+ * @brief Applies a complete radio configuration.
  *
  * @param[in] configuration Pointer to the configuration to apply.
  */
@@ -91,18 +91,29 @@ void rfManagerHal_setConfiguration(
 void rfManagerHal_calibrate(uint8_t lower_frequency, uint8_t upper_frequency);
 
 /**
- * @brief Starts packet transmission using the applied configuration.
+ * @brief Starts packet transmission with @p length in the packet parameters.
  *
+ * @param[in] configuration Pointer to the current configuration.
  * @param[in] data Pointer to the packet bytes.
  * @param[in] length Number of packet bytes.
  */
-void rfManagerHal_transmit(const uint8_t* data, uint8_t length);
+void rfManagerHal_transmit(const rfTypes_configuration_t* configuration,
+                           const uint8_t* data,
+                           uint8_t length);
 
-/** @brief Starts RX using the mode and timing in the applied configuration. */
-void rfManagerHal_startReceive(void);
+/**
+ * @brief Starts RX with the configured RX length in the packet parameters.
+ *
+ * @param[in] configuration Pointer to the current configuration.
+ */
+void rfManagerHal_startReceive(const rfTypes_configuration_t* configuration);
 
-/** @brief Starts one CAD scan using the applied LoRa CAD configuration. */
-void rfManagerHal_startCad(void);
+/**
+ * @brief Starts CAD and prepares RX packet parameters when CAD may enter RX.
+ *
+ * @param[in] configuration Pointer to the current configuration.
+ */
+void rfManagerHal_startCad(const rfTypes_configuration_t* configuration);
 
 /**
  * @brief Starts continuous-wave TX using the applied frequency and power.
@@ -120,12 +131,15 @@ void rfManagerHal_stop(void);
  *
  * @param[out] data Pointer to the destination packet buffer.
  * @param[in] capacity Destination buffer capacity in bytes.
- * @param[out] status Pointer to the packet-status destination.
+ * @param[in] configuration Pointer to the current configuration.
+ * @param[out] packet_status Pointer to the packet-status destination.
  * @return Number of packet bytes read.
  */
-uint8_t rfManagerHal_readReceivedPacket(uint8_t* data,
-                                        uint8_t capacity,
-                                        rfTypes_packetStatus_t* status);
+uint8_t rfManagerHal_readReceivedPacket(
+  uint8_t* data,
+  uint8_t capacity,
+  const rfTypes_configuration_t* configuration,
+  rfTypes_packetStatus_t* packet_status);
 
 /**
  * @brief Gets currently recorded radio device errors.

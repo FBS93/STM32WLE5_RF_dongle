@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @brief RF manager active object public interface.
+ * @brief Minimal host implementation of the host command manager HAL.
  *
  * @copyright
  * Copyright (c) 2026 FBS93.
@@ -12,9 +12,6 @@
  * The user assumes all responsibility for its use and any consequences.
  ******************************************************************************/
 
-#ifndef RF_MANAGER_H
-#define RF_MANAGER_H
-
 /*******************************************************************************
  * INCLUDES
  ******************************************************************************/
@@ -22,57 +19,50 @@
 /* -----------------------------------------------------------------------------
  * System library headers
  * -------------------------------------------------------------------------- */
-#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 /* -----------------------------------------------------------------------------
  * External library headers
  * -------------------------------------------------------------------------- */
-#include "edf.h"
+#include "eaf.h"
 
 /* -----------------------------------------------------------------------------
  * Project-specific headers
  * -------------------------------------------------------------------------- */
-#include "rf_types.h"
+#include "host_command_manager_hal.h"
 
 /*******************************************************************************
- * PUBLIC MACROS
+ * PRIVATE VARIABLES
  ******************************************************************************/
 
-/*******************************************************************************
- * PUBLIC TYPEDEFS
- ******************************************************************************/
-
-/** @brief RF manager active object and its persistent state. */
-typedef struct
-{
-  EDF_activeObject_t super;               //!< EDF active-object base.
-  rfTypes_configuration_t configuration;  //!< Current stored configuration.
-  bool configuration_valid;              //!< Whether configuration established.
-  rfTypes_operation_t active_operation;  //!< Host-visible RF operation.
-} rfManager_t;
-
-/*******************************************************************************
- * PUBLIC VARIABLES
- ******************************************************************************/
-
+/** @brief Define static file name string for asserts. */
+EAF_DEFINE_THIS_FILE(__FILE__);
 /*******************************************************************************
  * PUBLIC FUNCTIONS
  ******************************************************************************/
 
-/**
- * @brief Initializes the active-object state and HSM, starts/registers it with
- * EDF using the architecture-defined priority and queue, and subscribes it to
- * the architecture-defined events without enabling asynchronous event sources.
- *
- * @param[in,out] me Pointer to the active object instance.
- */
-void rfManager_init(rfManager_t* me);
+void hostCommandManagerHal_init(void)
+{
+}
 
-/**
- * @brief Initializes and activates the active-object-owned HAL and resources,
- * enabling event-producing sources at the end of EDF_onStartup() in accordance
- * with the EDF startup contract.
- */
-void rfManager_startup(void);
+uint32_t hostCommandManagerHal_getAvailableBytes(void)
+{
+  return 0U;
+}
 
-#endif /* RF_MANAGER_H */
+void hostCommandManagerHal_read(uint8_t* data, uint32_t length)
+{
+  EAF_ASSERT_BLOCK_BEGIN();
+  EAF_ASSERT_IN_BLOCK(data != NULL);
+  EAF_ASSERT_IN_BLOCK(length > 0U);
+  EAF_ASSERT_BLOCK_END();
+}
+
+void hostCommandManagerHal_write(const uint8_t* data, uint32_t length)
+{
+  EAF_ASSERT_BLOCK_BEGIN();
+  EAF_ASSERT_IN_BLOCK(data != NULL);
+  EAF_ASSERT_IN_BLOCK(length > 0U);
+  EAF_ASSERT_BLOCK_END();
+}

@@ -34,7 +34,6 @@
 /* -----------------------------------------------------------------------------
  * Project-specific headers
  * -------------------------------------------------------------------------- */
-#include "host_command_manager.h"
 
 /*******************************************************************************
  * PUBLIC MACROS
@@ -55,10 +54,8 @@
 /**
  * @brief Initializes the internal USART2 hardware abstraction.
  *
- * @param[in,out] me Pointer to the host command manager receiving data
- * notifications.
  */
-void hostCommandManagerHal_init(hostCommandManager_t* me);
+void hostCommandManagerHal_init(void);
 
 /**
  * @brief Gets the number of host bytes available to read.

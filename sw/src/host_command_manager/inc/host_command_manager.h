@@ -27,7 +27,7 @@
 /* -----------------------------------------------------------------------------
  * External library headers
  * -------------------------------------------------------------------------- */
-#include "edf_active_object.h"
+#include "edf.h"
 
 /* -----------------------------------------------------------------------------
  * Project-specific headers
@@ -64,10 +64,19 @@ typedef struct
  ******************************************************************************/
 
 /**
- * @brief Initializes a host command manager active object.
+ * @brief Initializes the active-object state and HSM, starts/registers it with
+ * EDF using the architecture-defined priority and queue, and subscribes it to
+ * the architecture-defined events without enabling asynchronous event sources.
  *
  * @param[in,out] me Pointer to the active object instance.
  */
 void hostCommandManager_init(hostCommandManager_t* me);
+
+/**
+ * @brief Initializes and activates the active-object-owned HAL and resources,
+ * enabling event-producing sources at the end of EDF_onStartup() in accordance
+ * with the EDF startup contract.
+ */
+void hostCommandManager_startup(void);
 
 #endif /* HOST_COMMAND_MANAGER_H */

@@ -22,6 +22,7 @@
 /* -----------------------------------------------------------------------------
  * System library headers
  * -------------------------------------------------------------------------- */
+#include <stdbool.h>
 
 /* -----------------------------------------------------------------------------
  * External library headers
@@ -91,8 +92,9 @@ void rfManagerActivities_handleTxPacket(rfManager_t* me,
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
+ * @return @c true when RX was started; otherwise @c false.
  */
-void rfManagerActivities_handleRxStart(rfManager_t* me,
+bool rfManagerActivities_handleRxStart(rfManager_t* me,
                                        const events_rxStart_t* e);
 
 /**
@@ -100,8 +102,9 @@ void rfManagerActivities_handleRxStart(rfManager_t* me,
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
+ * @return @c true when CAD was started; otherwise @c false.
  */
-void rfManagerActivities_handleCadStart(rfManager_t* me,
+bool rfManagerActivities_handleCadStart(rfManager_t* me,
                                         const events_cadStart_t* e);
 
 /**
@@ -119,8 +122,9 @@ void rfManagerActivities_handleTxContinuousWave(
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
+ * @return @c true when preamble transmission was started; otherwise @c false.
  */
-void rfManagerActivities_handleTxContinuousPreamble(
+bool rfManagerActivities_handleTxContinuousPreamble(
   rfManager_t* me,
   const events_txContinuousPreamble_t* e);
 
@@ -151,5 +155,23 @@ void rfManagerActivities_handleGetDiagnosticsRequest(
 void rfManagerActivities_handleOperationComplete(
   rfManager_t* me,
   const events_operationComplete_t* e);
+
+/** @brief Handles a radio TX-complete indication. */
+void rfManagerActivities_txDone(void* context);
+
+/** @brief Handles a radio TX-timeout indication. */
+void rfManagerActivities_txTimeout(void* context);
+
+/** @brief Handles a radio RX-complete indication. */
+void rfManagerActivities_rxDone(void* context);
+
+/** @brief Handles a radio RX-timeout indication. */
+void rfManagerActivities_rxTimeout(void* context);
+
+/** @brief Handles a radio RX-error indication. */
+void rfManagerActivities_rxError(void* context);
+
+/** @brief Handles a radio CAD-complete indication. */
+void rfManagerActivities_cadDone(void* context, bool detected);
 
 #endif /* RF_MANAGER_ACTIVITIES_H */

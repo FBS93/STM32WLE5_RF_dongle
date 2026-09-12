@@ -31,8 +31,7 @@
 /* -----------------------------------------------------------------------------
  * External library headers
  * -------------------------------------------------------------------------- */
-#include "edf_event.h"
-#include "edf_hsm.h"
+#include "edf.h"
 
 /* -----------------------------------------------------------------------------
  * Project-specific headers
@@ -113,6 +112,7 @@ typedef struct
 {
   EDF_event_t super;                                   //!< EDF event base.
   uint8_t packet_data[RF_TYPES_PACKET_DATA_CAPACITY];  //!< TX packet data.
+  uint8_t payload_length;                              //!< TX payload length.
 } events_txPacket_t;
 
 /**

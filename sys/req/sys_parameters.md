@@ -64,7 +64,7 @@ Status: approved
 
 Name: sysp_payloadLengthBytes
 
-Defines LoRa, generic FSK/GFSK, generic MSK/GMSK, or BPSK packet length.
+Defines configured RX packet length.
 
 Value size: 1 byte.
 
@@ -79,15 +79,17 @@ Encoded range: [0x00, 0xFF].
 Physical range: [0, 255] bytes.
 
 Dependencies and constraints:
+- This parameter applies only to RX and is unused for LoRa explicit-header RX and packet types that support TX only.
+- For LoRa implicit-header RX and fixed-length generic FSK/GFSK RX, the value shall be the exact expected RX packet length.
+- For variable-length generic FSK/GFSK RX, the value shall be the maximum RX packet length expected.
 - For generic framing with [sysp_genericAddressFiltering](#sys_req_parameter_22) set to `node` or `node_and_broadcast`, [sysp_payloadLengthBytes](#sys_req_parameter_3) ≤ 254 bytes.
-- For BPSK, the packet length shall include the complete supplied frame: preamble, synchronization word, device ID, and CRC.
 
 Domain:
 - sw
 
 Upstream traceability:
 - [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.5.5, Chapter 4.5.7, Chapter 4.8.4
+- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.5.5, Chapter 4.8.4
 
 Status: approved
 
@@ -1208,7 +1210,6 @@ Value size: [0, 255] bytes.
 Value type: byte array.
 
 Dependencies and constraints:
-- The packet data length shall equal [sysp_payloadLengthBytes](#sys_req_parameter_3).
 - For BPSK, [sysp_txPacketData](#sys_req_parameter_40) shall contain the complete frame, including preamble, synchronization word, device ID, and CRC.
 
 Domain:

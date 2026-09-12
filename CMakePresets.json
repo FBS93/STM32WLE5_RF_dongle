@@ -118,6 +118,48 @@
         "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
         "ECF_TARGET_PLATFORM": "stm32f103c8tx"
       }
+    },
+    {
+      "name": "target_stm32wle5c8u6",
+      "displayName": "Target STM32WLE5C8U6 (release)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/arm_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS_RELEASE": "-O2 -g2",
+        "EBF_CORE": "EBF_CORE_BAREMETAL",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "PROJECT_TARGET_PLATFORM": "stm32wle5c8u6_platform",
+        "ECF_TEST": "OFF"
+      }
+    },
+    {
+      "name": "target_stm32wle5c8u6_debug",
+      "displayName": "Target STM32WLE5C8U6 (debug)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/arm_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3",
+        "EBF_CORE": "EBF_CORE_BAREMETAL",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "PROJECT_TARGET_PLATFORM": "stm32wle5c8u6_platform",
+        "ECF_TEST": "OFF"
+      }
+    },
+    {
+      "name": "target_stm32wle5c8u6_hard_debug",
+      "displayName": "Target STM32WLE5C8U6 (hard debug)",
+      "inherits": "base",
+      "toolchainFile": "tools/cmake/toolchains/arm_gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -save-temps=obj -P",
+        "EBF_CORE": "EBF_CORE_BAREMETAL",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "PROJECT_TARGET_PLATFORM": "stm32wle5c8u6_platform",
+        "ECF_TEST": "OFF"
+      }
     }
   ]
 }
