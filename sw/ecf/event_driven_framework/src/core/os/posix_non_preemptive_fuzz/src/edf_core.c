@@ -336,7 +336,7 @@ static void installCoverageFlushSignalHandlers(void)
   struct sigaction sig_act;
   size_t idx;
 
-  (void)memset(&sig_act, 0, sizeof(sig_act));
+  EMF_utils_clear(&sig_act, sizeof(sig_act));
   sig_act.sa_handler = &coverageFlushSignalHandler;
   (void)sigemptyset(&sig_act.sa_mask);
 
