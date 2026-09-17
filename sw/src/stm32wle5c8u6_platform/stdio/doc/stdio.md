@@ -6,7 +6,7 @@ Initialization shall enable the MCU trace path and the ITM stimulus output used 
 
 Producers enqueue bytes in a statically allocated 1024-byte TX FIFO. Admission is non-blocking and all-or-nothing: `EBF_stdoutWrite()` enqueues the complete message when capacity is available or returns `false` without waiting for hardware.
 
-TIM2 is dedicated to consuming the FIFO from a low-priority ISR, below the radio and USART2 interrupt priorities. The timer has a 1 ms period, starts when the FIFO changes from empty to non-empty, and stops when the FIFO becomes empty. Each ISR transmits as many queued bytes as possible in FIFO order without waiting for hardware or blocking. A byte is removed only when the selected ITM stimulus port `FIFOREADY` condition is asserted; otherwise, the ISR exits immediately and retries on the next period.
+TIM2 is dedicated to consuming the FIFO from its ISR. The timer has a 1 ms period, starts when the FIFO changes from empty to non-empty, and stops when the FIFO becomes empty. Each ISR transmits as many queued bytes as possible in FIFO order without waiting for hardware or blocking. A byte is removed only when the selected ITM stimulus port `FIFOREADY` condition is asserted; otherwise, the ISR exits immediately and retries on the next period.
 
 The implementation shall comply with the [EBF stdin/stdout critical-section contract](../../../../ecf/embedded_base_framework/doc/ebf.md).
 

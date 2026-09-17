@@ -7,24 +7,24 @@
     "RPI_USER": "${localEnv:RPI_USER}", // Raspberry Pi SSH username.
     "RPI_HOST": "${localEnv:RPI_HOST}", // Raspberry Pi IP address.
     "GDB_PORT": "${localEnv:GDB_PORT}", // TCP port where GDB server will listen.
-    "GDB_SERVER_RUN_CMD": "JLinkGDBServer -device STM32F103C8 -if SWD -speed 400 -port ${localEnv:GDB_PORT} -nogui", // Command to start the GDB server.
-    "LOG_SOURCE": "serial", // Logging source: serial or tcp.
+    "GDB_SERVER_RUN_CMD": "JLinkGDBServer -device STM32WLE5C8 -if SWD -speed 400 -port ${localEnv:GDB_PORT} -nogui", // Command to start the GDB server.
+    "LOG_SOURCE": "tcp", // Logging source: serial or tcp.
     "LOG_PORT": "${localEnv:LOG_PORT}", // TCP port used for logging.
     "LOG_BAUD_RATE": "115200", // Baud rate used when LOG_SOURCE = serial.
     "LOG_SERIAL_DEVICE": "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_BG0301V6-if00-port0", // Stable Raspberry Pi serial device path assigned to target logging when LOG_SOURCE = serial.
-    "LOG_TCP_RUN_CMD": "", // Command to setup the external TCP logging provider when LOG_SOURCE = tcp. target logging.
+    "LOG_TCP_RUN_CMD": "${containerWorkspaceFolder}/tools/target_adapters/stm32wle5c8u6_jlink_swo/run_logging_server.sh", // Command to setup the external TCP logging provider when LOG_SOURCE = tcp.
     "LOGIC_ANALYZER_DEVICE": "fx2lafw", // Sigrok device selector assigned to the logic analyzer workflow.
     "LOGIC_ANALYZER_ARTIFACTS_DIR": "${containerWorkspaceFolder}/build/debug/logic_analyzer", // Directory where logic analyzer artifacts are stored grouped by logical capture name.
     "TARGET_RX_TIMEOUT_S": "10", // Maximum allowed inactivity time (seconds) without receiving data from the target.
     "NETWORK_LATENCY_TIMEOUT_S": "1.5", // Timeout budget (seconds) used for network-latency waits.
     "WORKSPACE_FOLDER": "${containerWorkspaceFolder}", // Absolute path to the workspace folder inside the container.
-    "SVD_FILE": "${containerWorkspaceFolder}/sw/ecf/platform/stm32f103c8tx/svd/STM32F103.svd", // Path to the SVD file used for target debugging.
+    "SVD_FILE": "${containerWorkspaceFolder}/sw/src/stm32wle5c8u6_platform/svd/STM32WLE5_CM4.svd", // Path to the SVD file used for target debugging.
     "AFL_SKIP_CPUFREQ": "1", // Skip host CPU frequency checks when fuzzing inside the devcontainer.
     "AFL_NO_AFFINITY": "1", // Disable AFL++ CPU affinity pinning inside the devcontainer.
     "AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES": "1", // Allow AFL++ fuzzing in the devcontainer when the host core_pattern cannot be reconfigured.
     "FUZZ_TIMEOUT_MS": "1000", // Shared timeout budget (milliseconds) used by fuzzing and fuzz-coverage replay.
     "CI_BRANCHES": "main", // Exact remote branch names, separated by spaces, that trigger CI on pre-push.
-    "CI_PRESETS": "host target_stm32f103c8tx", // CMake presets, separated by spaces, applied in CI pipelines.
+    "CI_PRESETS": "host target_stm32wle5c8u6", // CMake presets, separated by spaces, applied in CI pipelines.
     "DOCGEN_OUTPUT": "${containerWorkspaceFolder}/build/docgen", // Directory where Docgen output is generated.
     "RELEASE_REMOTE": "origin", // Git remote used by release operations.
     "KICAD_CONFIG_HOME": "/kicad-runtime/config", // Persistent KiCad config root stored in the devcontainer volume.

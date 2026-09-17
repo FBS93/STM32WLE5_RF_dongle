@@ -14,7 +14,7 @@ Hardware resources:
 
 External dependencies:
 - [Embedded Base Framework (EBF)](../../../ecf/embedded_base_framework/doc/ebf.md): Provides the stdout override API, weak stdin behavior, and critical-section contract.
-- [Embedded Assert Framework (EAF)](../../../ecf/embedded_assert_framework/doc/eaf.md): Provides assertions to enforce DbC in all undefined fault handling cases.
+- [Embedded Assert Framework (EAF)](../../../ecf/embedded_assert_framework/doc/eaf.md): Provides assertions to enforce Design by Contract (DbC) in all undefined fault handling cases.
 
 Status: approved
 

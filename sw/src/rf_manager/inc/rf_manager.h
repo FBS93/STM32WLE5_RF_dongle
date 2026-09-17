@@ -22,10 +22,12 @@
 /* -----------------------------------------------------------------------------
  * System library headers
  * -------------------------------------------------------------------------- */
+#include <stdbool.h>
+
 /* -----------------------------------------------------------------------------
  * External library headers
  * -------------------------------------------------------------------------- */
-#include "edf_active_object.h"
+#include "edf.h"
 
 /* -----------------------------------------------------------------------------
  * Project-specific headers
@@ -45,7 +47,8 @@ typedef struct
 {
   EDF_activeObject_t super;               //!< EDF active-object base.
   rfTypes_configuration_t configuration;  //!< Current stored configuration.
-  rfTypes_operation_t active_operation;   //!< Host-visible RF operation.
+  bool configuration_valid;              //!< Whether configuration established.
+  rfTypes_operation_t active_operation;  //!< Host-visible RF operation.
 } rfManager_t;
 
 /*******************************************************************************
@@ -57,10 +60,19 @@ typedef struct
  ******************************************************************************/
 
 /**
- * @brief Initializes an RF manager active object.
+ * @brief Initializes the active-object state and HSM, starts/registers it with
+ * EDF using the architecture-defined priority and queue, and subscribes it to
+ * the architecture-defined events without enabling asynchronous event sources.
  *
  * @param[in,out] me Pointer to the active object instance.
  */
 void rfManager_init(rfManager_t* me);
+
+/**
+ * @brief Initializes and activates the active-object-owned HAL and resources,
+ * enabling event-producing sources at the end of EDF_onStartup() in accordance
+ * with the EDF startup contract.
+ */
+void rfManager_startup(void);
 
 #endif /* RF_MANAGER_H */

@@ -1,62 +1,34 @@
-# SMT32WLE5_RF_dongle
+# STM32WLE5 RF dongle
 
-This project is developed using [Embedded Workbench](doc/ew.md).
+![RF Wizard artwork](doc/assets/RF_Wizard.png)
 
-The **SMT32WLE5_RF_dongle** is a compact RF dongle designed for wireless communication via USB. Built around the STM32WLE5C8U6 microcontroller, it enables straightforward radio communication in the sub-GHz range of 150–960 MHz. Supports LoRa and (G)FSK modulations for both transmission and reception, as well as BPSK/(G)MSK for transmission only.
+The **STM32WLE5 RF dongle** is a compact USB-controlled laboratory Sub-GHz radio built around the STM32WLE5C8U6 MCU. This repository brings together the hardware and software designs developed using V-model methodology.
 
-![SMT32WLE5_RF_dongle](.devcontainer/assets/images/SMT32WLE5_RF_dongle_3D_view.png)
+| STM32WLE5 RF dongle front | STM32WLE5 RF dongle back |
+|:---:|:---:|
+| ![STM32WLE5 RF dongle front](doc/assets/stm32wle5-rf-dongle-front.webp) | ![STM32WLE5 RF dongle back](doc/assets/stm32wle5-rf-dongle-back.webp) |
 
-This repository provides both the hardware design and an example software project that includes firmware for the STM32WLE5C8U6 microcontroller, along with a Kivy-based desktop app to control the RF dongle. The project is packaged in a devcontainer for Visual Studio Code, but adaptable as needed.
+The project is developed using the [Embedded Workbench](https://github.com/FBS93/embedded_workbench) template.
 
-Below you will find a brief guide on how to set up the development environment used.
+## Highlights
 
-# Setting up the development environment
+- **150–960 MHz RF range** through one bidirectional, half-duplex RF port.
+- **LoRa and FSK/GFSK transmit and receive**, plus **MSK/GMSK and BPSK transmit** configuration.
+- Packet TX/RX, LoRa channel-activity detection, continuous wave and preamble TX, radio calibration, and diagnostics.
+- **USB Virtual COM Port control** with COBS-framed commands and CRC-16/XMODEM integrity.
+- Event-driven target firmware architecture.
 
-## Development environment
+## Usage
 
-The following setup was used during the development of this project. While the project should work with similar setups, using these versions will help minimize compatibility issues.
+The STM32WLE5 RF dongle has two usage methods:
 
-- **Windows Subsystem for Linux (WSL)**: version 2.3.24.0
-- **Visual Studio Code**: version 1.95.2
-- **Remote Development (VSode extension)**:  version 0.26.0
-- **ST-LINK/V2**
+- **Direct USB:** Commands sent directly over the USB connection.
+- **CLI:** Command-line interface tool that abstracts the direct USB commands.
 
-Useful links:
+## Documentation
 
-- [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers)
-- [Connecting USB devices to WSL](https://learn.microsoft.com/en-us/windows/wsl/connect-usb)
-
-## Quick start
-
-Once inside the devcontainer you will find the following folders:
-
-- `hw/`: contains all the hardware design files of this project. You can find the full hardware design in a KiCad project format, including the schematic, PCB layout, and associated files. Additionally, the folder includes the KiCad libraries that were used for this design.
-
-- `software/stm32wle5_rf_dongle_example/`: contains an example firmware for the STM32WLE5C8U6 microcontroller, along with a Kivy-based desktop app to control the RF dongle.
-
-After opening the VSCode workspace defined in the `.vscode/.code-workspace` file, you should see the following icons in the VSCode status bar: ![VSCode status bar](.devcontainer/assets/images/vscode_status_bar.png)
-
-- **[Preset]**: Presets for the STM32WLE5C8U6 firmware
-
-- **🛠 C**: Predefined tasks to work with the STM32WLE5C8U6 firmware
-  - 🔨 Build &rarr; Compile the firmware
-  - 🐞 Debug &rarr; Debug the firmware on target
-  - ⚡ Flash &rarr; Flash the firmware to the target
-  - 🧹 Clean &rarr; Remove firmware build
-
-- **🐍 Python**:  Predefined tasks to work with the Kivy desktop app
-  - ▶ Run &rarr; Execute the Kivy app
-  - 🐞 Debug &rarr; Debug the Kivy app
-  - 🧹 Clean &rarr; Clean all \_\_pycache__
-
-- **🧰 Toolbox**: Predefined tasks to open the tools used for the Hardware and Software design
-  - ⚙️ STM32CubeMX
-  - ⚡ KiCad
-
-## Running the example software
-
-The following screenshots show the communication between two SMT32WLE5_RF_dongle using the example software provided in this repository.
-
-![VSCode status bar](.devcontainer/assets/images/kivy_app_dev_selec.png)
-
-![VSCode status bar](.devcontainer/assets/images/kivy_app_com_test.png)
+- [Embedded Workbench overview](doc/ew.md) - template, environment, and development entry point.
+- [Project specifications](spec/).
+- [System requirements](sys/req/) and [system architecture](sys/arch/).
+- [Hardware design](hw/).
+- [Software requirements](sw/req/), [software architecture](sw/arch/), and [software detailed design and implementation](sw/src/).

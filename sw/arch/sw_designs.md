@@ -6,21 +6,32 @@ Name: swd_eventDrivenModel
 
 This architecture shall follow an event-driven model using Event Driven Framework (EDF).
 
+Active-object priorities:
+- EDF priority 1 is reserved for the [EDF Test AO](../ecf/event_driven_framework/edf_test/doc/edf_test.md).
+- `hostCommandManager`: EDF priority 2.
+- `rfManager`: EDF priority 3, prioritizing asynchronous RF indications over buffered host-command processing.
+- Preemption thresholds are not used; each active object's threshold shall equal its base priority.
+
+EDF resource decisions:
+- Mutable events shall use EDF event pools. Its block size shall accommodate the largest event, and its block count shall cover all mutable events that can concurrently remain queued or under dispatch.
+- EDF time events are not used.
+
 Events:
 - `GET_CONFIG_REQUEST`
   - Description: Represents the [GET_CONFIG_REQUEST](../../sys/req/sys_interfaces.md#get-config-request) command.
 - `SET_CONFIG`
   - Description: Represents the [SET_CONFIG](../../sys/req/sys_interfaces.md#set-config-request) command.
   - Parameters:
-    - `configuration_payload`: [Configuration Payload](../../sys/req/sys_interfaces.md#configuration-payload).
+    - `configuration_payload`: [Configuration payload](../../sys/req/sys_interfaces.md#configuration-payload).
 - `CALIBRATE`
   - Description: Represents the [CALIBRATE](../../sys/req/sys_interfaces.md#calibrate-request) command.
   - Parameters:
-    - `calibration_payload`: [Calibration Payload](../../sys/req/sys_interfaces.md#calibration-payload).
+    - `calibration_payload`: [Calibration payload](../../sys/req/sys_interfaces.md#calibration-payload).
 - `TX_PACKET`
   - Description: Represents the [TX_PACKET](../../sys/req/sys_interfaces.md#tx-packet-request) command.
   - Parameters:
-    - `tx_packet_payload`: [TX Packet Payload](../../sys/req/sys_interfaces.md#tx-packet-payload).
+    - `tx_packet_payload`: [TX Packet payload](../../sys/req/sys_interfaces.md#tx-packet-payload).
+    - `payload_length`: [TX packet payload length](../../sys/req/sys_interfaces.md#tx-packet-payload).
 - `RX_START`
   - Description: Represents the [RX_START](../../sys/req/sys_interfaces.md#rx-start-request) command.
 - `CAD_START`
@@ -36,15 +47,15 @@ Events:
 - `GET_CONFIG_RESPONSE`
   - Description: Represents the [GET_CONFIG_RESPONSE](../../sys/req/sys_interfaces.md#get-config-response) command.
   - Parameters:
-    - `configuration_payload`: [Configuration Payload](../../sys/req/sys_interfaces.md#configuration-payload).
+    - `configuration_payload`: [Configuration payload](../../sys/req/sys_interfaces.md#configuration-payload).
 - `GET_DIAGNOSTICS_RESPONSE`
   - Description: Represents the [GET_DIAGNOSTICS_RESPONSE](../../sys/req/sys_interfaces.md#get-diagnostics-response) command.
   - Parameters:
-    - `diagnostics_payload`: [Diagnostics Payload](../../sys/req/sys_interfaces.md#diagnostics-payload).
+    - `diagnostics_payload`: [Diagnostics payload](../../sys/req/sys_interfaces.md#diagnostics-payload).
 - `RX_PACKET`
   - Description: Represents the [RX_PACKET](../../sys/req/sys_interfaces.md#rx-packet) command.
   - Parameters:
-    - `rx_packet_payload`: [RX Packet Payload](../../sys/req/sys_interfaces.md#rx-packet-payload).
+    - `rx_packet_payload`: [RX packet payload](../../sys/req/sys_interfaces.md#rx-packet-payload).
 - `CAD_DETECTED`
   - Description: Represents the [CAD_DETECTED](../../sys/req/sys_interfaces.md#cad-detected) command.
 - `OPERATION_COMPLETE`
@@ -80,6 +91,18 @@ Build configuration:
     - `target_stm32wle5c8u6`: CMAKE_BUILD_TYPE `Release`, optimization `-O2` and debug information `-g2`.
     - `target_stm32wle5c8u6_debug`: CMAKE_BUILD_TYPE `Debug`, optimization `-O0` and debug information `-g3`.
     - `target_stm32wle5c8u6_hard_debug`: CMAKE_BUILD_TYPE `Debug`, optimization `-O0`, debug information `-g3` and generation of preprocessed files for inspection `-save-temps=obj -P`.
+- The project-specific platform package is selected with `PROJECT_TARGET_PLATFORM=stm32wle5c8u6_platform`. This CMake variable can also be used to select the appropriate source code for target and host environments.
+
+ISR integration strategy:
+The following table lists the interrupts from highest to lowest NVIC preemption priority; all use subpriority 0.
+
+| Priority | Source | Owner | Purpose |
+|---|---|---|---|
+| 0 | `SUBGHZ_Radio_IRQn` | [`rfManager`](sw_components.md#sw_arch_component_3) | Report asynchronous radio indications. |
+| 1 | `USART2_IRQn` | [`hostCommandManager`](sw_components.md#sw_arch_component_2) | Receive host bytes, publish `HOST_DATA_AVAILABLE`, and transmit host responses from buffered output. |
+| 2 | `TIM2_IRQn` | STM32WLE5C8U6 platform stdout integration | Drain the non-blocking ECF stdout buffer periodically. |
+
+Interrupts that publish EDF events shall finish with `EDF_ISRExit()`. All event-producing interrupt sources shall remain disabled until the end of `EDF_onStartup()`; the TIM2 stdout source may be enabled with the stdout integration because it does not publish EDF events.
 
 RAM layout:
 | Name | Description | Start address | End address |

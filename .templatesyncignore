@@ -2,4 +2,5 @@
 README.md
 LICENSE
 .devcontainer/devcontainer.json
+.vscode/launch.json
 .gitignore

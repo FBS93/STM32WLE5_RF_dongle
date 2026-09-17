@@ -16,7 +16,7 @@
       }
     },
     {
-      "name": "Target STM32F103C8Tx (launch)",
+      "name": "Target STM32WLE5C8U6 (launch)",
       "type": "cortex-debug",
       "request": "launch",
       "gdbPath": "arm-none-eabi-gdb",
@@ -40,14 +40,14 @@
         "monitor reset",
         "monitor halt"
       ],
-      "device": "STM32F103C8",
+      "device": "STM32WLE5C8",
       "svdFile": "${env:SVD_FILE}",
       "runToEntryPoint": "main",
       "cwd": "${workspaceFolder}",
       "executable": "${command:cmake.launchTargetPath}"
     },
     {
-      "name": "Target STM32F103C8Tx (attach)",
+      "name": "Target STM32WLE5C8U6 (attach)",
       "type": "cortex-debug",
       "request": "attach",
       "gdbPath": "arm-none-eabi-gdb",
@@ -73,9 +73,8 @@
         "monitor reset",
         "monitor halt"
       ],
-      "device": "STM32F103C8",
+      "device": "STM32WLE5C8",
       "svdFile": "${env:SVD_FILE}",
-      "runToEntryPoint": "main",
       "cwd": "${workspaceFolder}",
       "executable": "${command:cmake.launchTargetPath}"
     }
