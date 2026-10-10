@@ -16,7 +16,7 @@ The project is developed using the [Embedded Workbench](https://github.com/FBS93
 - **LoRa and FSK/GFSK transmit and receive**, plus **MSK/GMSK and BPSK transmit** configuration.
 - Packet TX/RX, LoRa channel-activity detection, continuous wave and preamble TX, radio calibration, and diagnostics.
 - **USB Virtual COM Port control** with COBS-framed commands and CRC-16/XMODEM integrity.
-- Event-driven target firmware architecture.
+- Event-driven target software architecture.
 
 ## Usage
 
@@ -31,4 +31,4 @@ The STM32WLE5 RF dongle has two usage methods:
 - [Project specifications](spec/).
 - [System requirements](sys/req/) and [system architecture](sys/arch/).
 - [Hardware design](hw/).
-- [Software requirements](sw/req/), [software architecture](sw/arch/), and [software detailed design and implementation](sw/src/).
+- [Software requirements](sw/req/), [software architecture](sw/arch/) and [software detailed design and implementation](sw/src/).

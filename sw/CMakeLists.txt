@@ -20,7 +20,6 @@ if(DEFINED PROJECT_TARGET_PLATFORM)
   # Add third-party source files.
   set(SX126X_ENABLE_BPSK ON)
   add_subdirectory(third_party)
-  target_compile_options(sx126x_driver PRIVATE -w) # Disable warnings for third-party code.
 endif()
 
 add_subdirectory(ecf)
