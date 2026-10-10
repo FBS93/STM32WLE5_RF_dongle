@@ -4,3 +4,4 @@ LICENSE
 .devcontainer/devcontainer.json
 .vscode/launch.json
 .gitignore
+sw/CMakeLists.txt
