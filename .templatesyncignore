@@ -5,3 +5,4 @@ LICENSE
 .vscode/launch.json
 .gitignore
 sw/CMakeLists.txt
+CMakePresets.json
