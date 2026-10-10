@@ -8,6 +8,10 @@ on:
   workflow_call:
   workflow_dispatch:
 
+concurrency:
+  group: test-steps-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test-implementation-job:
     runs-on: ubuntu-latest
@@ -17,7 +21,7 @@ jobs:
     steps:
       # To use this repository's private action, you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Test action step first steps
         uses: ./ # Uses an action in the root directory
