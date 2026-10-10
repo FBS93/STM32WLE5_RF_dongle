@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   call_shellcheck:
     permissions:
@@ -13,7 +17,7 @@ jobs:
   call_lint:
     permissions:
       contents: read
-    uses: ./.github/workflows/lint.yml
+    uses: ./.github/workflows/ci.yml
   call_test_all:
     uses: ./.github/workflows/test_all.yml
     secrets: inherit

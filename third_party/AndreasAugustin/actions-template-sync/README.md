@@ -1,11 +1,11 @@
 # actions-template-sync
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-42-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-43-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
  [![actions-template-sync](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/actions_template_sync.yml/badge.svg)](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/actions_template_sync.yml)
 
-[![Lint](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/lint.yml/badge.svg)](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/lint.yml)
+[![ci](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/ci.yml/badge.svg)](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/ci.yml)
 
 [![shellcheck](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/AndreasAugustin/actions-template-sync/actions/workflows/shellcheck.yml)
 
@@ -65,6 +65,7 @@ flowchart LR
   See [.github/workflows/test_ssh_gitlab.yml](.github/workflows/test_ssh_gitlab.yml) for an example.
 * It is not necessarily needed that source and target repository have the same base history.
   Because of that reason, it is possible to merge 2 totally different repositories with the help of the action.
+* Sync to the latest semantic version tag from the source repository, optionally including prereleases.
 
 ## Usage
 
@@ -106,6 +107,9 @@ jobs:
           source_repo_path: <owner/repo>
           upstream_branch: <target_branch> # defaults to main
           pr_labels: <label1>,<label2>[,...] # defaults to template_sync
+          # Optional release-based sync:
+          # is_sync_to_latest_semver: true
+          # is_include_prerelease: true
 ```
 
 You will receive a pull request within your repository if there are some changes available in the template.
@@ -231,9 +235,9 @@ settings -> actions -> general.
 * `metadata` -> read
 * `pull requests` -> write
 
-If you are automatically adding reviewers you also need
+If you are automatically adding reviewers or assignees you also need
 
-* `organisation:members` read permissions to the PAT token.
+* `organisation:members` read permissions to the PAT token (so GitHub can resolve organization members as reviewers or assignees).
 
 ![pat-scopes-fine-grained](docs/assets/pat_fine_grained_needed_scopes.png)
 
@@ -290,6 +294,7 @@ jobs:
 | source_gh_token | `[optional]` used for the source github repo token. Can be passed in using `${{ secrets.GITHUB_TOKEN }}` | `false` | `${{ github.token }}` |
 | target_gh_token | `[optional]` used for the source github repo token. Can be passed in using `${{ secrets.GITHUB_TOKEN }}` | `false` | `${{ github.token }}` |
 | source_repo_path | Repository path of the template | `true` | |
+| source_branch | Branch of the source repository to synchronize | `false` | The source repository's default branch |
 | upstream_branch | The target branch | `false` | The remote's default (usually `main`) |
 | source_repo_ssh_private_key | `[optional]` private ssh key for the source repository. [see](#private-template-repository) | `false` | |
 | pr_branch_name_prefix | `[optional]` the prefix of branches created by this action | `false` | `chore/template_sync` |
@@ -297,6 +302,7 @@ jobs:
 | pr_body | `[optional]` the body of PRs opened by this action. | `false` | `Merge ${SOURCE_REPO} ${TEMPLATE_GIT_HASH}` |
 | pr_labels | `[optional]` comma separated list. [pull request labels][pr-labels]. | `false` | `sync_template` |
 | pr_reviewers | `[optional]` comma separated list of pull request reviewers. | `false` | |
+| pr_assignees | `[optional]` comma separated list of pull request assignees. | `false` | |
 | pr_commit_msg | `[optional]` commit message in the created pull request | `false` | `chore(template): merge template changes :up:` |
 | hostname | `[optional]` the hostname of the repository | `false` | `github.com` |
 | is_git_lfs | `[optional]` set to `true` if you want to enalbe git lfs | `false` | `false` |
@@ -316,6 +322,8 @@ jobs:
 | steps | `[optional] add the steps you want to execute within the action` | `false` | all steps will be executed |
 | template_sync_ignore_file_path | `[optional] set the path to the ignore file.` | `false` | `.templatesyncignore` |
 | is_with_tags | `[optional]` set to `true` if tags should be synced | `false` | `false` |
+| is_sync_to_latest_semver | `[optional]` set to `true` to sync to the latest semantic version tag from the source repository | `false` | `false` |
+| is_include_prerelease | `[optional]` set to `true` to include prerelease tags when `is_sync_to_latest_semver` is enabled | `false` | `false` |
 
 ### Action Outputs
 
@@ -373,6 +381,8 @@ If you look for a more detailed guide you can have a look at
 You can use all [triggers][action-triggers] which are supported for GitHub actions
 
 ## Ignore Files
+
+:warning: `.templatesyncignore` within the target repository is not supported (functionality is on purpose similar to a `.gitignore` file).
 
 Create a `.templatesyncignore` file. Just like writing a `.gitignore` file, follow the [glob pattern][glob-pattern]
 in defining the files and folders that should be excluded from syncing with the template repository.
@@ -766,6 +776,12 @@ make help
 
 For some architectural notes please have a look at the [docs](./docs/README.md)
 
+## Sponsorship
+
+If `actions-template-sync` helps you or your team, please consider
+[sponsoring the project](https://github.com/sponsors/AndreasAugustin). Your
+support helps maintain the action and continue its development.
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -828,6 +844,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="http://toshy.dev"><img src="https://avatars.githubusercontent.com/u/31921460?v=4?s=100" width="100px;" alt="ToshY"/><br /><sub><b>ToshY</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=ToshY" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/KLAVIATURKIN"><img src="https://avatars.githubusercontent.com/u/11288889?v=4?s=100" width="100px;" alt="Yuriy"/><br /><sub><b>Yuriy</b></sub></a><br /><a href="#ideas-KLAVIATURKIN" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Eric-Liu-SANDAG"><img src="https://avatars.githubusercontent.com/u/108823453?v=4?s=100" width="100px;" alt="Eric Liu"/><br /><sub><b>Eric Liu</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=Eric-Liu-SANDAG" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mzglinski"><img src="https://avatars.githubusercontent.com/u/23341314?v=4?s=100" width="100px;" alt="mzglinski"/><br /><sub><b>mzglinski</b></sub></a><br /><a href="https://github.com/AndreasAugustin/actions-template-sync/commits?author=mzglinski" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
