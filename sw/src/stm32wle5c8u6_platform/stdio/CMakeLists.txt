@@ -2,6 +2,12 @@
 # It is implemented as an OBJECT + INTERFACE library to ensure strong symbols are used.
 # See: doc/technical_notes/CMake_weak_symbol_oddities.md
 add_library(stdio_obj OBJECT src/stdio.c)
-target_link_libraries(stdio_obj PRIVATE ebf eaf)
+target_link_libraries(stdio_obj PRIVATE ebf eaf segger_rtt::segger_rtt)
 add_library(stdio INTERFACE)
-target_link_libraries(stdio INTERFACE stdio_obj $<TARGET_OBJECTS:stdio_obj>)
+target_link_libraries(
+  stdio
+  INTERFACE
+    stdio_obj
+    $<TARGET_OBJECTS:stdio_obj>
+    $<LINK_ONLY:segger_rtt::segger_rtt>
+)

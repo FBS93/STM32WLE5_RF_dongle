@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package schemaVersion="1.7.56" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.56/schema/PACK.xsd">
+  <vendor>SEGGER</vendor>
+  <name>RTT</name>
+  <description overview="README.md">SEGGER Real Time Transfer (RTT)</description>
+  <url>https://github.com/SEGGERMicro/RTT/raw/main/</url>
+  <repository type="git">https://github.com/SEGGERMicro/RTT.git</repository>
+  <license>LICENSE.md</license>
+
+  <releases>
+    <release version="8.58.0" tag="V8.58.0" date="2026-06-03" url="https://github.com/SEGGERMicro/RTT/releases/download/V8.58.0/SEGGER.RTT.8.58.0.pack">
+      Pack based on RTT 8.58.0.
+    </release>
+  </releases>
+
+  <keywords>
+    <keyword>SEGGER</keyword>
+    <keyword>RTT</keyword>
+    <keyword>Real Time Transfer</keyword>
+  </keywords>
+
+  <conditions>
+    <condition id="ASM">
+      <description>Assembly compiler</description>
+      <accept  Tcompiler="ARMCC" Toptions="AC6"/>
+      <accept  Tcompiler="ARMCC" Toptions="AC6LTO"/>
+      <accept  Tcompiler="GCC"/>
+      <accept  Tcompiler="CLANG"/>
+      <accept  Tcompiler="IAR"/>
+    </condition>
+    <condition id="ARMv7-M">
+      <description>Armv7-M architecture based device</description>
+      <accept  Dcore="Cortex-M3"/>
+      <accept  Dcore="Cortex-M4"/>
+      <accept  Dcore="Cortex-M7"/>
+      <accept  Dcore="SC300"/>
+    </condition>
+    <condition id="ARMv8-MML">
+      <description>Armv8-M main line architecture based device</description>
+      <accept  Dcore="ARMV8MML"/>
+      <accept  Dcore="Cortex-M33"/>
+      <accept  Dcore="Cortex-M35P"/>
+      <accept  Dcore="Star-MC1"/>
+    </condition>
+    <condition id="ARMv81-MML">
+      <description>Armv8.1-M main line architecture based device</description>
+      <accept  Dcore="ARMV81MML"/>
+      <accept  Dcore="Cortex-M52"/>
+      <accept  Dcore="Cortex-M55"/>
+      <accept  Dcore="Cortex-M85"/>
+    </condition>
+    <condition id="ARMv7-M/v8-MML/v81-MML">
+      <description>Armv7-M, Armv8-M main line, and Armv8.1-M main line architecture based device</description>
+      <accept  condition="ARMv7-M"/>
+      <accept  condition="ARMv8-MML"/>
+      <accept  condition="ARMv81-MML"/>
+    </condition>
+    <condition id="ASM ARMv7-M/v8-MML/v81-MML">
+      <description>Assembly compiler for ARMv7-M/v8-MML/v81-MML</description>
+      <require condition="ASM"/>
+      <require condition="ARMv7-M/v8-MML/v81-MML"/>
+    </condition>
+  </conditions>
+
+  <components>
+    <component Cclass="SEGGER" Cgroup="RTT" Cversion="8.58.0">
+      <description>SEGGER Real Time Transfer (RTT)</description>
+      <RTE_Components_h>
+        #define RTE_SEGGER_RTT
+      </RTE_Components_h>
+      <files>
+        <file category="doc"       name="https://kb.segger.com/RTT"/>
+        <file category="header"    name="Config/SEGGER_RTT_Conf.h" attr="config" version="8.58.0"/>
+        <file category="header"    name="RTT/SEGGER_RTT.h"/>
+        <file category="header"    name="RTT/SEGGER_RTT_ConfDefaults.h"/>
+        <file category="sourceC"   name="RTT/SEGGER_RTT.c"/>
+        <file category="sourceC"   name="RTT/SEGGER_RTT_printf.c"/>
+        <file category="sourceAsm" name="RTT/SEGGER_RTT_ASM_ARMv7M.S" condition="ASM ARMv7-M/v8-MML/v81-MML"/>
+      </files>
+    </component>
+  </components>
+</package>
