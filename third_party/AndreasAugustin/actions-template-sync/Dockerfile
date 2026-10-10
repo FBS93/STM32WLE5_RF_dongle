@@ -1,7 +1,7 @@
 ########################################
 # prod image
 #######################################
-FROM alpine:3.23.4 AS prod
+FROM alpine:3.24.1 AS prod
 
 ARG GH_CLI_VER=2.44.1
 
@@ -25,13 +25,21 @@ RUN tar --strip-components=1 -xf ghcli.tar.gz \
     && rm ghcli.tar.gz
 
 ADD src/*.sh /bin/
-RUN chmod +x /bin/entrypoint.sh \
-  && chmod +x /bin/sync_template.sh \
-  && chmod +x /bin/sync_common.sh \
-  && chmod +x /bin/gpg_no_tty.sh
+RUN chmod 755 /bin/entrypoint.sh \
+  && chmod 755 /bin/sync_template.sh \
+  && chmod 755 /bin/sync_common.sh \
+  && chmod 755 /bin/gpg_no_tty.sh
 
 RUN mkdir -p /root/.ssh \
   && ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+
+WORKDIR /app
+
+ADD src/*.sh /app/src/
+ADD tests/*.sh /app/tests/
+ADD action.yml /app/action.yml
+
+RUN git config --global --add safe.directory /app/
 
 ENTRYPOINT ["/bin/bash", "/bin/entrypoint.sh"]
 #######################################
@@ -55,7 +63,7 @@ ENTRYPOINT ["/bin/zsh"]
 #######################################
 # image for creating the documentation
 ######################################
-FROM node:25.9.0-alpine AS docs
+FROM node:26.8.1-alpine AS docs
 
 # install packages
 RUN apk add --update --no-cache bash make git zsh curl tmux
