@@ -74,14 +74,14 @@
 #define SUBGHZSPI_SR REG32(0x58010008UL)
 /** @brief SUBGHZSPI byte data register. */
 #define SUBGHZSPI_DR8 REG8(0x5801000CUL)
-/** @brief NVIC interrupt set-enable register 2. */
-#define NVIC_ISER2 REG32(0xE000E108UL)
+/** @brief NVIC interrupt set-enable register 1. */
+#define NVIC_ISER1 REG32(0xE000E104UL)
 /** @brief Base address of the byte-addressed NVIC priority registers. */
 #define NVIC_IPR_BASE 0xE000E400UL
 /** @brief Integrated-radio interrupt number. */
-#define RADIO_IRQ_NUMBER 74U
-/** @brief Integrated-radio enable bit in NVIC_ISER2. */
-#define RADIO_IRQ_MASK (1UL << (RADIO_IRQ_NUMBER - 64U))
+#define RADIO_IRQ_NUMBER 50U
+/** @brief Integrated-radio enable bit in NVIC_ISER1. */
+#define RADIO_IRQ_MASK (1UL << (RADIO_IRQ_NUMBER - 32U))
 /** @brief Radio indications routed to the integrated-radio interrupt. */
 #define RADIO_IRQS                                                        \
   (SX126X_IRQ_TX_DONE | SX126X_IRQ_RX_DONE | SX126X_IRQ_HEADER_ERROR |    \
@@ -494,7 +494,7 @@ void rfManagerHal_init(const rfManagerHal_callbacks_t* registered_callbacks,
 
   // Set the radio IRQ priority before enabling it in the NVIC.
   REG8(NVIC_IPR_BASE + RADIO_IRQ_NUMBER) = 0U;
-  NVIC_ISER2 = RADIO_IRQ_MASK;
+  NVIC_ISER1 = RADIO_IRQ_MASK;
 }
 
 void rfManagerHal_setConfiguration(const rfTypes_configuration_t* configuration)
