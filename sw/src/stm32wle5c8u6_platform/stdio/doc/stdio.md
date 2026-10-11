@@ -1,14 +1,14 @@
 # Stdio overview
 
-`stdio` provides non-blocking EBF stdout for the STM32WLE5C8U6 target through ITM, TPIU and SWO. Target stdin is not supported.
+`stdio` provides non-blocking EBF stdout for the STM32WLE5C8U6 target through [SEGGER RTT](../../../../third_party/segger_rtt-8.58.0/README.md) over SWD, as defined by [SW_ARCH_DESIGN_2](../../../../arch/sw_designs.md#sw_arch_design_2). The EBF API is unchanged; target stdin is not supported and retains the EBF weak behavior.
 
-Initialization shall enable the MCU trace path and the ITM stimulus output used by stdout, preserve PB3 for SWO, select the TPIU NRZ asynchronous protocol and derive the TPIU prescaler from the active trace clock for the nominal 2 Mbit/s SWO bitrate. Clock and pin constraints remain defined by [SW_ARCH_DESIGN_2](../../../../arch/sw_designs.md#sw_arch_design_2), the [HW/SW interfaces](../../../../../hw/cross_domain_interfaces/hw_sw_interface.md) and the referenced MCU documentation.
+The first valid stdout write shall initialize RTT once using `SEGGER_RTT_Init()`. Initialization and each `SEGGER_RTT_WriteNoLock()` call shall be protected by the [EBF stdin/stdout critical-section contract](../../../../ecf/embedded_base_framework/doc/ebf.md).
 
-Producers enqueue bytes in a statically allocated 1024-byte TX FIFO. Admission is non-blocking and all-or-nothing: `EBF_stdoutWrite()` enqueues the complete message when capacity is available or returns `false` without waiting for hardware.
+Writes use RTT up-channel 0 with `SEGGER_RTT_MODE_NO_BLOCK_SKIP`: `EBF_stdoutWrite()` returns `true` only when the complete message is queued, or `false` without queuing bytes when capacity is insufficient. A null data pointer or zero length returns `false`. Admission is non-blocking and all-or-nothing; it does not wait for the debug probe.
 
-TIM2 is dedicated to consuming the FIFO from its ISR. The timer has a 1 ms period, starts when the FIFO changes from empty to non-empty, and stops when the FIFO becomes empty. Each ISR transmits as many queued bytes as possible in FIFO order without waiting for hardware or blocking. A byte is removed only when the selected ITM stimulus port `FIFOREADY` condition is asserted; otherwise, the ISR exits immediately and retries on the next period.
+The statically allocated up-buffer has 1024 bytes of usable capacity: [CMake configuration](../../../../third_party/CMakeLists.txt) sets `BUFFER_SIZE_UP=1025` because RTT reserves one byte. RTT buffer and write semantics remain defined by the [upstream implementation](../../../../third_party/segger_rtt-8.58.0/RTT/SEGGER_RTT.c).
 
-The implementation shall comply with the [EBF stdin/stdout critical-section contract](../../../../ecf/embedded_base_framework/doc/ebf.md).
+The debug probe drains the buffer from SRAM over SWD.
 
 All undefined fault handling cases shall be handled using a Design by Contract (DbC) approach with the Embedded Assert Framework (EAF) as follows:
   - An assert shall be triggered for any unexpected software condition (e.g., invalid states, unexpected values, unexpected execution paths, invalid function parameters, ...).
@@ -18,10 +18,7 @@ All undefined fault handling cases shall be handled using a Design by Contract (
 
 | Term | Definition |
 |---|---|
-| ITM | Instrumentation Trace Macrocell. |
-| TPIU | Trace Port Interface Unit. |
-| SWO | Serial Wire Output. |
-| NRZ | Non-return-to-zero asynchronous trace encoding. |
+| RTT | Real Time Transfer. |
 
 # Usage example
 

@@ -100,9 +100,8 @@ The following table lists the interrupts from highest to lowest NVIC preemption 
 |---|---|---|---|
 | 0 | `SUBGHZ_Radio_IRQn` | [`rfManager`](sw_components.md#sw_arch_component_3) | Report asynchronous radio indications. |
 | 1 | `USART2_IRQn` | [`hostCommandManager`](sw_components.md#sw_arch_component_2) | Receive host bytes, publish `HOST_DATA_AVAILABLE`, and transmit host responses from buffered output. |
-| 2 | `TIM2_IRQn` | STM32WLE5C8U6 platform stdout integration | Drain the non-blocking ECF stdout buffer periodically. |
 
-Interrupts that publish EDF events shall finish with `EDF_ISRExit()`. All event-producing interrupt sources shall remain disabled until the end of `EDF_onStartup()`; the TIM2 stdout source may be enabled with the stdout integration because it does not publish EDF events.
+Interrupts that publish EDF events shall finish with `EDF_ISRExit()`. All event-producing interrupt sources shall remain disabled until the end of `EDF_onStartup()`.
 
 RAM layout:
 | Name | Description | Start address | End address |
@@ -123,10 +122,7 @@ Debug configuration:
 - The target shall use SWD as its debug interface.
 
 Embedded C Framework (ECF) integration:
-- The target ECF stdout shall use the ITM/TPIU/SWO interface with the following configuration:
-  - TPIU asynchronous output protocol: NRZ.
-  - Nominal SWO bitrate: 2 Mbit/s.
-  - The target ECF stdout shall use a non-blocking 1024-byte buffer.
+- The target ECF stdout shall use non-blocking buffered SEGGER RTT output over SWD, with 1024 bytes of usable buffer capacity. The debug probe shall drain the buffer; no target stdout interrupt is required.
 - Target ECF stdin is not supported.
 
 Upstream traceability:
