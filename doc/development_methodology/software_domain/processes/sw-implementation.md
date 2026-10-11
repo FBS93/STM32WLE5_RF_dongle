@@ -35,8 +35,7 @@ The implementation of each software unit shall:
 - Be written in C.
 - Use a build system based on CMake.
 - Define a `CMakeLists.txt` file in its root folder.
-- Be implemented as an independent static library (`.a`) if source implementation is required.
-- Be implemented as a CMake `INTERFACE` library if defined as header-only.
+- Be implemented as an independent CMake target.
 - Link dependencies using `PRIVATE` visibility whenever possible.
 - Use and link only the external dependencies defined in the software detailed design.
 - Expose all header files as `PUBLIC` whenever possible, to allow full validation of the software detailed design. If present, `<sw_unit_name>.h` shall be the primary interface intended for use by other software units.
