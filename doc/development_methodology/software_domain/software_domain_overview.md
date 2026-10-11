@@ -9,7 +9,7 @@
 | Software interface | Traceable element of the software architecture defining the interaction between software components. |
 | Software parameter | Traceable element of the software architecture defining configurable or fixed values that affect the software behavior. |
 | Software design | Traceable element of the software architecture defining architectural decisions. |
-| Software unit | Traceable element of the detailed design built as a static library (`.a`) when it requires source implementation or as a CMake `INTERFACE` library when it is header-only. |
+| Software unit | Traceable element of the detailed design implemented as an independent CMake target. |
 | Software integration test | Traceable element validating the software architecture. |
 | Software qualification test | Traceable element validating the software requirements. |
 

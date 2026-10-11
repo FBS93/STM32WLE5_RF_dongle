@@ -117,10 +117,7 @@ The platform software design shall contain:
 - Debug configuration:
   - Definition of the debug interfaces used (e.g., SWD, JTAG, etc.).
 - [Embedded C Framework (ECF)](../../../../sw/ecf/doc/ecf.md) integration:
-  - Integration strategy for [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md) stdin/stdout integration. Upstream elements shall define the interface used for this integration. If no further detail is specified by upstream elements, the default shall be:
-    - Stdin listener shall be executed in the reception ISR context.
-    - Stdout shall use buffered transmission handled by ISR.
-    - Stdout buffer size shall be configurable and defined according to the memory constraints of the target platform.
+  - Integration strategy for [Embedded Base Framework (EBF)](../../../../sw/ecf/embedded_base_framework/doc/ebf.md) stdin/stdout integration.
 
 The following template shall be used for the description of this software design:
 
