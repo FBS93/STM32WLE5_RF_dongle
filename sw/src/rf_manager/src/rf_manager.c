@@ -79,7 +79,7 @@ static rfManager_t* instance;
 /**
  * @brief Performs the initial transition to idle.
  *
- * @param[in] me Pointer to the RF manager instance.
+ * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Initialization event.
  * @return EDF transition result targeting idle.
  */

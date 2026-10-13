@@ -93,7 +93,11 @@ void EDF_onStartup(void)
   hostCommandManager_startup();
 }
 
-/** @brief Initializes the application and transfers control to EDF. */
+/**
+ * @brief Initializes the application and transfers control to EDF.
+ *
+ * @return Exit status returned by EDF_run().
+ */
 int main(void)
 {
   EDF_init();

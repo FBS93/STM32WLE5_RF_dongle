@@ -178,7 +178,7 @@ typedef struct
 typedef struct
 {
   EDF_event_t super;                        //!< EDF event base.
-  rfTypes_operation_t active_rf_operation;  //!< Current RF configuration
+  rfTypes_operation_t active_rf_operation;  //!< Current RF operation.
   uint16_t radio_errors;  //!< Radio errors bit field; zero means no error.
 } events_getDiagnosticsResponse_t;
 

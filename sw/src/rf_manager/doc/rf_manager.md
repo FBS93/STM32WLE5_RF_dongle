@@ -50,7 +50,7 @@ External dependencies:
 - [events](../../events/doc/events.md): Provides the shared project-specific event definitions.
 - [Semtech SX126X driver v2.5.0](../../../third_party/sx126x_driver-2.5.0/README.md): Provides the low-level command API for the STM32WLE5-integrated sub-GHz radio.
 
-Status: not approved
+Status: approved
 
 ## Glossary
 

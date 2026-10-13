@@ -149,71 +149,204 @@ static const events_getDiagnosticsRequest_t getDiagnosticsRequestEvent = {
  * Private function declarations
  * -------------------------------------------------------------------------- */
 
-/** @brief Returns the exact serialized size selected by a packet type. */
+/**
+ * @brief Returns the exact serialized size selected by a packet type.
+ *
+ * @param[in] packet_type RF packet-type encoding.
+ * @return Configuration size in bytes, or zero for an unsupported packet type.
+ */
 static uint16_t getConfigurationSize(uint8_t packet_type);
-/** @brief Returns whether a complete configuration is semantically valid. */
+/**
+ * @brief Returns whether a complete configuration is semantically valid.
+ *
+ * @param[in] configuration Configuration to validate.
+ * @return True if all applicable configuration checks pass; false otherwise.
+ */
 static bool isConfigurationValid(const rfTypes_configuration_t* configuration);
-/** @brief Returns whether a generic pulse-shape encoding is valid. */
+/**
+ * @brief Returns whether a generic pulse-shape encoding is valid.
+ *
+ * @param[in] pulse_shape Encoded pulse shape to validate.
+ * @return True for a supported encoding; false otherwise.
+ */
 static bool isPulseShapeValid(uint8_t pulse_shape);
-/** @brief Returns whether a generic CRC-type encoding is valid. */
+/**
+ * @brief Returns whether a generic CRC-type encoding is valid.
+ *
+ * @param[in] crc_type Encoded CRC type to validate.
+ * @return True for a supported encoding; false otherwise.
+ */
 static bool isCrcTypeValid(uint8_t crc_type);
-/** @brief Returns whether a LoRa bandwidth encoding is valid. */
+/**
+ * @brief Returns whether a LoRa bandwidth encoding is valid.
+ *
+ * @param[in] bandwidth Encoded LoRa bandwidth to validate.
+ * @return True for a supported encoding; false otherwise.
+ */
 static bool isLoraBandwidthValid(uint8_t bandwidth);
-/** @brief Converts an FSK receive-bandwidth encoding to hertz, or zero. */
+/**
+ * @brief Converts an FSK receive-bandwidth encoding to hertz.
+ *
+ * @param[in] bandwidth Encoded FSK receive bandwidth.
+ * @return Bandwidth in hertz, or zero for an unsupported encoding.
+ */
 static uint32_t getFskBandwidthHz(uint8_t bandwidth);
-/** @brief Returns whether a single-RX timeout is valid for the RX mode. */
+/**
+ * @brief Returns whether a single-RX timeout is valid for the RX mode.
+ *
+ * @param[in] rx_mode RX mode encoding; zero selects single RX.
+ * @param[in] timeout Timeout in radio RTC steps.
+ * @return True unless single RX uses a reserved timeout value.
+ */
 static bool isRxTimeoutValid(uint8_t rx_mode, uint32_t timeout);
-/** @brief Returns whether the FSK modulation constraints are valid. */
+/**
+ * @brief Returns whether the FSK modulation constraints are valid.
+ *
+ * @param[in] fsk FSK modulation configuration to validate.
+ * @return True when occupied bandwidth and receive bandwidth checks pass.
+ */
 static bool isFskModulationValid(const rfTypes_configurationFsk_t* fsk);
-/** @brief Returns whether the FSK RX duty-cycle timing is valid. */
+/**
+ * @brief Returns whether the FSK RX duty-cycle timing is valid.
+ *
+ * @param[in] fsk FSK receive configuration to validate.
+ * @return True if the duty-cycle detection timing is valid or not applicable.
+ */
 static bool isFskRxDutyCycleValid(const rfTypes_configurationFsk_t* fsk);
-/** @brief Gets the LoRa-specific configuration from its wire representation. */
+/**
+ * @brief Gets the LoRa-specific configuration from its wire representation.
+ *
+ * @param[in] data LoRa configuration block of 33 bytes.
+ * @param[out] lora Destination for the decoded LoRa settings.
+ */
 static void getLoraConfiguration(const uint8_t* data,
                                  rfTypes_configurationLora_t* lora);
-/** @brief Sets the LoRa-specific wire representation. */
+/**
+ * @brief Sets the LoRa-specific wire representation.
+ *
+ * @param[out] data Destination for the 33-byte LoRa configuration block.
+ * @param[in] lora LoRa settings to serialize.
+ */
 static void setLoraConfiguration(uint8_t* data,
                                  const rfTypes_configurationLora_t* lora);
-/** @brief Gets the FSK-specific configuration from its wire representation. */
+/**
+ * @brief Gets the FSK-specific configuration from its wire representation.
+ *
+ * @param[in] data FSK configuration block of 46 bytes.
+ * @param[out] fsk Destination for the decoded FSK settings.
+ */
 static void getFskConfiguration(const uint8_t* data,
                                 rfTypes_configurationFsk_t* fsk);
-/** @brief Sets the FSK-specific wire representation. */
+/**
+ * @brief Sets the FSK-specific wire representation.
+ *
+ * @param[out] data Destination for the 46-byte FSK configuration block.
+ * @param[in] fsk FSK settings to serialize.
+ */
 static void setFskConfiguration(uint8_t* data,
                                 const rfTypes_configurationFsk_t* fsk);
-/** @brief Gets the MSK-specific configuration from its wire representation. */
+/**
+ * @brief Gets the MSK-specific configuration from its wire representation.
+ *
+ * @param[in] data MSK configuration block of 31 bytes.
+ * @param[out] msk Destination for the decoded MSK settings.
+ */
 static void getMskConfiguration(const uint8_t* data,
                                 rfTypes_configurationMsk_t* msk);
-/** @brief Sets the MSK-specific wire representation. */
+/**
+ * @brief Sets the MSK-specific wire representation.
+ *
+ * @param[out] data Destination for the 31-byte MSK configuration block.
+ * @param[in] msk MSK settings to serialize.
+ */
 static void setMskConfiguration(uint8_t* data,
                                 const rfTypes_configurationMsk_t* msk);
-/** @brief Gets the BPSK-specific configuration from its wire representation. */
+/**
+ * @brief Gets the BPSK-specific configuration from its wire representation.
+ *
+ * @param[in] data BPSK configuration block of 6 bytes.
+ * @param[out] bpsk Destination for the decoded BPSK settings.
+ */
 static void getBpskConfiguration(const uint8_t* data,
                                  rfTypes_configurationBpsk_t* bpsk);
-/** @brief Sets the BPSK-specific wire representation. */
+/**
+ * @brief Sets the BPSK-specific wire representation.
+ *
+ * @param[out] data Destination for the 6-byte BPSK configuration block.
+ * @param[in] bpsk BPSK settings to serialize.
+ */
 static void setBpskConfiguration(uint8_t* data,
                                  const rfTypes_configurationBpsk_t* bpsk);
-/** @brief Gets one complete configuration from its wire representation. */
+/**
+ * @brief Decodes a complete configuration when its type and length match.
+ *
+ * @param[in] data Configuration payload to decode.
+ * @param[in] length Payload length in bytes.
+ * @param[out] configuration Decoded settings; unchanged on type/length failure.
+ * @return True if decoded; false for an unsupported type or incorrect length.
+ */
 static bool getConfiguration(const uint8_t* data,
                              uint16_t length,
                              rfTypes_configuration_t* configuration);
-/** @brief Sets one complete configuration wire representation. */
+/**
+ * @brief Sets one complete configuration wire representation.
+ *
+ * @param[out] data Destination with capacity for getConfigurationSize() bytes.
+ * @param[in] configuration Configuration with a supported packet type.
+ */
 static void setConfiguration(uint8_t* data,
                              const rfTypes_configuration_t* configuration);
-/** @brief Validates and publishes a SET_CONFIG request. */
+/**
+ * @brief Validates and publishes a SET_CONFIG request.
+ *
+ * @param[in] payload Serialized configuration to validate.
+ * @param[in] payload_length Payload length in bytes.
+ * @return True if the request was published; false if the payload is invalid.
+ */
 static bool publishSetConfigRequest(const uint8_t* payload,
                                     uint16_t payload_length);
-/** @brief Validates and publishes a CALIBRATE request. */
+/**
+ * @brief Validates and publishes a CALIBRATE request.
+ *
+ * @param[in] payload Encoded lower and upper image-calibration frequencies.
+ * @param[in] payload_length Payload length in bytes.
+ * @return True if the request was published; false if the payload is invalid.
+ */
 static bool publishCalibrateRequest(const uint8_t* payload,
                                     uint16_t payload_length);
-/** @brief Validates and publishes a TX_PACKET request. */
+/**
+ * @brief Validates and publishes a TX_PACKET request.
+ *
+ * @param[in] payload Packet bytes to transmit.
+ * @param[in] payload_length Packet length in bytes.
+ * @return True if the request was published; false if the packet is too long.
+ */
 static bool publishTxPacketRequest(const uint8_t* payload,
                                    uint16_t payload_length);
-/** @brief Publishes a validated request frame. */
+/**
+ * @brief Dispatches requests; ignores unknown commands or invalid payloads.
+ *
+ * @param[in] command_id Decoded request command identifier.
+ * @param[in] payload Non-null payload buffer, including for empty payloads.
+ * @param[in] payload_length Payload length in bytes.
+ */
 static void publishRequest(uint16_t command_id,
                            const uint8_t* payload,
                            uint16_t payload_length);
-/** @brief Decodes, validates, and dispatches one assembled frame. */
+/**
+ * @brief Decodes and dispatches a frame, discarding framing or CRC failures.
+ *
+ * @param[in] encoded Assembled COBS frame including its trailing delimiter.
+ * @param[in] encoded_length Encoded frame length in bytes.
+ */
 static void processFrame(const uint8_t* encoded, uint16_t encoded_length);
-/** @brief Encodes and writes one response frame. */
+/**
+ * @brief Encodes and writes one response frame.
+ *
+ * @param[in] command_id Response command identifier.
+ * @param[in] payload Response bytes, or NULL when payload_length is zero.
+ * @param[in] payload_length Payload length in bytes, at most 258.
+ */
 static void sendResponse(uint16_t command_id,
                          const uint8_t* payload,
                          uint16_t payload_length);
