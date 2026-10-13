@@ -51,7 +51,7 @@
  ******************************************************************************/
 
 /**
- * @brief Handles a GET_CONFIG_REQUEST event.
+ * @brief Publishes the stored configuration, including before first SET_CONFIG.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -61,7 +61,7 @@ void rfManagerActivities_handleGetConfigRequest(
   const events_getConfigRequest_t* e);
 
 /**
- * @brief Handles a SET_CONFIG event.
+ * @brief Stops RF, applies and stores the configuration, and marks it valid.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -70,7 +70,7 @@ void rfManagerActivities_handleSetConfig(rfManager_t* me,
                                          const events_setConfig_t* e);
 
 /**
- * @brief Handles a CALIBRATE event.
+ * @brief Stops RF, performs calibration, and publishes operation completion.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -79,7 +79,7 @@ void rfManagerActivities_handleCalibrate(rfManager_t* me,
                                          const events_calibrate_t* e);
 
 /**
- * @brief Handles a TX_PACKET event.
+ * @brief Starts packet TX with valid configuration, replacing active RF.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -88,7 +88,7 @@ void rfManagerActivities_handleTxPacket(rfManager_t* me,
                                         const events_txPacket_t* e);
 
 /**
- * @brief Handles an RX_START event.
+ * @brief Starts RX with valid LoRa or FSK configuration, replacing active RF.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -98,7 +98,7 @@ bool rfManagerActivities_handleRxStart(rfManager_t* me,
                                        const events_rxStart_t* e);
 
 /**
- * @brief Handles a CAD_START event.
+ * @brief Replaces the active operation with CAD for a valid LoRa configuration.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -108,7 +108,7 @@ bool rfManagerActivities_handleCadStart(rfManager_t* me,
                                         const events_cadStart_t* e);
 
 /**
- * @brief Handles a TX_CONTINUOUS_WAVE event.
+ * @brief Replaces active RF with continuous-wave TX if configuration is valid.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -118,7 +118,7 @@ void rfManagerActivities_handleTxContinuousWave(
   const events_txContinuousWave_t* e);
 
 /**
- * @brief Handles a TX_CONTINUOUS_PREAMBLE event.
+ * @brief Starts preamble TX for valid LoRa, FSK, or MSK, replacing active RF.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -129,7 +129,7 @@ bool rfManagerActivities_handleTxContinuousPreamble(
   const events_txContinuousPreamble_t* e);
 
 /**
- * @brief Handles a STOP event.
+ * @brief Stops the radio and marks the host-visible operation idle.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -137,7 +137,7 @@ bool rfManagerActivities_handleTxContinuousPreamble(
 void rfManagerActivities_handleStop(rfManager_t* me, const events_stop_t* e);
 
 /**
- * @brief Handles a GET_DIAGNOSTICS_REQUEST event.
+ * @brief Publishes the active operation and radio errors without stopping RF.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -147,7 +147,7 @@ void rfManagerActivities_handleGetDiagnosticsRequest(
   const events_getDiagnosticsRequest_t* e);
 
 /**
- * @brief Handles an OPERATION_COMPLETE event.
+ * @brief Stops completed RF hardware and marks the host-visible operation idle.
  *
  * @param[in,out] me Pointer to the RF manager instance.
  * @param[in] e Pointer to the event.
@@ -156,22 +156,53 @@ void rfManagerActivities_handleOperationComplete(
   rfManager_t* me,
   const events_operationComplete_t* e);
 
-/** @brief Handles a radio TX-complete indication. */
+/**
+ * @brief Publishes operation completion after a radio TX-complete indication.
+ *
+ * @param[in] context Non-null registered caller context; contents are unused.
+ */
 void rfManagerActivities_txDone(void* context);
 
-/** @brief Handles a radio TX-timeout indication. */
+/**
+ * @brief Publishes operation completion after a radio TX timeout.
+ *
+ * @param[in] context Non-null registered caller context; contents are unused.
+ */
 void rfManagerActivities_txTimeout(void* context);
 
-/** @brief Handles a radio RX-complete indication. */
+/**
+ * @brief Publishes the packet and resumes CAD or duty-cycle RX as needed.
+ *
+ * Single RX publishes operation completion; continuous RX remains listening.
+ *
+ * @param[in] context RF manager instance to inspect.
+ */
 void rfManagerActivities_rxDone(void* context);
 
-/** @brief Handles a radio RX-timeout indication. */
+/**
+ * @brief Resumes CAD or duty-cycle RX on timeout; completes other RX modes.
+ *
+ * @param[in] context RF manager instance to inspect.
+ */
 void rfManagerActivities_rxTimeout(void* context);
 
-/** @brief Handles a radio RX-error indication. */
+/**
+ * @brief Discards a rejected packet without completing RX or CAD.
+ *
+ * Rearms duty-cycle RX when it is the active operation.
+ *
+ * @param[in] context RF manager instance to inspect.
+ */
 void rfManagerActivities_rxError(void* context);
 
-/** @brief Handles a radio CAD-complete indication. */
+/**
+ * @brief Repeats clear CAD scans; reports detection and optional completion.
+ *
+ * Detection completes CAD only when its configured exit mode does not enter RX.
+ *
+ * @param[in] context RF manager instance providing the CAD exit configuration.
+ * @param[in] detected True when the radio detected channel activity.
+ */
 void rfManagerActivities_cadDone(void* context, bool detected);
 
 #endif /* RF_MANAGER_ACTIVITIES_H */

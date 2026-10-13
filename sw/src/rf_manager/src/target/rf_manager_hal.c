@@ -54,14 +54,28 @@
 #define REG8(address) (*(volatile uint8_t*)(address))
 /** @brief RCC AHB2 peripheral clock-enable register. */
 #define RCC_AHB2ENR REG32(0x5800004CUL)
+/** @brief RCC clock control register. */
+#define RCC_CR REG32(0x58000000UL)
+/** @brief Select the VDDTCXO supply output on PB0. */
+#define RCC_CR_HSEBYPPWR (1UL << 21U)
+/** @brief CPU HSE32 enable and ready bits. */
+#define RCC_CR_HSE_ACTIVE ((1UL << 16U) | (1UL << 17U))
 /** @brief RCC APB3 peripheral clock-enable register. */
 #define RCC_APB3ENR REG32(0x58000064UL)
-/** @brief RCC peripheral clock configuration register. */
-#define RCC_CCIPR REG32(0x58000088UL)
+/** @brief RCC control/status register. */
+#define RCC_CSR REG32(0x58000094UL)
+/** @brief Sub-GHz radio software reset control. */
+#define RCC_CSR_RFRST (1UL << 15U)
+/** @brief Sub-GHz radio reset status maintained by hardware. */
+#define RCC_CSR_RFRSTF (1UL << 14U)
 /** @brief PWR status register 2. */
 #define PWR_SR2 REG32(0x58000414UL)
 /** @brief PWR sub-GHz SPI control register. */
 #define PWR_SUBGHZSPICR REG32(0x58000490UL)
+/** @brief Software-controlled sub-GHz SPI NSS level. */
+#define PWR_SUBGHZSPICR_NSS (1UL << 15U)
+/** @brief Actual radio busy signal. */
+#define PWR_SR2_RFBUSYS (1UL << 1U)
 /** @brief GPIOA mode register. */
 #define GPIOA_MODER REG32(0x48000000UL)
 /** @brief GPIOA bit set/reset register. */
@@ -76,6 +90,8 @@
 #define SUBGHZSPI_DR8 REG8(0x5801000CUL)
 /** @brief NVIC interrupt set-enable register 1. */
 #define NVIC_ISER1 REG32(0xE000E104UL)
+/** @brief NVIC interrupt clear-enable register 1. */
+#define NVIC_ICER1 REG32(0xE000E184UL)
 /** @brief Base address of the byte-addressed NVIC priority registers. */
 #define NVIC_IPR_BASE 0xE000E400UL
 /** @brief Integrated-radio interrupt number. */
@@ -95,6 +111,14 @@
 #define RADIO_NOP 0x00U
 /** @brief Integrated-radio crystal frequency in hertz. */
 #define RADIO_XTAL_FREQUENCY_HZ 32000000UL
+/** @brief Radio HSE32 OSC_IN capacitor trim register. */
+#define RADIO_HSEINTRIM_REGISTER 0x0911U
+/** @brief SetRxDutyCycle command, which permits automatic radio Sleep. */
+#define SET_RX_DUTY_CYCLE_COMMAND 0x94U
+/** @brief SetStandby command, which terminates duty-cycle listening. */
+#define SET_STANDBY_COMMAND 0x80U
+/** @brief Minimum NSS wake time in cycles at the MCU's maximum 48 MHz. */
+#define RADIO_WAKEUP_CYCLES (20U * 48U)
 /** @brief GPIOA clock-enable bit. */
 #define RCC_AHB2ENR_GPIOAEN (1UL << 0U)
 
@@ -121,6 +145,14 @@ static void* callbackContext;
  * volatile_use: asynchronous_interaction
  */
 static volatile bool transmitting;
+/** @brief Whether the last operation command permits automatic Sleep.
+ * volatile_use: asynchronous_interaction
+ */
+static volatile bool radioMaySleep;
+/** @brief Whether asynchronous operation indications are still wanted.
+ * volatile_use: asynchronous_interaction
+ */
+static volatile bool radioOperationActive;
 
 /*******************************************************************************
  * PUBLIC VARIABLES
@@ -134,25 +166,76 @@ static volatile bool transmitting;
  * Private function declarations
  * -------------------------------------------------------------------------- */
 
-/** @brief Selects the external TX or RX/idle RF path. */
+/**
+ * @brief Selects the external TX or RX/idle RF path.
+ *
+ * @param[in] tx True for TX; false for RX or idle.
+ */
 static void setRfSwitch(bool tx);
 
-/** @brief Transfers one byte through SUBGHZSPI. */
+/**
+ * @brief Exchanges one byte through SUBGHZSPI while the radio is selected.
+ *
+ * @param[in] value Byte to transmit.
+ * @return Byte received during the exchange.
+ */
 static uint8_t transfer(uint8_t value);
 
-/** @brief Programs packet parameters for one packet operation. */
+/**
+ * @brief Restores the radio IRQ only if it was enabled on entry.
+ *
+ * @param[in] irq_enabled Radio IRQ enable bit saved before masking.
+ */
+static void restoreRadioIrq(uint32_t irq_enabled);
+
+/**
+ * @brief Selects the radio with its IRQ masked and waits for readiness.
+ *
+ * Wakes the radio on explicit request or when duty-cycle Sleep is possible.
+ *
+ * @param[in] wakeup True to perform the NSS wake sequence unconditionally.
+ * @return Previous radio IRQ enable bit for transaction completion.
+ */
+static uint32_t beginTransaction(bool wakeup);
+
+/**
+ * @brief Completes the SPI transaction before restoring the radio IRQ.
+ *
+ * @param[in] irq_enabled Radio IRQ enable bit returned by beginTransaction().
+ */
+static void endTransaction(uint32_t irq_enabled);
+
+/**
+ * @brief Programs packet parameters for one packet operation.
+ *
+ * @param[in] configuration Packet-type configuration to apply.
+ * @param[in] payload_length Payload length in bytes for this operation.
+ */
 static void setPacketParameters(const rfTypes_configuration_t* configuration,
                                 uint8_t payload_length);
 
-/** @brief Programs GFSK modulation with an exact encoded deviation. */
+/**
+ * @brief Programs GFSK modulation with an exact encoded deviation.
+ *
+ * @param[in] configuration FSK modulation settings in the system encoding.
+ */
 static void setFskModulationParameters(
   const rfTypes_configurationFsk_t* configuration);
 
-/** @brief Gets the operation timeout selected by the packet type. */
+/**
+ * @brief Gets the operation timeout selected by the packet type.
+ *
+ * @param[in] configuration Configuration selecting the packet type and timeout.
+ * @return Configured operation timeout in radio RTC steps.
+ */
 static uint32_t getOperationTimeout(
   const rfTypes_configuration_t* configuration);
 
-/** @brief Reads the raw three-byte packet status. */
+/**
+ * @brief Reads the raw three-byte packet status.
+ *
+ * @param[out] status Destination for the three status bytes in radio order.
+ */
 static void getPacketStatus(uint8_t status[3]);
 
 /* -----------------------------------------------------------------------------
@@ -179,6 +262,80 @@ static uint8_t transfer(uint8_t value)
   received = SUBGHZSPI_DR8;
 
   return received;
+}
+
+static void restoreRadioIrq(uint32_t irq_enabled)
+{
+  // Complete peripheral writes before a pending radio IRQ can run.
+  __asm volatile("dsb 0xF" ::: "memory");
+  if (irq_enabled != 0UL)
+  {
+    NVIC_ISER1 = RADIO_IRQ_MASK;
+  }
+}
+
+static uint32_t beginTransaction(bool wakeup)
+{
+  uint32_t irq_enabled;
+  uint32_t index;
+
+  do
+  {
+    // Keep the caller's IRQ state during the potentially long radio busy wait.
+    while (((PWR_SR2 & PWR_SR2_RFBUSYS) != 0UL) && !radioMaySleep && !wakeup)
+    {
+    }
+
+    irq_enabled = NVIC_ISER1 & RADIO_IRQ_MASK;
+    NVIC_ICER1 = RADIO_IRQ_MASK;
+    // Ensure IRQ masking takes effect before accessing the shared SPI bus.
+    __asm volatile("dsb 0xF" ::: "memory");
+    __asm volatile("isb 0xF" ::: "memory");
+
+    // An ISR may have sent a command between the busy poll and IRQ masking.
+    if (((PWR_SR2 & PWR_SR2_RFBUSYS) == 0UL) || radioMaySleep || wakeup)
+    {
+      break;
+    }
+    restoreRadioIrq(irq_enabled);
+  } while (true);
+
+  PWR_SUBGHZSPICR &= ~(uint32_t)PWR_SUBGHZSPICR_NSS;
+  if (radioMaySleep || wakeup)
+  {
+    // RM0461 4.7.2: Sleep exit needs NSS low for at least 20 us.
+    // NSS remains selected: no competing radio ISR may use SPI while waking.
+    __asm volatile("dsb 0xF" ::: "memory");
+    for (index = 0U; index < RADIO_WAKEUP_CYCLES; ++index)
+    {
+      __asm volatile("nop" ::: "memory");
+    }
+    while ((PWR_SR2 & PWR_SR2_RFBUSYS) != 0UL)
+    {
+    }
+  }
+
+  return irq_enabled;
+}
+
+static void endTransaction(uint32_t irq_enabled)
+{
+  uint32_t index;
+
+  while ((SUBGHZSPI_SR & (1UL << 7U)) != 0UL)
+  {
+  }
+  // Keep NSS active until the last bit has left the SPI peripheral.
+  PWR_SUBGHZSPICR |= PWR_SUBGHZSPICR_NSS;
+  // RM0461 section 4.7.8: BUSY can rise up to 600 ns after NSS rises.
+  // Complete NSS first; 32 cycles exceed 600 ns even at the MCU's 48 MHz max.
+  // Keep radio IRQ masked through this window, not through command processing.
+  __asm volatile("dsb 0xF" ::: "memory");
+  for (index = 0U; index < 32U; ++index)
+  {
+    __asm volatile("nop" ::: "memory");
+  }
+  restoreRadioIrq(irq_enabled);
 }
 
 static void setPacketParameters(const rfTypes_configuration_t* configuration,
@@ -336,6 +493,16 @@ static void getPacketStatus(uint8_t status[3])
  * PUBLIC FUNCTIONS
  ******************************************************************************/
 
+/**
+ * @brief Sends a driver command and payload in one protected radio transaction.
+ *
+ * @param[in] context Non-null opaque driver context; contents are unused.
+ * @param[in] command Command bytes, or NULL when command_length is zero.
+ * @param[in] command_length Number of command bytes.
+ * @param[in] data Payload bytes, or NULL when data_length is zero.
+ * @param[in] data_length Number of payload bytes.
+ * @return SX126X_HAL_STATUS_OK after the transfer completes.
+ */
 sx126x_hal_status_t sx126x_hal_write(const void* context,
                                      const uint8_t* command,
                                      uint16_t command_length,
@@ -343,6 +510,7 @@ sx126x_hal_status_t sx126x_hal_write(const void* context,
                                      uint16_t data_length)
 {
   uint16_t index;
+  uint32_t irq_enabled;
 
   EAF_ASSERT_BLOCK_BEGIN();
   EAF_ASSERT_IN_BLOCK(context != NULL);
@@ -350,12 +518,7 @@ sx126x_hal_status_t sx126x_hal_write(const void* context,
   EAF_ASSERT_IN_BLOCK((data != NULL) || (data_length == 0U));
   EAF_ASSERT_BLOCK_END();
 
-  while ((PWR_SR2 & (1UL << 8U)) != 0UL)
-  {
-  }
-
-  // Clear NSS before transferring command and payload bytes.
-  PWR_SUBGHZSPICR &= ~(uint32_t)1UL;
+  irq_enabled = beginTransaction(false);
   for (index = 0U; index < command_length; ++index)
   {
     (void)transfer(command[index]);
@@ -365,15 +528,31 @@ sx126x_hal_status_t sx126x_hal_write(const void* context,
     (void)transfer(data[index]);
   }
 
-  while ((SUBGHZSPI_SR & (1UL << 7U)) != 0UL)
+  // Update Sleep eligibility before restoring IRQ, including calls from ISR.
+  if ((command_length != 0U) && (command[0] == SET_RX_DUTY_CYCLE_COMMAND))
   {
+    radioMaySleep = true;
   }
-  // Set NSS after the SPI peripheral is no longer busy.
-  PWR_SUBGHZSPICR |= 1UL;
+  else if ((command_length != 0U) && (command[0] == SET_STANDBY_COMMAND))
+  {
+    radioMaySleep = false;
+  }
+
+  endTransaction(irq_enabled);
 
   return SX126X_HAL_STATUS_OK;
 }
 
+/**
+ * @brief Sends a command and reads its data in one protected radio transaction.
+ *
+ * @param[in] context Non-null opaque driver context; contents are unused.
+ * @param[in] command Command bytes, or NULL when command_length is zero.
+ * @param[in] command_length Number of command bytes.
+ * @param[out] data Destination buffer, or NULL when data_length is zero.
+ * @param[in] data_length Number of bytes to read.
+ * @return SX126X_HAL_STATUS_OK after the transfer completes.
+ */
 sx126x_hal_status_t sx126x_hal_read(const void* context,
                                     const uint8_t* command,
                                     uint16_t command_length,
@@ -381,6 +560,7 @@ sx126x_hal_status_t sx126x_hal_read(const void* context,
                                     uint16_t data_length)
 {
   uint16_t index;
+  uint32_t irq_enabled;
 
   EAF_ASSERT_BLOCK_BEGIN();
   EAF_ASSERT_IN_BLOCK(context != NULL);
@@ -388,12 +568,7 @@ sx126x_hal_status_t sx126x_hal_read(const void* context,
   EAF_ASSERT_IN_BLOCK((data != NULL) || (data_length == 0U));
   EAF_ASSERT_BLOCK_END();
 
-  while ((PWR_SR2 & (1UL << 8U)) != 0UL)
-  {
-  }
-
-  // Clear NSS before transferring command and payload bytes.
-  PWR_SUBGHZSPICR &= ~(uint32_t)1UL;
+  irq_enabled = beginTransaction(false);
   for (index = 0U; index < command_length; ++index)
   {
     (void)transfer(command[index]);
@@ -403,15 +578,19 @@ sx126x_hal_status_t sx126x_hal_read(const void* context,
     data[index] = transfer(0U);
   }
 
-  while ((SUBGHZSPI_SR & (1UL << 7U)) != 0UL)
-  {
-  }
-  // Set NSS after the SPI peripheral is no longer busy.
-  PWR_SUBGHZSPICR |= 1UL;
+  endTransaction(irq_enabled);
 
   return SX126X_HAL_STATUS_OK;
 }
 
+/**
+ * @brief Acknowledges the driver reset hook without resetting the hardware.
+ *
+ * Initial radio reset release is performed by rfManagerHal_init().
+ *
+ * @param[in] context Non-null opaque driver context; contents are unused.
+ * @return SX126X_HAL_STATUS_OK; no reset is performed by this hook.
+ */
 sx126x_hal_status_t sx126x_hal_reset(const void* context)
 {
   EAF_ASSERT(context != NULL);
@@ -419,16 +598,27 @@ sx126x_hal_status_t sx126x_hal_reset(const void* context)
   return SX126X_HAL_STATUS_OK;
 }
 
+/**
+ * @brief Wakes the radio and sends its wake command with the radio IRQ masked.
+ *
+ * @param[in] context Non-null opaque driver context; contents are unused.
+ * @return SX126X_HAL_STATUS_OK after the wake-up transaction completes.
+ */
 sx126x_hal_status_t sx126x_hal_wakeup(const void* context)
 {
-  sx126x_hal_status_t status;
+  uint32_t irq_enabled;
+  size_t index;
 
   EAF_ASSERT(context != NULL);
 
-  status =
-    sx126x_hal_write(context, wakeupCommand, sizeof(wakeupCommand), NULL, 0U);
+  irq_enabled = beginTransaction(true);
+  for (index = 0U; index < sizeof(wakeupCommand); ++index)
+  {
+    (void)transfer(wakeupCommand[index]);
+  }
+  endTransaction(irq_enabled);
 
-  return status;
+  return SX126X_HAL_STATUS_OK;
 }
 
 void rfManagerHal_init(const rfManagerHal_callbacks_t* registered_callbacks,
@@ -436,6 +626,9 @@ void rfManagerHal_init(const rfManagerHal_callbacks_t* registered_callbacks,
 {
   sx126x_pa_cfg_params_t pa;
   sx126x_status_t status;
+  sx126x_chip_status_t chip_status;
+  sx126x_errors_mask_t errors;
+  uint8_t tcxo_trim;
 
   EAF_ASSERT(registered_callbacks != NULL);
 
@@ -466,10 +659,20 @@ void rfManagerHal_init(const rfManagerHal_callbacks_t* registered_callbacks,
 
   // Enable and configure the integrated SUBGHZSPI peripheral.
   RCC_APB3ENR |= 1UL;
-  RCC_CCIPR &= ~(uint32_t)(3UL << 30U);
-  PWR_SUBGHZSPICR |= 1UL;
-  SUBGHZSPI_CR1 = (1UL << 2U) | (1UL << 6U);
+  // Release the initial radio reset and wait before accessing the radio.
+  RCC_CSR &= ~(uint32_t)RCC_CSR_RFRST;
+  while ((RCC_CSR & RCC_CSR_RFRSTF) != 0UL)
+  {
+  }
+  PWR_SUBGHZSPICR |= PWR_SUBGHZSPICR_NSS;
+  // Software NSS management keeps the SPI master selected internally.
+  SUBGHZSPI_CR1 = (1UL << 2U) | (1UL << 8U) | (1UL << 9U);
   SUBGHZSPI_CR2 = (7UL << 8U) | (1UL << 12U);
+  SUBGHZSPI_CR1 |= (1UL << 6U);
+
+  // At startup the radio IRQ is not yet enabled. Wake before polling BUSY.
+  status = (sx126x_status_t)sx126x_hal_wakeup(&radioContext);
+  EAF_ASSERT(status == SX126X_STATUS_OK);
 
   status = sx126x_set_standby(&radioContext, SX126X_STANDBY_CFG_RC);
   EAF_ASSERT(status == SX126X_STATUS_OK);
@@ -477,6 +680,41 @@ void rfManagerHal_init(const rfManagerHal_callbacks_t* registered_callbacks,
   status =
     sx126x_set_dio3_as_tcxo_ctrl(&radioContext, SX126X_TCXO_CTRL_1_8V, 3200U);
   EAF_ASSERT(status == SX126X_STATUS_OK);
+
+  // RM0461 section 6.2.1: configure voltage before selecting VDDTCXO on PB0.
+  // HSEBYPPWR can only be changed while HSEON and HSERDY are both clear.
+  EAF_ASSERT((RCC_CR & RCC_CR_HSE_ACTIVE) == 0UL);
+  RCC_CR |= RCC_CR_HSEBYPPWR;
+
+  // Use the TCXO input trim from ST's SUBGRF_Init TCXO initialization path.
+  tcxo_trim = 0U;
+  status = sx126x_write_register(
+    &radioContext, RADIO_HSEINTRIM_REGISTER, &tcxo_trim, sizeof(tcxo_trim));
+  EAF_ASSERT(status == SX126X_STATUS_OK);
+
+  // Prove HSE32 operation before clearing a recorded cold-wake XOSC error.
+  status = sx126x_set_standby(&radioContext, SX126X_STANDBY_CFG_XOSC);
+  EAF_ASSERT(status == SX126X_STATUS_OK);
+  status = sx126x_get_status(&radioContext, &chip_status);
+  EAF_ASSERT(status == SX126X_STATUS_OK);
+  EAF_ASSERT(chip_status.chip_mode == SX126X_CHIP_MODE_STBY_XOSC);
+  status = sx126x_get_device_errors(&radioContext, &errors);
+  EAF_ASSERT(status == SX126X_STATUS_OK);
+  EAF_ASSERT((errors == 0U) || (errors == SX126X_ERRORS_XOSC_START));
+  if (errors == SX126X_ERRORS_XOSC_START)
+  {
+    status = sx126x_clear_device_errors(&radioContext);
+    EAF_ASSERT(status == SX126X_STATUS_OK);
+  }
+
+  // Recalibrate with the configured TCXO, then verify fresh errors in RC idle.
+  status = sx126x_set_standby(&radioContext, SX126X_STANDBY_CFG_RC);
+  EAF_ASSERT(status == SX126X_STATUS_OK);
+  status = sx126x_cal(&radioContext, SX126X_CAL_ALL);
+  EAF_ASSERT(status == SX126X_STATUS_OK);
+  status = sx126x_get_device_errors(&radioContext, &errors);
+  EAF_ASSERT(status == SX126X_STATUS_OK);
+  EAF_ASSERT(errors == 0U);
 
   status = sx126x_set_reg_mode(&radioContext, SX126X_REG_MODE_LDO);
   EAF_ASSERT(status == SX126X_STATUS_OK);
@@ -701,6 +939,7 @@ void rfManagerHal_transmit(const rfTypes_configuration_t* configuration,
   status = sx126x_write_buffer(&radioContext, 0U, data, length);
   EAF_ASSERT(status == SX126X_STATUS_OK);
 
+  radioOperationActive = true;
   status = sx126x_set_tx_with_timeout_in_rtc_step(&radioContext, timeout);
   EAF_ASSERT(status == SX126X_STATUS_OK);
 }
@@ -735,8 +974,15 @@ void rfManagerHal_startReceive(const rfTypes_configuration_t* configuration)
   transmitting = false;
   setRfSwitch(false);
 
+  if (mode == 2U)
+  {
+    // SetRxDutyCycle requires Standby, also after a rejected packet.
+    status = sx126x_set_standby(&radioContext, SX126X_STANDBY_CFG_RC);
+    EAF_ASSERT(status == SX126X_STATUS_OK);
+  }
   setPacketParameters(configuration, configuration->payload_length_bytes);
 
+  radioOperationActive = true;
   if (mode == 2U)
   {
     status = sx126x_set_rx_duty_cycle_with_timings_in_rtc_step(
@@ -766,6 +1012,7 @@ void rfManagerHal_startCad(const rfTypes_configuration_t* configuration)
     setPacketParameters(configuration, configuration->payload_length_bytes);
   }
 
+  radioOperationActive = true;
   status = sx126x_set_cad(&radioContext);
   EAF_ASSERT(status == SX126X_STATUS_OK);
 }
@@ -777,6 +1024,7 @@ void rfManagerHal_startContinuousWave(void)
   setRfSwitch(true);
   transmitting = true;
 
+  radioOperationActive = true;
   status = sx126x_set_tx_cw(&radioContext);
   EAF_ASSERT(status == SX126X_STATUS_OK);
 }
@@ -788,6 +1036,7 @@ void rfManagerHal_startContinuousPreamble(void)
   setRfSwitch(true);
   transmitting = true;
 
+  radioOperationActive = true;
   status = sx126x_set_tx_infinite_preamble(&radioContext);
   EAF_ASSERT(status == SX126X_STATUS_OK);
 }
@@ -796,9 +1045,13 @@ void rfManagerHal_stop(void)
 {
   sx126x_status_t status;
 
+  // Prevent a pending completion callback from restarting RX during STOP.
+  radioOperationActive = false;
   transmitting = false;
 
   status = sx126x_set_standby(&radioContext, SX126X_STANDBY_CFG_RC);
+  EAF_ASSERT(status == SX126X_STATUS_OK);
+  status = sx126x_clear_irq_status(&radioContext, SX126X_IRQ_ALL);
   EAF_ASSERT(status == SX126X_STATUS_OK);
 
   setRfSwitch(false);
@@ -858,7 +1111,12 @@ uint16_t rfManagerHal_getErrors(void)
   return errors;
 }
 
-/** @brief Handles integrated-radio interrupts owned by RF manager. */
+/**
+ * @brief Clears radio IRQ indications and calls back for active operations.
+ *
+ * Canceled-operation indications are discarded. On bare metal, notifies EDF of
+ * ISR exit after callback delivery.
+ */
 void SUBGHZ_Radio_IRQHandler(void)
 {
   sx126x_status_t status;
@@ -869,6 +1127,11 @@ void SUBGHZ_Radio_IRQHandler(void)
   status = sx126x_get_and_clear_irq_status(&radioContext, &irq);
   EAF_ASSERT(status == SX126X_STATUS_OK);
 
+  if (!radioOperationActive)
+  {
+    // A canceled operation may leave a pending NVIC indication, now cleared.
+    irq = 0U;
+  }
   if ((irq & SX126X_IRQ_TX_DONE) != 0U)
   {
     callbacks->tx_done(callbackContext);

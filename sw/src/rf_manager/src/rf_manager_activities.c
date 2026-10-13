@@ -69,9 +69,32 @@ static const events_cadDetected_t cadDetectedEvent = {
  * Private function declarations
  * -------------------------------------------------------------------------- */
 
+/**
+ * @brief Gets the configured receive mode for an RX-capable packet type.
+ *
+ * @param[in] configuration LoRa or FSK configuration to inspect.
+ * @return RX mode: 0 for single, 1 for continuous, 2 for duty-cycle RX.
+ */
+static uint8_t getRxMode(const rfTypes_configuration_t* configuration);
+
 /* -----------------------------------------------------------------------------
  * Private function definitions
  * -------------------------------------------------------------------------- */
+
+static uint8_t getRxMode(const rfTypes_configuration_t* configuration)
+{
+  uint8_t mode;
+
+  EAF_ASSERT(configuration != NULL);
+  EAF_ASSERT((configuration->packet_type == RF_TYPES_PACKET_TYPE_LORA) ||
+             (configuration->packet_type == RF_TYPES_PACKET_TYPE_FSK));
+
+  mode = (configuration->packet_type == RF_TYPES_PACKET_TYPE_LORA) ?
+           configuration->packet_type_configuration.lora.rx_mode :
+           configuration->packet_type_configuration.fsk.rx_mode;
+
+  return mode;
+}
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS
@@ -301,18 +324,15 @@ void rfManagerActivities_rxDone(void* context)
   }
   else
   {
-    if (me->configuration.packet_type == RF_TYPES_PACKET_TYPE_LORA)
-    {
-      rx_mode = me->configuration.packet_type_configuration.lora.rx_mode;
-    }
-    else
-    {
-      rx_mode = me->configuration.packet_type_configuration.fsk.rx_mode;
-    }
+    rx_mode = getRxMode(&me->configuration);
 
     if (rx_mode == 0U)
     {
       EDF_activeObject_publish(&operationCompleteEvent.super);
+    }
+    else if (rx_mode == 2U)
+    {
+      rfManagerHal_startReceive(&me->configuration);
     }
   }
 }
@@ -328,6 +348,10 @@ void rfManagerActivities_rxTimeout(void* context)
   {
     rfManagerHal_startCad(&me->configuration);
   }
+  else if (getRxMode(&me->configuration) == 2U)
+  {
+    rfManagerHal_startReceive(&me->configuration);
+  }
   else
   {
     EDF_activeObject_publish(&operationCompleteEvent.super);
@@ -336,9 +360,21 @@ void rfManagerActivities_rxTimeout(void* context)
 
 void rfManagerActivities_rxError(void* context)
 {
+  rfManager_t* me;
+  uint8_t rx_mode;
+
   EAF_ASSERT(context != NULL);
 
+  me = (rfManager_t*)context;
   // A rejected packet does not complete the active RX or CAD operation.
+  if (me->active_operation == RF_TYPES_OPERATION_RX)
+  {
+    rx_mode = getRxMode(&me->configuration);
+    if (rx_mode == 2U)
+    {
+      rfManagerHal_startReceive(&me->configuration);
+    }
+  }
 }
 
 void rfManagerActivities_cadDone(void* context, bool detected)

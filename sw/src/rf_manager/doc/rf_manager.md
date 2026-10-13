@@ -7,13 +7,17 @@
 The internal `rf_manager_hal`:
 - Has mutually exclusive target and host implementations selected by the software-unit build. The target implementation abstracts the STM32WLE5 sub-GHz radio and RF switch behind the shared semantic API; the host implementation minimally realizes the same functional interface.
 - Reports asynchronous TX, RX, and CAD indications through registered callbacks and provides received payload, packet status, and radio errors.
+- Recovers a historical cold-start XOSC error only after verifying the radio's external clock is operational and no other errors are present; verifies no fresh errors remain after calibration. Other unexpected startup errors follow DbC.
+- Protects radio transactions from interference by the radio ISR, including wake-up from duty-cycle Sleep, without blocking other interrupts.
+- Suppresses callbacks for canceled operations during stopping and prevents their indications from reaching a subsequent operation.
 
 The active object implementation:
 - Zero-initializes its configuration storage to establish defined C object values; this is not a semantically valid RF default.
 - Returns the stored configuration contents for `GET_CONFIG_REQUEST` without requiring prior configuration.
-- Stops any active RF operation before handling valid `SET_CONFIG`, `CALIBRATE`, `TX_PACKET`, `RX_START`, `CAD_START`, `TX_CONTINUOUS_WAVE`, `TX_CONTINUOUS_PREAMBLE`, or `STOP`; diagnostic and configuration queries do not stop it.
+- Stops any active RF operation before handling valid `SET_CONFIG`, `CALIBRATE`, `TX_PACKET`, `RX_START`, `CAD_START`, `TX_CONTINUOUS_WAVE`, `TX_CONTINUOUS_PREAMBLE`, or `STOP`; diagnostic and configuration queries preserve it without stopping or restarting it.
 - Stores and atomically applies complete configurations, tracks the host-visible active RF operation, and maps radio callbacks to the traced result events.
 - Discards radio-rejected packets without publishing `RX_PACKET` or completing the active RX or CAD operation.
+- Rearms duty-cycle RX (mode 2) after packet delivery, rejection, or an RX timeout indication without completing the operation.
 - Accepts RX only for LoRa and FSK, CAD only for LoRa, and continuous-preamble TX only for LoRa, FSK, and MSK. The applicable activities return whether the modeled transition shall occur; rejected requests have no effect.
 - The AO stores whether a valid `SET_CONFIG` has established its configuration; its activities exclusively manage and consult that state and do not apply TX, RX, CAD, continuous-wave, or continuous-preamble hardware operations before then. Calibration, stop, configuration queries, and diagnostics remain independent and available before configuration.
 - Repeats CAD after a clear result and, after detection, either completes or receives according to the stored CAD exit mode.
@@ -46,7 +50,7 @@ External dependencies:
 - [events](../../events/doc/events.md): Provides the shared project-specific event definitions.
 - [Semtech SX126X driver v2.5.0](../../../third_party/sx126x_driver-2.5.0/README.md): Provides the low-level command API for the STM32WLE5-integrated sub-GHz radio.
 
-Status: approved
+Status: not approved
 
 ## Glossary
 

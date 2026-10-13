@@ -76,18 +76,54 @@ static rfManager_t* instance;
  * Private function declarations
  * -------------------------------------------------------------------------- */
 
-/** @brief Performs the initial transition to idle. */
+/**
+ * @brief Performs the initial transition to idle.
+ *
+ * @param[in] me Pointer to the RF manager instance.
+ * @param[in] e Initialization event.
+ * @return EDF transition result targeting idle.
+ */
 static EDF_hsm_stateReturn_t initialTransition(rfManager_t* me,
                                                const EDF_event_t* e);
-/** @brief Handles events in the idle state. */
+/**
+ * @brief Dispatches idle-state events to activities.
+ *
+ * @param[in,out] me Pointer to the RF manager instance.
+ * @param[in] e Event to dispatch.
+ * @return EDF transition, handled, or superstate result for the event.
+ */
 static EDF_hsm_stateReturn_t idle(rfManager_t* me, const EDF_event_t* e);
-/** @brief Handles events in the TX state. */
+/**
+ * @brief Dispatches TX-state events to activities.
+ *
+ * @param[in,out] me Pointer to the RF manager instance.
+ * @param[in] e Event to dispatch.
+ * @return EDF transition, handled, or superstate result for the event.
+ */
 static EDF_hsm_stateReturn_t tx(rfManager_t* me, const EDF_event_t* e);
-/** @brief Handles events in the RX state. */
+/**
+ * @brief Dispatches RX-state events to activities.
+ *
+ * @param[in,out] me Pointer to the RF manager instance.
+ * @param[in] e Event to dispatch.
+ * @return EDF transition, handled, or superstate result for the event.
+ */
 static EDF_hsm_stateReturn_t rx(rfManager_t* me, const EDF_event_t* e);
-/** @brief Handles events in the CAD state. */
+/**
+ * @brief Dispatches CAD-state events to activities.
+ *
+ * @param[in,out] me Pointer to the RF manager instance.
+ * @param[in] e Event to dispatch.
+ * @return EDF transition, handled, or superstate result for the event.
+ */
 static EDF_hsm_stateReturn_t cad(rfManager_t* me, const EDF_event_t* e);
-/** @brief Handles events in the calibration state. */
+/**
+ * @brief Dispatches calibration-state events to activities.
+ *
+ * @param[in,out] me Pointer to the RF manager instance.
+ * @param[in] e Event to dispatch.
+ * @return EDF transition, handled, or superstate result for the event.
+ */
 static EDF_hsm_stateReturn_t calibration(rfManager_t* me, const EDF_event_t* e);
 
 /* -----------------------------------------------------------------------------

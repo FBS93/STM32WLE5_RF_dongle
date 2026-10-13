@@ -91,7 +91,7 @@ void rfManagerHal_setConfiguration(
 void rfManagerHal_calibrate(uint8_t lower_frequency, uint8_t upper_frequency);
 
 /**
- * @brief Starts packet transmission with @p length in the packet parameters.
+ * @brief Starts packet transmission using the supplied payload length.
  *
  * @param[in] configuration Pointer to the current configuration.
  * @param[in] data Pointer to the packet bytes.
