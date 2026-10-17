@@ -9,7 +9,7 @@
     "GDB_PORT": "${localEnv:GDB_PORT}", // TCP port where GDB server will listen.
     "GDB_SERVER_RUN_CMD": "JLinkGDBServer -device STM32WLE5C8 -if SWD -speed 400 -port ${localEnv:GDB_PORT} -RTTTelnetPort ${localEnv:LOG_PORT} -nosinglerun -nohalt -nogui", // Command to start the GDB server.
     "LOG_SOURCE": "tcp", // Logging source: serial or tcp.
-    "LOG_PORT": "${localEnv:LOG_PORT}", // TCP port used for logging.
+    "LOG_PORT": "${localEnv:LOG_PORT}", // TCP port used for logging. WARNING: Sharing LOG_PORT between serial/TCP can leave it occupied on changes; stop the old server and restart J-Link if needed.
     "LOG_BAUD_RATE": "115200", // Baud rate used when LOG_SOURCE = serial.
     "LOG_SERIAL_DEVICE": "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_BG0301V6-if00-port0", // Stable Raspberry Pi serial device path assigned to target logging when LOG_SOURCE = serial.
     "LOG_TCP_RUN_CMD": "${containerWorkspaceFolder}/tools/target_adapters/stm32wle5c8u6_jlink_rtt/run_logging_server.sh", // Command to setup the external TCP logging provider when LOG_SOURCE = tcp.
