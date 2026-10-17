@@ -7,8 +7,13 @@ project(embedded_workbench C ASM)
 # ******************************************************************************
 
 if(DEFINED ECF_TARGET_PLATFORM)
-  # Add target platform specific cmake configurations.
-  include(sw/ecf/platform/${ECF_TARGET_PLATFORM}/cmake/platform.cmake)
+  if(
+    EXISTS
+      "${CMAKE_CURRENT_SOURCE_DIR}/sw/ecf/platform/${ECF_TARGET_PLATFORM}/cmake/platform.cmake"
+  )
+    # Add target platform specific cmake configurations.
+    include(sw/ecf/platform/${ECF_TARGET_PLATFORM}/cmake/platform.cmake)
+  endif()
 endif()
 
 add_link_options(

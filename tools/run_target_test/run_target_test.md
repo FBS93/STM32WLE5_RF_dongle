@@ -10,6 +10,8 @@ It works as follows:
 - Capturing logging output.
 - Reporting PASS/FAIL.
 
+The test reporter shall emit `<TEST_RESULT=PASS>` or `<TEST_RESULT=FAIL>` on a separate line at the end of the report. The runner uses this marker, not the human-readable summary, to finish the run with exit code 0 for PASS or 1 for FAIL. Without a result marker, inactivity exceeding `TARGET_RX_TIMEOUT_S` fails the run.
+
 # Glossary
 
 | Term | Definition |

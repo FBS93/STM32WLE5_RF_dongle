@@ -175,6 +175,7 @@ static EDF_hsm_stateReturn_t waitForEvent(EDFTest_t* me, const EDF_event_t* e)
       // Disable EDFTest AO by unsubscribing from all signals
       EDF_activeObject_unsubscribeAll(EDF_AO_UPCAST(EDFTest));
 
+      EMF_testReport_printResult(true);
       EDFTest_onExit(0);  // Success
     }
 
@@ -236,6 +237,7 @@ void EDFTest_fail(const char* cond, const char* file, int line)
   // Disable EDFTest AO by unsubscribing from all signals
   EDF_activeObject_unsubscribeAll(EDF_AO_UPCAST(EDFTest));
 
+  EMF_testReport_printResult(false);
   EDFTest_onExit(-1);  // Failure
 
   // Halt in case EDFTest_onExit() returns unexpectedly
@@ -298,6 +300,7 @@ int main(void)
     // Disable EDFTest AO by unsubscribing from all signals
     EDF_activeObject_unsubscribeAll(EDF_AO_UPCAST(EDFTest));
 
+    EMF_testReport_printResult(true);
     EDFTest_onExit(0);  // Success
     ret = 0;
   }

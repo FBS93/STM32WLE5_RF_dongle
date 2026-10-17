@@ -20,6 +20,7 @@
  * System library headers
  * -------------------------------------------------------------------------- */
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 
 /* -----------------------------------------------------------------------------
@@ -208,4 +209,16 @@ void EMF_testReport_printSummary(uint16_t totalTests,
             EMF_PRINT_ARG_U(failedTests));
   printRepeated('-', LINE_WIDTH);
   EMF_PRINT("\n\n");
+}
+
+void EMF_testReport_printResult(bool passed)
+{
+  if (passed)
+  {
+    EMF_PRINT("<TEST_RESULT=PASS>\n");
+  }
+  else
+  {
+    EMF_PRINT("<TEST_RESULT=FAIL>\n");
+  }
 }

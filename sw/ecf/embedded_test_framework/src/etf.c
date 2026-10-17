@@ -133,6 +133,7 @@ void ETF_fail(const char* cond, const char* file, int line)
 
   EMF_testReport_printTestResult(TEST_FAILED, cond, file, line);
   EMF_testReport_printSummary(ETF.test_cnt, ETF.skip_cnt, 1);
+  EMF_testReport_printResult(false);
 
   ETF_onExit(-1);  // Failure
 
@@ -182,6 +183,7 @@ int main(void)
   }
 
   EMF_testReport_printSummary(ETF.test_cnt, ETF.skip_cnt, 0);
+  EMF_testReport_printResult(true);
 
   ETF_onExit(0);  // Success
 }
