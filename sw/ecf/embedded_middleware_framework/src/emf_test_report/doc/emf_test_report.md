@@ -2,6 +2,8 @@
 
 EMF test report provides the shared text report utilities used by [ETF](../../../../embedded_test_framework/doc/etf.md) and [EDF Test](../../../../event_driven_framework/edf_test/doc/edf_test.md).
 
+To automate tests with [run_target_test tool](../../../../../../tools/run_target_test/run_target_test.md), call `EMF_testReport_printResult` after completing the test report to emit the completion marker required by the tool.
+
 # Glossary
 
 | Term | Definition |
@@ -19,5 +21,6 @@ void example(void)
   EMF_testReport_printTestIntro(1U, "example_test");
   EMF_testReport_printTestResult(TEST_PASSED, NULL, NULL, 0);
   EMF_testReport_printSummary(1U, 0U, 0U);
+  EMF_testReport_printResult(true);
 }
 ```

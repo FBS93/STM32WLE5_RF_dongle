@@ -121,6 +121,6 @@ For a reused or promoted ECF platform package, the project shall retain a softwa
 This software unit is implemented by the [<platform_name> ECF platform package](<link_to_ECF_platform_package_markdown_document>).
 ```
 
-A platform package shall be identified by `<platform_name>`, which shall be a descriptive identifier reflecting its scope (e.g., MCU family, board, execution environment, ...). In ECF platform packages, `ECF_TARGET_PLATFORM` name shall equal the ECF platform package folder name `<platform_name>`.
+A platform package shall be identified by `<platform_name>`, which shall be a descriptive identifier reflecting its scope (e.g., MCU family, board, execution environment, ...). `ECF_TARGET_PLATFORM` shall identify the selected internal ECF or project-specific platform package as defined by the [ECF platform integration contract](../../../../sw/ecf/doc/ecf.md#platform-integration). For internal ECF packages, its value shall equal the package folder name `<platform_name>`.
 
 The [STM32F103C8Tx platform package](../../../../sw/ecf/platform/stm32f103c8tx/doc/stm32f103c8tx_platform_package.md) shall be used as the reference example for platform packages.

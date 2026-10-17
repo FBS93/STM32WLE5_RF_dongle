@@ -61,6 +61,13 @@ WORKSPACE_FOLDER = None
 # Path to the target ELF firmware to be flashed and executed.
 TEST_BINARY = None
 
+# Test result markers.
+TEST_PASS_PATTERN = "\n<TEST_RESULT=PASS>\n"
+TEST_FAIL_PATTERN = "\n<TEST_RESULT=FAIL>\n"
+
+# Required trailing buffer length.
+RESULT_TAIL_LENGTH = max(len(TEST_PASS_PATTERN), len(TEST_FAIL_PATTERN))
+
 # ==============================================================================
 # CLASSES
 # ==============================================================================
@@ -210,7 +217,7 @@ def main():
   # fmt: on
 
   print("Capturing test output:", flush=True)
-  buffer = ""
+  buffer = "\n"
   last_rx = time.time()  # Timestamp of last received data.
 
   ret = 1  # Set default exit code to failure.
@@ -226,20 +233,23 @@ def main():
         last_rx = time.time()
 
         print(data, end="", flush=True)
-        buffer += data
+        buffer = (buffer + data).replace("\r\n", "\n")
 
-        if "0 failed" in buffer:
-          print("\n✅ Test pass.", flush=True)
+        if TEST_FAIL_PATTERN in buffer:
+          print("\n❌ Test fail.\n", flush=True)
+          break
+
+        if TEST_PASS_PATTERN in buffer:
+          print("\n✅ Test pass.\n", flush=True)
           ret = 0
           break
 
-        if "FAIL" in buffer:
-          print("\n❌ Test fail.", flush=True)
-          break
+        # Keep the leading LF and a pending CR in place of the final LF.
+        buffer = buffer[-RESULT_TAIL_LENGTH:]
 
       # Exit if no data has been received for TARGET_RX_TIMEOUT_S.
       if (time.time() - last_rx) > TARGET_RX_TIMEOUT_S:
-        print("\n❌ Timeout: no output from target.", flush=True)
+        print("\n❌ Timeout: no output from target.\n", flush=True)
         break
 
   finally:

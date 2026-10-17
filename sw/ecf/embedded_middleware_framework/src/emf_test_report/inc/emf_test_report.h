@@ -26,6 +26,7 @@
  * System library headers
  * -------------------------------------------------------------------------- */
 #include <stdint.h>
+#include <stdbool.h>
 
 /* -----------------------------------------------------------------------------
  * External library headers
@@ -101,5 +102,13 @@ void EMF_testReport_printTestResult(EMF_testReport_testResult_t test_result,
 void EMF_testReport_printSummary(uint16_t totalTests,
                                  uint16_t skippedTests,
                                  uint16_t failedTests);
+
+/**
+ * @brief Prints the result marker <TEST_RESULT=PASS> or <TEST_RESULT=FAIL> on
+ * its own line.
+ *
+ * @param[in] passed True if the test suite passed, false otherwise.
+ */
+void EMF_testReport_printResult(bool passed);
 
 #endif /* TEST_REPORT_H */

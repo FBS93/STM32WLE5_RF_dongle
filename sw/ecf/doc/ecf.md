@@ -32,14 +32,16 @@ The ECF build configuration is mainly controlled through the following CMake cac
 |---|---|
 | `EBF_CORE` | Selects the [Core](../embedded_base_framework/doc/ebf.md#glossary) used by EBF. |
 | `EBF_PORT` | Selects the [Port](../embedded_base_framework/doc/ebf.md#glossary) used by EBF. |
-| `ECF_TARGET_PLATFORM` | Selects the target platform package. When defined, it loads the platform-specific CMake configuration and platform integration files. |
+| `ECF_TARGET_PLATFORM` | Selects an internal or external target platform package. Leave undefined for host execution. |
 | `ECF_TEST` | Enables `CTest`, the ECF CMake test and mock helper functions and the ECF tests. |
 
 These variables are typically defined in the project [CMakePresets.json](../../../CMakePresets.json).
 
 ### Platform integration
 
-When `ECF_TARGET_PLATFORM` is defined, ECF loads the selected platform package and its platform-specific CMake integration.
+For platform packages in `ecf/platform/`, `ECF_TARGET_PLATFORM` shall match the package folder name.
+
+External platform packages shall be explicitly integrated into CMake, including their configuration and sources before creating executables. ECF does not discover external packages.
 
 The `platform.cmake` file of the selected platform package centralizes the common platform-specific build configuration that shall be applied to the relevant embedded executables, such as startup files, linker scripts, libraries and target-specific compiler or linker options.
 
