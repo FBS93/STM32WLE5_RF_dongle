@@ -10,7 +10,7 @@
       "program": "${command:cmake.launchTargetPath}",
       "stopAtEntry": true,
       "debuginfod": {
-        // Workaround for https://github.com/microsoft/vscode/issues/316682.
+        // Workaround: for https://github.com/microsoft/vscode/issues/316682.
         // Requires ms-vscode.cpptools >= 1.33.0, which supports disabling debuginfod.
         "enabled": false
       }

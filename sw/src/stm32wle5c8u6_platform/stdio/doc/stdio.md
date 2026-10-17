@@ -6,7 +6,7 @@ The first valid stdout write shall initialize RTT once using `SEGGER_RTT_Init()`
 
 Writes use RTT up-channel 0 with `SEGGER_RTT_MODE_NO_BLOCK_SKIP`: `EBF_stdoutWrite()` returns `true` only when the complete message is queued, or `false` without queuing bytes when capacity is insufficient. A null data pointer or zero length returns `false`. Admission is non-blocking and all-or-nothing; it does not wait for the debug probe.
 
-The statically allocated up-buffer has 1024 bytes of usable capacity: [CMake configuration](../../../../third_party/CMakeLists.txt) sets `BUFFER_SIZE_UP=1025` because RTT reserves one byte. RTT buffer and write semantics remain defined by the [upstream implementation](../../../../third_party/segger_rtt-8.58.0/RTT/SEGGER_RTT.c).
+The statically allocated up-buffer has 2048 bytes of usable capacity: [CMake configuration](../../../../third_party/CMakeLists.txt) sets `BUFFER_SIZE_UP=2049` because RTT reserves one byte. RTT buffer and write semantics remain defined by the [upstream implementation](../../../../third_party/segger_rtt-8.58.0/RTT/SEGGER_RTT.c).
 
 The debug probe drains the buffer from SRAM over SWD.
 

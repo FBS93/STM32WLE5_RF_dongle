@@ -1,11 +1,11 @@
-if(PROJECT_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
+if(ECF_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
   set(host_command_manager_hal_source src/target/host_command_manager_hal.c)
-elseif(NOT DEFINED PROJECT_TARGET_PLATFORM)
+elseif(NOT DEFINED ECF_TARGET_PLATFORM)
   set(host_command_manager_hal_source src/host/host_command_manager_hal.c)
 else()
   message(
     FATAL_ERROR
-    "host_command_manager is not supported on ${PROJECT_TARGET_PLATFORM}"
+    "host_command_manager is not supported on ${ECF_TARGET_PLATFORM}"
   )
 endif()
 
@@ -22,3 +22,7 @@ target_link_libraries(
   PUBLIC events edf
   PRIVATE eaf ebf emf
 )
+
+if(ECF_TEST)
+  add_subdirectory(u_test)
+endif()

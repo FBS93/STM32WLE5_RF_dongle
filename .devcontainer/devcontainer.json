@@ -43,6 +43,9 @@
     "vscode": {
       "extensions": [
         "ms-vscode.cpptools-extension-pack",
+        // Workaround: CMake Tools 1.24.42 looks for test executables before building them in Test Explorer and fails if they do not exist yet.
+        // Pin 1.23.52 to keep the previous build-before-run behavior.
+        "ms-vscode.cmake-tools@1.23.52",
         "dan-c-underwood.arm",
         "ms-python.python",
         "marus25.cortex-debug",

@@ -1,14 +1,11 @@
-if(PROJECT_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
+if(ECF_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
   set(rf_manager_hal_source src/target/rf_manager_hal.c)
   set(rf_manager_hal_dependency sx126x_driver)
-elseif(NOT DEFINED PROJECT_TARGET_PLATFORM)
+elseif(NOT DEFINED ECF_TARGET_PLATFORM)
   set(rf_manager_hal_source src/host/rf_manager_hal.c)
   set(rf_manager_hal_dependency)
 else()
-  message(
-    FATAL_ERROR
-    "rf_manager is not supported on ${PROJECT_TARGET_PLATFORM}"
-  )
+  message(FATAL_ERROR "rf_manager is not supported on ${ECF_TARGET_PLATFORM}")
 endif()
 
 add_library(
@@ -25,3 +22,7 @@ target_link_libraries(
   PUBLIC events edf rf_types
   PRIVATE eaf ebf emf
 )
+
+if(ECF_TEST)
+  add_subdirectory(u_test)
+endif()

@@ -1,21 +1,7 @@
-if(DEFINED PROJECT_TARGET_PLATFORM AND DEFINED ECF_TARGET_PLATFORM)
-  message(
-    FATAL_ERROR
-    "PROJECT_TARGET_PLATFORM and ECF_TARGET_PLATFORM are mutually exclusive"
-  )
-endif()
-
-if(DEFINED PROJECT_TARGET_PLATFORM)
-  if(NOT PROJECT_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
-    message(
-      FATAL_ERROR
-      "Unsupported PROJECT_TARGET_PLATFORM: ${PROJECT_TARGET_PLATFORM}"
-    )
-  endif()
-
+if(ECF_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
   # Add project-specific target platform CMake configuration.
-  include(src/${PROJECT_TARGET_PLATFORM}/cmake/platform.cmake)
-  add_subdirectory(src/${PROJECT_TARGET_PLATFORM})
+  include(src/${ECF_TARGET_PLATFORM}/cmake/platform.cmake)
+  add_subdirectory(src/${ECF_TARGET_PLATFORM})
 
   # Add third-party source files.
   set(SX126X_ENABLE_BPSK ON)
@@ -24,7 +10,10 @@ endif()
 
 add_subdirectory(ecf)
 
-if(NOT DEFINED ECF_TARGET_PLATFORM)
+if(
+  NOT DEFINED ECF_TARGET_PLATFORM
+  OR ECF_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform"
+)
   # Add project-specific source files.
   add_subdirectory(src/rf_types)
   add_subdirectory(src/events)

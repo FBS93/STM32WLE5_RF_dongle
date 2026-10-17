@@ -91,7 +91,7 @@ Build configuration:
     - `target_stm32wle5c8u6`: CMAKE_BUILD_TYPE `Release`, optimization `-O2` and debug information `-g2`.
     - `target_stm32wle5c8u6_debug`: CMAKE_BUILD_TYPE `Debug`, optimization `-O0` and debug information `-g3`.
     - `target_stm32wle5c8u6_hard_debug`: CMAKE_BUILD_TYPE `Debug`, optimization `-O0`, debug information `-g3` and generation of preprocessed files for inspection `-save-temps=obj -P`.
-- The project-specific platform package is selected with `PROJECT_TARGET_PLATFORM=stm32wle5c8u6_platform`. This CMake variable can also be used to select the appropriate source code for target and host environments.
+- The project-specific platform package is selected with `ECF_TARGET_PLATFORM=stm32wle5c8u6_platform`. This CMake variable can also be used to select the appropriate source code for target and host environments.
 
 ISR integration strategy:
 The following table lists the interrupts from highest to lowest NVIC preemption priority; all use subpriority 0.
@@ -122,7 +122,7 @@ Debug configuration:
 - The target shall use SWD as its debug interface.
 
 Embedded C Framework (ECF) integration:
-- The target ECF stdout shall use non-blocking buffered SEGGER RTT output over SWD, with 1024 bytes of usable buffer capacity. The debug probe shall drain the buffer; no target stdout interrupt is required.
+- The target ECF stdout shall use non-blocking buffered SEGGER RTT output over SWD, with 2048 bytes of usable buffer capacity. The debug probe shall drain the buffer; no target stdout interrupt is required.
 - Target ECF stdin is not supported.
 
 Upstream traceability:

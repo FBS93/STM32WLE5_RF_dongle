@@ -1,11 +1,11 @@
-if(PROJECT_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
+if(ECF_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
   set(error_handler_source src/target/error_handler.c)
-elseif(NOT DEFINED PROJECT_TARGET_PLATFORM)
+elseif(NOT DEFINED ECF_TARGET_PLATFORM)
   set(error_handler_source src/host/error_handler.c)
 else()
   message(
     FATAL_ERROR
-    "error_handler is not supported on ${PROJECT_TARGET_PLATFORM}"
+    "error_handler is not supported on ${ECF_TARGET_PLATFORM}"
   )
 endif()
 
