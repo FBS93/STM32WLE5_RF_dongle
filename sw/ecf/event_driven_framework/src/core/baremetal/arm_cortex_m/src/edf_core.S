@@ -66,14 +66,14 @@ PendSV_Handler:
 
     // Unpend any spurious PendSV.
     LDR     r2, =SCB_ICSR
-    MOV     r1, #1
-    LSL     r1, r1, #27 // r1 := (1 << 27)
+    MOVS    r1, #1
+    LSLS    r1, r1, #27 // r1 := (1 << 27)
     STR     r1, [r2]    // Clear PendSV pending bit.
 
     // Prepare return from exception into Thread mode -> EDF_core_activate().
-    LSR     r3, r1, #3             // r3 := (r1 >> 3); sets xPSR T (Thumb) bit.
+    LSRS    r3, r1, #3             // r3 := (r1 >> 3); sets xPSR T (Thumb) bit.
     LDR     r2, =EDF_core_activate // Address of EDF_core_activate.
-    SUB     r2, r2, #1             // Align Thumb address; clear bit 0.
+    SUBS    r2, r2, #1             // Align Thumb address; clear bit 0.
     LDR     r1, =EDF_core_preemptedContextReturn // Ret after EDF_core_activate.
 
     // Reserve 8 words for fabricated exception frame.
@@ -84,8 +84,8 @@ PendSV_Handler:
     STM     r0!, {r1-r3}
 
     // Fabricate EXC_RETURN for Thread mode using MSP.
-    MOV     r0, #6
-    MVN    r0, r0 // r0 := 0xFFFFFFF9
+    MOVS    r0, #6
+    MVNS    r0, r0 // r0 := 0xFFFFFFF9
 
 #if (__ARM_ARCH != 6)
     DSB        // ARM erratum 838869.
@@ -109,8 +109,8 @@ EDF_core_preemptedContextReturn:
 #endif
     // Prepare NMI Trigger.
     LDR     r0, =SCB_ICSR // Interrupt Control and State Register.
-    MOV     r1, #1
-    LSL     r1, r1, #31 // r1 := (1 << 31) => Pend NMI.
+    MOVS    r1, #1
+    LSLS    r1, r1, #31 // r1 := (1 << 31) => Pend NMI.
     STR     r1, [r0]    // Trigger NMI.
 
     // Execution continues in NMI_Handler (interrupts remain disabled).
@@ -140,6 +140,7 @@ NMI_Handler:
 .size NMI_Handler, .-NMI_Handler
 
 
+#ifdef __ARM_FP
 .global EDF_core_disableFPUContext
 .type EDF_core_disableFPUContext, %function
 EDF_core_disableFPUContext:
@@ -149,6 +150,7 @@ EDF_core_disableFPUContext:
     ISB                 // Synchronize after CONTROL write.
     BX      lr
 .size EDF_core_disableFPUContext, .-EDF_core_disableFPUContext
+#endif
 
 
 .global EDF_core_getIPSR

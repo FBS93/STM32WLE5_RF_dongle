@@ -55,7 +55,7 @@
 .section .text
 .align 4
 
-#if (__ARM_ARCH > 6)
+#ifdef __ARM_FEATURE_CLZ
 .global EBF_utils_log2
 .type EBF_utils_log2, %function
 EBF_utils_log2:
@@ -65,7 +65,7 @@ EBF_utils_log2:
     SUB     r0, r2, r1 // r0 = 32 - CLZ(r0)
     BX      lr
 .size EBF_utils_log2, .-EBF_utils_log2
-#endif /* (__ARM_ARCH > 6) */
+#endif /* __ARM_FEATURE_CLZ */
 
 .global EBF_entryCriticalSection
 .type EBF_entryCriticalSection, %function
