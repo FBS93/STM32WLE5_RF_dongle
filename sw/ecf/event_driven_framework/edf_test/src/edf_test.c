@@ -224,6 +224,23 @@ static void EDFTestInit(void)
  * PUBLIC FUNCTIONS
  ******************************************************************************/
 
+EBF_WEAK void EDFTest_onInit(void)
+{
+}
+
+EBF_WEAK void EDFTest_onExit(int err)
+{
+  exit(err);
+}
+
+EBF_WEAK void EDFTest_setUp(void)
+{
+}
+
+EBF_WEAK void EDFTest_tearDown(void)
+{
+}
+
 void EDFTest_fail(const char* cond, const char* file, int line)
 {
   EAF_ASSERT_BLOCK_BEGIN();
@@ -246,21 +263,15 @@ void EDFTest_fail(const char* cond, const char* file, int line)
   }
 }
 
-EBF_WEAK void EDFTest_onInit(void)
+void EDF_onStartup(void)
 {
-}
-
-EBF_WEAK void EDFTest_onExit(int err)
-{
-  exit(err);
-}
-
-EBF_WEAK void EDFTest_setUp(void)
-{
-}
-
-EBF_WEAK void EDFTest_tearDown(void)
-{
+  /*
+   * Initialize the first executable test here to respect the EDF startup
+   * contract: test setup and initialization may publish events, so they must
+   * run from EDF_onStartup(), not before EDF_run().
+   */
+  EDFTest_setUp();
+  EDFTest.tests[EDFTest.test_idx].test.test_init();
 }
 
 int main(void)
@@ -274,7 +285,7 @@ int main(void)
 
   EDFTestInit();
 
-  // Initialize the first test
+  // Select the first executable test
   while ((EDFTest.test_idx < EDFTest.num_tests) &&
          EDFTest.tests[EDFTest.test_idx].skip)
   {
@@ -289,8 +300,6 @@ int main(void)
   {
     EMF_testReport_printTestIntro(
       EDFTest.test_idx + 1, EDFTest.tests[EDFTest.test_idx].test.test_name);
-    EDFTest_setUp();
-    EDFTest.tests[EDFTest.test_idx].test.test_init();  // Init test
     ret = EDF_run();
   }
   else
