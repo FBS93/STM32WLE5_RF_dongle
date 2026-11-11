@@ -66,6 +66,31 @@ static EDF_activeObject_bitmask_t subscriberList[EVENTS_LAST_SIGNAL];
 static EMF_UTILS_MEM_ALIGNED_SLOT(sizeof(events_rxPacket_t))
   mutableEventPool[MUTABLE_EVENT_POOL_SLOT_COUNT];
 
+<<<<<<< Updated upstream
+=======
+#if (EBF_PORT == EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ)
+/** @brief Immutable event instances consumed by the EDF fuzz port. */
+static const EDF_event_t getConfigRequestEvt =
+  EDF_EVENT_IMMUTABLE_INIT(EVENTS_GET_CONFIG_REQUEST);
+static const EDF_event_t rxStartEvt = EDF_EVENT_IMMUTABLE_INIT(EVENTS_RX_START);
+static const EDF_event_t cadStartEvt =
+  EDF_EVENT_IMMUTABLE_INIT(EVENTS_CAD_START);
+static const EDF_event_t txContinuousWaveEvt =
+  EDF_EVENT_IMMUTABLE_INIT(EVENTS_TX_CONTINUOUS_WAVE);
+static const EDF_event_t txContinuousPreambleEvt =
+  EDF_EVENT_IMMUTABLE_INIT(EVENTS_TX_CONTINUOUS_PREAMBLE);
+static const EDF_event_t stopEvt = EDF_EVENT_IMMUTABLE_INIT(EVENTS_STOP);
+static const EDF_event_t getDiagnosticsRequestEvt =
+  EDF_EVENT_IMMUTABLE_INIT(EVENTS_GET_DIAGNOSTICS_REQUEST);
+static const EDF_event_t cadDetectedEvt =
+  EDF_EVENT_IMMUTABLE_INIT(EVENTS_CAD_DETECTED);
+static const EDF_event_t operationCompleteEvt =
+  EDF_EVENT_IMMUTABLE_INIT(EVENTS_OPERATION_COMPLETE);
+static const EDF_event_t hostDataAvailableEvt =
+  EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE);
+#endif
+
+>>>>>>> Stashed changes
 /*******************************************************************************
  * PUBLIC VARIABLES
  ******************************************************************************/
