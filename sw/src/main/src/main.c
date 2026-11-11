@@ -66,8 +66,6 @@ static EDF_activeObject_bitmask_t subscriberList[EVENTS_LAST_SIGNAL];
 static EMF_UTILS_MEM_ALIGNED_SLOT(sizeof(events_rxPacket_t))
   mutableEventPool[MUTABLE_EVENT_POOL_SLOT_COUNT];
 
-<<<<<<< Updated upstream
-=======
 #if (EBF_PORT == EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ)
 /** @brief Immutable event instances consumed by the EDF fuzz port. */
 static const EDF_event_t getConfigRequestEvt =
@@ -90,7 +88,6 @@ static const EDF_event_t hostDataAvailableEvt =
   EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE);
 #endif
 
->>>>>>> Stashed changes
 /*******************************************************************************
  * PUBLIC VARIABLES
  ******************************************************************************/
