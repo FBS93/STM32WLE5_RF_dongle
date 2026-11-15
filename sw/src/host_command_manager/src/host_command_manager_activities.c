@@ -34,6 +34,7 @@
  * Project-specific headers
  * -------------------------------------------------------------------------- */
 #include "events.h"
+#include "host_command_manager.h"
 #include "host_command_manager_activities.h"
 #include "host_command_manager_hal.h"
 #include "rf_types.h"
@@ -63,35 +64,6 @@
 #define FSK_DEVIATION_STEP_DENOMINATOR (1ULL << 25U)
 /** @brief Number of 15.625 microsecond radio timer ticks per second. */
 #define RADIO_TIMER_TICKS_PER_SECOND 64000ULL
-
-/** @brief GET_CONFIG_REQUEST command identifier. */
-#define COMMAND_GET_CONFIG_REQUEST 0x0000U
-/** @brief SET_CONFIG command identifier. */
-#define COMMAND_SET_CONFIG 0x0001U
-/** @brief CALIBRATE command identifier. */
-#define COMMAND_CALIBRATE 0x0002U
-/** @brief TX_PACKET command identifier. */
-#define COMMAND_TX_PACKET 0x0003U
-/** @brief RX_START command identifier. */
-#define COMMAND_RX_START 0x0004U
-/** @brief CAD_START command identifier. */
-#define COMMAND_CAD_START 0x0005U
-/** @brief TX_CONTINUOUS_WAVE command identifier. */
-#define COMMAND_TX_CONTINUOUS_WAVE 0x0006U
-/** @brief TX_CONTINUOUS_PREAMBLE command identifier. */
-#define COMMAND_TX_CONTINUOUS_PREAMBLE 0x0007U
-/** @brief STOP command identifier. */
-#define COMMAND_STOP 0x0008U
-/** @brief GET_DIAGNOSTICS_REQUEST command identifier. */
-#define COMMAND_GET_DIAGNOSTICS_REQUEST 0x0009U
-/** @brief GET_CONFIG_RESPONSE command identifier. */
-#define COMMAND_GET_CONFIG_RESPONSE 0x8001U
-/** @brief GET_DIAGNOSTICS_RESPONSE command identifier. */
-#define COMMAND_GET_DIAGNOSTICS_RESPONSE 0x8002U
-/** @brief RX_PACKET report command identifier. */
-#define COMMAND_RX_PACKET 0x8003U
-/** @brief CAD_DETECTED report command identifier. */
-#define COMMAND_CAD_DETECTED 0x8004U
 
 /** @brief Common configuration payload prefix size. */
 #define CONFIGURATION_COMMON_SIZE 7U
@@ -347,7 +319,7 @@ static void processFrame(const uint8_t* encoded, uint16_t encoded_length);
  * @param[in] payload Response bytes, or NULL when payload_length is zero.
  * @param[in] payload_length Payload length in bytes, at most 258.
  */
-static void sendResponse(uint16_t command_id,
+static void sendResponse(hostCommandManager_commandId_t command_id,
                          const uint8_t* payload,
                          uint16_t payload_length);
 
@@ -938,58 +910,58 @@ static void publishRequest(uint16_t command_id,
 
   switch (command_id)
   {
-    case COMMAND_GET_CONFIG_REQUEST:
+    case HOST_COMMAND_MANAGER_GET_CONFIG_REQUEST:
       payload_valid = (payload_length == 0U);
       if (payload_valid)
       {
         EDF_activeObject_publish(&getConfigRequestEvent.super);
       }
       break;
-    case COMMAND_SET_CONFIG:
+    case HOST_COMMAND_MANAGER_SET_CONFIG:
       (void)publishSetConfigRequest(payload, payload_length);
       break;
-    case COMMAND_CALIBRATE:
+    case HOST_COMMAND_MANAGER_CALIBRATE:
       (void)publishCalibrateRequest(payload, payload_length);
       break;
-    case COMMAND_TX_PACKET:
+    case HOST_COMMAND_MANAGER_TX_PACKET:
       (void)publishTxPacketRequest(payload, payload_length);
       break;
-    case COMMAND_RX_START:
+    case HOST_COMMAND_MANAGER_RX_START:
       payload_valid = (payload_length == 0U);
       if (payload_valid)
       {
         EDF_activeObject_publish(&rxStartEvent.super);
       }
       break;
-    case COMMAND_CAD_START:
+    case HOST_COMMAND_MANAGER_CAD_START:
       payload_valid = (payload_length == 0U);
       if (payload_valid)
       {
         EDF_activeObject_publish(&cadStartEvent.super);
       }
       break;
-    case COMMAND_TX_CONTINUOUS_WAVE:
+    case HOST_COMMAND_MANAGER_TX_CONTINUOUS_WAVE:
       payload_valid = (payload_length == 0U);
       if (payload_valid)
       {
         EDF_activeObject_publish(&txContinuousWaveEvent.super);
       }
       break;
-    case COMMAND_TX_CONTINUOUS_PREAMBLE:
+    case HOST_COMMAND_MANAGER_TX_CONTINUOUS_PREAMBLE:
       payload_valid = (payload_length == 0U);
       if (payload_valid)
       {
         EDF_activeObject_publish(&txContinuousPreambleEvent.super);
       }
       break;
-    case COMMAND_STOP:
+    case HOST_COMMAND_MANAGER_STOP:
       payload_valid = (payload_length == 0U);
       if (payload_valid)
       {
         EDF_activeObject_publish(&stopEvent.super);
       }
       break;
-    case COMMAND_GET_DIAGNOSTICS_REQUEST:
+    case HOST_COMMAND_MANAGER_GET_DIAGNOSTICS_REQUEST:
       payload_valid = (payload_length == 0U);
       if (payload_valid)
       {
@@ -1033,12 +1005,13 @@ static void processFrame(const uint8_t* encoded, uint16_t encoded_length)
   }
 }
 
-static void sendResponse(uint16_t command_id,
+static void sendResponse(hostCommandManager_commandId_t command_id,
                          const uint8_t* payload,
                          uint16_t payload_length)
 {
   uint8_t decoded[DECODED_FRAME_CAPACITY];
   uint8_t encoded[ENCODED_FRAME_CAPACITY];
+  uint16_t u16_command_id;
   uint16_t crc;
   uint16_t decoded_length;
   uint16_t encoded_length;
@@ -1050,7 +1023,8 @@ static void sendResponse(uint16_t command_id,
                       (DECODED_FRAME_CAPACITY - FRAME_OVERHEAD));
   EAF_ASSERT_BLOCK_END();
 
-  EMF_endian_u16WriteBuffLE(&decoded[0], &command_id);
+  u16_command_id = (uint16_t)command_id;
+  EMF_endian_u16WriteBuffLE(&decoded[0], &u16_command_id);
   EMF_endian_u16WriteBuffLE(&decoded[2], &payload_length);
   for (index = 0U; index < payload_length; ++index)
   {
@@ -1119,7 +1093,8 @@ void hostCommandManagerActivities_handleGetConfigResponse(
 
   payload_length = getConfigurationSize(e->configuration.packet_type);
   setConfiguration(payload, &e->configuration);
-  sendResponse(COMMAND_GET_CONFIG_RESPONSE, payload, payload_length);
+  sendResponse(
+    HOST_COMMAND_MANAGER_GET_CONFIG_RESPONSE, payload, payload_length);
 }
 
 void hostCommandManagerActivities_handleGetDiagnosticsResponse(
@@ -1135,7 +1110,8 @@ void hostCommandManagerActivities_handleGetDiagnosticsResponse(
 
   payload[0] = (uint8_t)e->active_rf_operation;
   EMF_endian_u16WriteBuffLE(&payload[1], &e->radio_errors);
-  sendResponse(COMMAND_GET_DIAGNOSTICS_RESPONSE, payload, sizeof(payload));
+  sendResponse(
+    HOST_COMMAND_MANAGER_GET_DIAGNOSTICS_RESPONSE, payload, sizeof(payload));
 }
 
 void hostCommandManagerActivities_handleRxPacket(hostCommandManager_t* me,
@@ -1158,7 +1134,7 @@ void hostCommandManagerActivities_handleRxPacket(hostCommandManager_t* me,
   payload_length = (uint16_t)e->received_packet_length_bytes + 1U;
   payload[payload_length++] = e->packet_status.rssi;
   payload[payload_length++] = e->packet_status.packet_info;
-  sendResponse(COMMAND_RX_PACKET, payload, payload_length);
+  sendResponse(HOST_COMMAND_MANAGER_RX_PACKET, payload, payload_length);
 }
 
 void hostCommandManagerActivities_handleCadDetected(
@@ -1170,5 +1146,5 @@ void hostCommandManagerActivities_handleCadDetected(
   EAF_ASSERT_IN_BLOCK(e != NULL);
   EAF_ASSERT_BLOCK_END();
 
-  sendResponse(COMMAND_CAD_DETECTED, NULL, 0U);
+  sendResponse(HOST_COMMAND_MANAGER_CAD_DETECTED, NULL, 0U);
 }

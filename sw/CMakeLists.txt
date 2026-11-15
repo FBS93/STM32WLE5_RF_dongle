@@ -21,4 +21,8 @@ if(
   add_subdirectory(src/error_handler)
   add_subdirectory(src/rf_manager)
   add_subdirectory(src/main)
+
+  if(ECF_TEST)
+    add_subdirectory(src/i_test)
+  endif()
 endif()

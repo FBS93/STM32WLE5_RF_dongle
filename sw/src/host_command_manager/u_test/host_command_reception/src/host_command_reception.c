@@ -274,9 +274,16 @@ ETF_TEST_SUITE(host_command_reception)
 
     // Include a zero payload byte to exercise COBS byte stuffing.
     uint8_t payload[] = {0x11U, 0x00U, 0x33U};
-    // LE header: TX_PACKET (0x0003), length 3; payload; CRC placeholders.
-    uint8_t decoded[] = {
-      0x03U, 0x00U, 0x03U, 0x00U, 0x11U, 0x00U, 0x33U, 0x00U, 0x00U};
+    // LE header: TX_PACKET, length 3; payload; CRC placeholders.
+    uint8_t decoded[] = {(uint8_t)HOST_COMMAND_MANAGER_TX_PACKET,
+                         (uint8_t)(HOST_COMMAND_MANAGER_TX_PACKET >> 8U),
+                         0x03U,
+                         0x00U,
+                         0x11U,
+                         0x00U,
+                         0x33U,
+                         0x00U,
+                         0x00U};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t crc;
     uint16_t encoded_length;
@@ -333,12 +340,33 @@ ETF_TEST_SUITE(host_command_reception)
     uint8_t third_payload[] = {0x66U, 0x77U, 0x00U, 0x99U};
 
     // LE TX_PACKET headers, payloads and two CRC placeholders per frame.
-    uint8_t first_decoded[] = {
-      0x03U, 0x00U, 0x03U, 0x00U, 0x11U, 0x00U, 0x33U, 0x00U, 0x00U};
-    uint8_t second_decoded[] = {
-      0x03U, 0x00U, 0x02U, 0x00U, 0x44U, 0x55U, 0x00U, 0x00U};
-    uint8_t third_decoded[] = {
-      0x03U, 0x00U, 0x04U, 0x00U, 0x66U, 0x77U, 0x00U, 0x99U, 0x00U, 0x00U};
+    uint8_t first_decoded[] = {(uint8_t)HOST_COMMAND_MANAGER_TX_PACKET,
+                               (uint8_t)(HOST_COMMAND_MANAGER_TX_PACKET >> 8U),
+                               0x03U,
+                               0x00U,
+                               0x11U,
+                               0x00U,
+                               0x33U,
+                               0x00U,
+                               0x00U};
+    uint8_t second_decoded[] = {(uint8_t)HOST_COMMAND_MANAGER_TX_PACKET,
+                                (uint8_t)(HOST_COMMAND_MANAGER_TX_PACKET >> 8U),
+                                0x02U,
+                                0x00U,
+                                0x44U,
+                                0x55U,
+                                0x00U,
+                                0x00U};
+    uint8_t third_decoded[] = {(uint8_t)HOST_COMMAND_MANAGER_TX_PACKET,
+                               (uint8_t)(HOST_COMMAND_MANAGER_TX_PACKET >> 8U),
+                               0x04U,
+                               0x00U,
+                               0x66U,
+                               0x77U,
+                               0x00U,
+                               0x99U,
+                               0x00U,
+                               0x00U};
     uint8_t first_encoded[EMF_COBS_ENCODED_SIZE(sizeof(first_decoded))];
     uint8_t second_encoded[EMF_COBS_ENCODED_SIZE(sizeof(second_decoded))];
     uint8_t third_encoded[EMF_COBS_ENCODED_SIZE(sizeof(third_decoded))];
@@ -437,7 +465,7 @@ ETF_TEST_SUITE(host_command_reception)
     uint8_t payload[255U];
     uint8_t decoded[sizeof(payload) + 6U];
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
-    uint16_t command_id = 0x0003U;
+    uint16_t command_id = (uint16_t)HOST_COMMAND_MANAGER_TX_PACKET;
     uint16_t payload_length = sizeof(payload);
     uint16_t crc;
     uint16_t encoded_length;
@@ -488,7 +516,7 @@ ETF_TEST_SUITE(host_command_reception)
     uint8_t decoded[] = {
       0x00U, 0x00U, 0x00U, 0x00U, 0x11U, 0x00U, 0x33U, 0x00U, 0x00U};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
-    uint16_t command_id = 0x0003U;
+    uint16_t command_id = (uint16_t)HOST_COMMAND_MANAGER_TX_PACKET;
     uint16_t payload_length = 3U;
     uint16_t crc;
     uint16_t encoded_length;
@@ -521,7 +549,15 @@ ETF_TEST_SUITE(host_command_reception)
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
     // Declare two bytes but supply three; CRC covers all present bytes.
-    uint8_t decoded[] = {3U, 0U, 2U, 0U, 0x11U, 0U, 0x33U, 0U, 0U};
+    uint8_t decoded[] = {(uint8_t)HOST_COMMAND_MANAGER_TX_PACKET,
+                         (uint8_t)(HOST_COMMAND_MANAGER_TX_PACKET >> 8U),
+                         2U,
+                         0U,
+                         0x11U,
+                         0U,
+                         0x33U,
+                         0U,
+                         0U};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t crc;
     uint16_t encoded_length;
@@ -545,7 +581,15 @@ ETF_TEST_SUITE(host_command_reception)
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
     // Declare four bytes but supply three; no missing-byte CRC fiction.
-    uint8_t decoded[] = {3U, 0U, 4U, 0U, 0x11U, 0U, 0x33U, 0U, 0U};
+    uint8_t decoded[] = {(uint8_t)HOST_COMMAND_MANAGER_TX_PACKET,
+                         (uint8_t)(HOST_COMMAND_MANAGER_TX_PACKET >> 8U),
+                         4U,
+                         0U,
+                         0x11U,
+                         0U,
+                         0x33U,
+                         0U,
+                         0U};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t crc;
     uint16_t encoded_length;
@@ -568,7 +612,8 @@ ETF_TEST_SUITE(host_command_reception)
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
     // Code 8 promises seven nonzero bytes but only six precede the delimiter.
-    uint8_t encoded[] = {8U, 3U, 1U, 1U, 1U, 1U, 1U, 0U};
+    uint8_t encoded[] = {
+      8U, (uint8_t)HOST_COMMAND_MANAGER_TX_PACKET, 1U, 1U, 1U, 1U, 1U, 0U};
 
     EMF_byteFifo_push(&rxFifo, encoded, sizeof(encoded));
     hostCommandManagerActivities_handleHostDataAvailable(&manager,
@@ -586,7 +631,11 @@ ETF_TEST_SUITE(host_command_reception)
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
     // Five decoded bytes cannot contain the four-byte header and two-byte CRC.
-    uint8_t decoded[] = {3U, 0U, 0U, 0U, 0x11U};
+    uint8_t decoded[] = {(uint8_t)HOST_COMMAND_MANAGER_TX_PACKET,
+                         (uint8_t)(HOST_COMMAND_MANAGER_TX_PACKET >> 8U),
+                         0U,
+                         0U,
+                         0x11U};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t encoded_length;
 

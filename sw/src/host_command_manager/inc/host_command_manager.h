@@ -45,6 +45,32 @@
  ******************************************************************************/
 
 /**
+ * @brief Public host protocol command, response, and report identifiers.
+ */
+typedef enum
+{
+  HOST_COMMAND_MANAGER_GET_CONFIG_REQUEST =
+    0x0000U,                                  //!< Configuration request.
+  HOST_COMMAND_MANAGER_SET_CONFIG = 0x0001U,  //!< Apply configuration.
+  HOST_COMMAND_MANAGER_CALIBRATE = 0x0002U,   //!< Radio calibration.
+  HOST_COMMAND_MANAGER_TX_PACKET = 0x0003U,   //!< Packet TX request.
+  HOST_COMMAND_MANAGER_RX_START = 0x0004U,    //!< Start packet RX.
+  HOST_COMMAND_MANAGER_CAD_START = 0x0005U,   //!< Start LoRa CAD.
+  HOST_COMMAND_MANAGER_TX_CONTINUOUS_WAVE = 0x0006U,  //!< Continuous-wave TX.
+  HOST_COMMAND_MANAGER_TX_CONTINUOUS_PREAMBLE =
+    0x0007U,                            //!< Infinite-preamble TX.
+  HOST_COMMAND_MANAGER_STOP = 0x0008U,  //!< Stop the active RF operation.
+  HOST_COMMAND_MANAGER_GET_DIAGNOSTICS_REQUEST =
+    0x0009U,  //!< Diagnostics request.
+  HOST_COMMAND_MANAGER_GET_CONFIG_RESPONSE =
+    0x8001U,  //!< Configuration response.
+  HOST_COMMAND_MANAGER_GET_DIAGNOSTICS_RESPONSE =
+    0x8002U,                                   //!< Diagnostics response.
+  HOST_COMMAND_MANAGER_RX_PACKET = 0x8003U,    //!< Received packet report.
+  HOST_COMMAND_MANAGER_CAD_DETECTED = 0x8004U  //!< Channel activity report.
+} hostCommandManager_commandId_t;
+
+/**
  * @brief Host command manager active object.
  */
 typedef struct

@@ -26,6 +26,10 @@
 #include "edf.h"
 #include "emf.h"
 
+#if (EBF_PORT == EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ)
+#include "edf_fuzz.h"
+#endif
+
 /* -----------------------------------------------------------------------------
  * Project-specific headers
  * -------------------------------------------------------------------------- */
@@ -91,6 +95,31 @@ static const EDF_event_t hostDataAvailableEvt =
 /*******************************************************************************
  * PUBLIC VARIABLES
  ******************************************************************************/
+
+#if (EBF_PORT == EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ)
+/** @brief Fuzzable application events in events_signal_t declaration order. */
+EDF_FUZZ_EVENT_TABLE(
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_GET_CONFIG_REQUEST, &getConfigRequestEvt),
+  EDF_FUZZ_MUTABLE_EVENT(EVENTS_SET_CONFIG, sizeof(events_setConfig_t)),
+  EDF_FUZZ_MUTABLE_EVENT(EVENTS_CALIBRATE, sizeof(events_calibrate_t)),
+  EDF_FUZZ_MUTABLE_EVENT(EVENTS_TX_PACKET, sizeof(events_txPacket_t)),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_RX_START, &rxStartEvt),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_CAD_START, &cadStartEvt),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_TX_CONTINUOUS_WAVE, &txContinuousWaveEvt),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_TX_CONTINUOUS_PREAMBLE,
+                           &txContinuousPreambleEvt),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_STOP, &stopEvt),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_GET_DIAGNOSTICS_REQUEST,
+                           &getDiagnosticsRequestEvt),
+  EDF_FUZZ_MUTABLE_EVENT(EVENTS_GET_CONFIG_RESPONSE,
+                         sizeof(events_getConfigResponse_t)),
+  EDF_FUZZ_MUTABLE_EVENT(EVENTS_GET_DIAGNOSTICS_RESPONSE,
+                         sizeof(events_getDiagnosticsResponse_t)),
+  EDF_FUZZ_MUTABLE_EVENT(EVENTS_RX_PACKET, sizeof(events_rxPacket_t)),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_CAD_DETECTED, &cadDetectedEvt),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_OPERATION_COMPLETE, &operationCompleteEvt),
+  EDF_FUZZ_IMMUTABLE_EVENT(EVENTS_HOST_DATA_AVAILABLE, &hostDataAvailableEvt));
+#endif
 
 /*******************************************************************************
  * PRIVATE FUNCTIONS

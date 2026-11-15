@@ -259,7 +259,9 @@ ETF_TEST_SUITE(host_command_set_config)
     hostCommandManager_t manager = {0};
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-    uint8_t decoded[sizeof(loraPayload) + 6U] = {1U, 0U};
+    uint8_t decoded[sizeof(loraPayload) + 6U] = {
+      (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+      (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t payload_length = sizeof(loraPayload);
     uint16_t crc;
@@ -321,7 +323,9 @@ ETF_TEST_SUITE(host_command_set_config)
     hostCommandManager_t manager = {0};
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-    uint8_t decoded[sizeof(fskPayload) + 6U] = {1U, 0U};
+    uint8_t decoded[sizeof(fskPayload) + 6U] = {
+      (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+      (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint8_t expected_sync[] = {
       0x12U, 0x23U, 0x34U, 0x45U, 0x56U, 0x67U, 0x78U, 0x89U};
@@ -386,7 +390,9 @@ ETF_TEST_SUITE(host_command_set_config)
     hostCommandManager_t manager = {0};
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-    uint8_t decoded[sizeof(loraPayload) + 6U] = {1U, 0U};
+    uint8_t decoded[sizeof(loraPayload) + 6U] = {
+      (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+      (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t payload_length = sizeof(loraPayload);
     uint16_t crc;
@@ -417,7 +423,9 @@ ETF_TEST_SUITE(host_command_set_config)
     hostCommandManager_t manager = {0};
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-    uint8_t decoded[sizeof(loraPayload) - 1U + 6U] = {1U, 0U};
+    uint8_t decoded[sizeof(loraPayload) - 1U + 6U] = {
+      (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+      (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t payload_length = sizeof(loraPayload) - 1U;
     uint16_t crc;
@@ -447,7 +455,9 @@ ETF_TEST_SUITE(host_command_set_config)
     hostCommandManager_t manager = {0};
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-    uint8_t decoded[sizeof(fskPayload) + 1U + 6U] = {1U, 0U};
+    uint8_t decoded[sizeof(fskPayload) + 1U + 6U] = {
+      (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+      (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t payload_length = sizeof(fskPayload) + 1U;
     uint16_t crc;
@@ -483,7 +493,9 @@ ETF_TEST_SUITE(host_command_set_config)
       hostCommandManager_t manager = {0};
       events_hostDataAvailable_t data_available = {
         .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-      uint8_t decoded[sizeof(loraPayload) + 6U] = {1U, 0U};
+      uint8_t decoded[sizeof(loraPayload) + 6U] = {
+        (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+        (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
       uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
       uint16_t payload_length = sizeof(loraPayload);
       uint16_t preamble_length = 12U;
@@ -533,7 +545,9 @@ ETF_TEST_SUITE(host_command_set_config)
       hostCommandManager_t manager = {0};
       events_hostDataAvailable_t data_available = {
         .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-      uint8_t decoded[sizeof(loraPayload) + 6U] = {1U, 0U};
+      uint8_t decoded[sizeof(loraPayload) + 6U] = {
+        (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+        (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
       uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
       uint16_t payload_length = sizeof(loraPayload);
       uint16_t preamble_length = 11U;
@@ -567,7 +581,9 @@ ETF_TEST_SUITE(host_command_set_config)
     hostCommandManager_t manager = {0};
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-    uint8_t decoded[sizeof(fskPayload) + 6U] = {1U, 0U};
+    uint8_t decoded[sizeof(fskPayload) + 6U] = {
+      (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+      (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t payload_length = sizeof(fskPayload);
     uint16_t crc;
@@ -598,7 +614,9 @@ ETF_TEST_SUITE(host_command_set_config)
     hostCommandManager_t manager = {0};
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-    uint8_t decoded[sizeof(fskPayload) + 6U] = {1U, 0U};
+    uint8_t decoded[sizeof(fskPayload) + 6U] = {
+      (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+      (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t payload_length = sizeof(fskPayload);
     uint32_t bit_rate = 150000UL;
@@ -630,7 +648,9 @@ ETF_TEST_SUITE(host_command_set_config)
     hostCommandManager_t manager = {0};
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
-    uint8_t decoded[sizeof(fskPayload) + 6U] = {1U, 0U};
+    uint8_t decoded[sizeof(fskPayload) + 6U] = {
+      (uint8_t)HOST_COMMAND_MANAGER_SET_CONFIG,
+      (uint8_t)(HOST_COMMAND_MANAGER_SET_CONFIG >> 8U)};
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];
     uint16_t payload_length = sizeof(fskPayload);
     uint32_t deviation = 0x01999AUL;

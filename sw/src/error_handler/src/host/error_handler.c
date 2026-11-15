@@ -26,6 +26,7 @@
  * PUBLIC FUNCTIONS
  *******************************************************************************/
 
+#if (EBF_PORT != EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ)
 /** @brief Handles host fatal errors by halting without accessing hardware. */
 void EAF_onError(const char* file, int line, int id)
 {
@@ -38,3 +39,4 @@ void EAF_onError(const char* file, int line, int id)
     // Forever. This function shall not return.
   }
 }
+#endif
