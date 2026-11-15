@@ -27,7 +27,7 @@ Architecture components shall have the following attributes:
   - `<domain>` identifies the engineering domain using its abbreviation in lower case.
   - `<architectureComponentName>` is the unique component name written in camelCase.
 - A description defining the component. The description shall include all necessary information to fully specify the component, written in a clear and concise manner. When other architecture elements are referenced from the architecture component, their usage shall be explicitly defined (i.e., referenced interfaces should specify how they are used by the component and, when applicable, how they are implemented by it; referenced parameters should specify their effect on the component behavior).
-- Upstream traceability to one or more requirements. Shall be defined as a list of Markdown links referencing the corresponding requirements.
+- Upstream traceability to one or more upstream elements used as architecture input. Shall be defined as a list of Markdown links referencing the corresponding upstream elements.
 - References to other architecture elements when applicable. Shall be defined as a list of Markdown links referencing the target element identifier.
 - A status indicating the approval state of the component. Shall use exactly one of these values: `not approved`, `approved`.
 
@@ -60,7 +60,7 @@ Architecture interfaces shall have the following attributes:
   - `<domain>` identifies the engineering domain using its abbreviation in lower case.
   - `<architectureInterfaceName>` is the unique interface name written in camelCase.
 - A description defining the interface. The description shall include all necessary information to fully specify the interface, written in a clear and concise manner.
-- Upstream traceability to one or more requirements. Shall be defined as a list of Markdown links referencing the corresponding requirements.
+- Upstream traceability to one or more upstream elements used as architecture input. Shall be defined as a list of Markdown links referencing the corresponding upstream elements.
 - A status indicating the approval state of the interface. Shall use exactly one of these values: `not approved`, `approved`.
 
 The following interface template shall be used:
@@ -100,7 +100,7 @@ Architecture parameters shall have the following attributes:
   - `<domain>` identifies the engineering domain using its abbreviation in lower case.
   - `<architectureParameterName>` is the unique parameter name written in camelCase.
 - A description defining the parameter. The description shall include all necessary information to fully specify the parameter, written in a clear and concise manner, including its explicit value and units when applicable.
-- Upstream traceability to one or more requirements. Shall be defined as a list of Markdown links referencing the corresponding requirements.
+- Upstream traceability to one or more upstream elements used as architecture input. Shall be defined as a list of Markdown links referencing the corresponding upstream elements.
 - A status indicating the approval state of the parameter. Shall use exactly one of these values: `not approved`, `approved`.
 
 The following parameter template shall be used:
@@ -140,7 +140,7 @@ Architecture designs shall have the following attributes:
   - `<domain>` identifies the engineering domain using its abbreviation in lower case.
   - `<architectureDesignName>` is the unique design name written in camelCase.
 - A description defining the design. The description shall include all necessary information to fully specify the architectural design decision, written in a clear and concise manner. A design captures architectural decisions that are not represented as components, interfaces, or parameters.
-- Upstream traceability when applicable. Shall be defined as a list of Markdown links referencing the corresponding requirement.
+- Upstream traceability when applicable. Shall be defined as a list of Markdown links referencing the corresponding upstream elements used as architecture input.
 - A status indicating the approval state of the design. Shall use exactly one of these values: `not approved`, `approved`.
 
 The following design template shall be used:

@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Implement the software from software requirements, software architecture and software detailed design.
+Implement the software from requirements, software architecture and software detailed design.
 
 ## Input work products
 
-- Software requirements
+- Requirements
 - Software architecture
 - Software detailed design
 - Tools
@@ -17,10 +17,10 @@ Implement the software from software requirements, software architecture and sof
 
 ## Steps
 
-1. Review the software requirements, software architecture and software detailed design.
+1. Review the requirements, software architecture and software detailed design.
 2. Review available tools required for the implementation.
 3. Implement each software unit according to its software detailed design.
-4. Ensure consistency between implementation, software detailed design, software architecture and software requirements.
+4. Ensure consistency between implementation, software detailed design, software architecture and requirements.
 5. Check the software implementation for completeness, consistency and correctness.
 
 ## Guidelines
@@ -29,7 +29,7 @@ Implement the software from software requirements, software architecture and sof
 
 Each software unit shall be implemented strictly according to its software detailed design and shall not introduce additional behavior.
 
-Software architecture and software requirements shall be used only as complementary input when the software detailed design does not fully define the required behavior.
+Software architecture and requirements applicable to the software domain shall be used only as complementary input when the software detailed design does not fully define the required behavior.
 
 The implementation of each software unit shall:
 - Be written in C.
@@ -55,7 +55,7 @@ The implementation of software units defined as active objects shall:
   - Implement each activity defined in the HSM in a source file named `<sw_unit_name>_activities.c`, with corresponding declarations in the `<sw_unit_name>_activities.h` header file.
   - Ensure that the HSM only extracts event parameters, evaluates minimal dispatching logic and invokes the corresponding activities.
   - Delegate all functional logic to activity functions and avoid implementing it directly within the HSM.
-- Use events as the only mechanism for interaction between software units. Direct function calls to other software units shall not be used.
+- Use events as the only mechanism for interaction between active object software units.
 - Publish and subscribe only to the events explicitly defined for the software unit.
 - Include the header-only software unit defining the complete set of events from the corresponding software design.
 - Not introduce additional states, activities, transitions, published events, or subscribed events not defined for the software detailed design.

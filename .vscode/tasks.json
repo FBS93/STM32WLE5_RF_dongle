@@ -108,7 +108,7 @@
       "type": "shell",
       "command": "${TASKS_PATH}/format.sh",
       "args": [
-        "${workspaceFolder}/sw",
+        "${workspaceFolder}",
         "${workspaceFolder}"
       ]
     },

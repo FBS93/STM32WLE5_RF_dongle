@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Define software detailed design from software requirements and software architecture.
+Define software detailed design from requirements and software architecture.
 
 ## Input work products
 
-- Software requirements
+- Requirements
 - Software architecture
 
 ## Output work products
@@ -15,8 +15,8 @@ Define software detailed design from software requirements and software architec
 
 ## Steps
 
-1. Review the software requirements and software architecture.
-2. Identify the software units required to address the software requirements and software architecture.
+1. Review the requirements and software architecture.
+2. Identify the software units required to address the requirements and software architecture.
 3. Define the detailed design of each software unit.
 4. Define traceability between software detailed design and software architecture.
 5. Check the software detailed design for completeness, consistency and correctness.
@@ -25,11 +25,11 @@ Define software detailed design from software requirements and software architec
 
 ### Software detailed design work product
 
-Software detailed designs shall be derived from software architecture and software requirements.
+Software detailed designs shall be derived from software architecture and requirements applicable to the software domain.
 
-Software requirements shall be used only as complementary input when the software architecture does not fully define the required behavior.
+Requirements shall be used only as complementary input when the software architecture does not fully define the required behavior.
 
-Software detailed designs shall not define direct traceability to software requirements.
+Software detailed designs shall not define direct traceability to requirements.
 
 All software architecture elements shall be traced to one or more software units. Each software architecture element may be refined into one or more software units (1:1 or 1:N) depending on the software detailed design needs.
 

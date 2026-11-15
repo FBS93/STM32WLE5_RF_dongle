@@ -44,44 +44,42 @@ When delegating to `EW-executor`, the orchestrator must follow the [communicatio
 
 The following skills map directly to development processes and should be used following the V-model methodology.
 
-### Specifications
+### Product definition and validation
 
 | Skill | Purpose | Path |
 |---|---|---|
 | `specs-definition` | Define project specifications from stakeholder specifications. | .opencode/skills/specs-definition/SKILL.md |
+| `requirements` | Define requirements from specifications. | .opencode/skills/requirements/SKILL.md |
+| `qualification-test` | Define and implement qualification tests against requirements to validate that the product implementation correctly realizes them. | .opencode/skills/qualification-test/SKILL.md |
 
 ### System domain
 
 | Skill | Purpose | Path |
 |---|---|---|
-| `sys-requirements` | Define system requirements from specifications. | .opencode/skills/sys-requirements/SKILL.md |
-| `sys-architecture` | Define system architecture from system requirements. | .opencode/skills/sys-architecture/SKILL.md |
+| `sys-architecture` | Define system architecture from requirements. | .opencode/skills/sys-architecture/SKILL.md |
 | `sys-integration-test` | Define and implement system integration tests against system architecture to validate that the system implementation correctly realizes it. | .opencode/skills/sys-integration-test/SKILL.md |
-| `sys-qualification-test` | Define and implement system qualification tests against system requirements to validate that the system implementation correctly realizes them. | .opencode/skills/sys-qualification-test/SKILL.md |
 
 ### Software domain
 
 | Skill | Purpose | Path |
 |---|---|---|
-| `sw-requirements` | Define software requirements from system requirements, system architecture and hardware-software interface. | .opencode/skills/sw-requirements/SKILL.md |
-| `sw-architecture` | Define software architecture from software requirements. | .opencode/skills/sw-architecture/SKILL.md |
-| `sw-detailed-design` | Define software detailed design from software requirements and software architecture. | .opencode/skills/sw-detailed-design/SKILL.md |
-| `sw-implementation` | Implement the software from software requirements, software architecture and software detailed design. | .opencode/skills/sw-implementation/SKILL.md |
+| `sw-architecture` | Define software architecture from requirements, system architecture and hardware-software interface. | .opencode/skills/sw-architecture/SKILL.md |
+| `sw-detailed-design` | Define software detailed design from requirements and software architecture. | .opencode/skills/sw-detailed-design/SKILL.md |
+| `sw-implementation` | Implement the software from requirements, software architecture and software detailed design. | .opencode/skills/sw-implementation/SKILL.md |
 | `sw-unit-test` | Define and implement software unit tests against software detailed design to validate that the software implementation correctly realizes it. | .opencode/skills/sw-unit-test/SKILL.md |
 | `sw-integration-test` | Define and implement software integration tests against software architecture to validate that the software detailed design and software implementation correctly realizes it. | .opencode/skills/sw-integration-test/SKILL.md |
-| `sw-qualification-test` | Define and implement software qualification tests against software requirements to validate that the software architecture, software detailed design and software implementation correctly realizes them. | .opencode/skills/sw-qualification-test/SKILL.md |
 
 ### Hardware domain
 
 | Skill | Purpose | Path |
 |---|---|---|
-| `hw-sw-interface-definition` | Define the hardware-software interface from system requirements, system architecture and external hardware documentation. | .opencode/skills/hw-sw-interface-definition/SKILL.md |
+| `hw-sw-interface-definition` | Define the hardware-software interface from requirements, system architecture and external hardware documentation. | .opencode/skills/hw-sw-interface-definition/SKILL.md |
 
 ### Review
 
 | Skill | Purpose | Path |
 |---|---|---|
-| `spec-review` | Review specifications process work products before closure. | .opencode/skills/spec-review/SKILL.md |
+| `pdv-review` | Review product definition and validation process work products before closure. | .opencode/skills/pdv-review/SKILL.md |
 | `sys-review` | Review system process work products before closure. | .opencode/skills/sys-review/SKILL.md |
 | `sw-review` | Review software process work products before closure. | .opencode/skills/sw-review/SKILL.md |
 | `hw-review` | Review hardware process work products before closure. | .opencode/skills/hw-review/SKILL.md |

@@ -4,19 +4,19 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="ez_s-m6W8uq9Sedmb101-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Specifications" vertex="1">
-          <mxGeometry height="80" width="550" x="130" y="40" as="geometry" />
+        <mxCell id="ez_s-m6W8uq9Sedmb101-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Product definition and validation" vertex="1">
+          <mxGeometry height="170" width="550" x="130" y="40" as="geometry" />
         </mxCell>
         <mxCell id="ez_s-m6W8uq9Sedmb101-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="System domain" vertex="1">
-          <mxGeometry height="170" width="550" x="130" y="130" as="geometry" />
+          <mxGeometry height="80" width="550" x="130" y="220" as="geometry" />
         </mxCell>
-        <mxCell id="ez_s-m6W8uq9Sedmb101-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Enginnering domains" vertex="1">
+        <mxCell id="ez_s-m6W8uq9Sedmb101-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Engineering domains" vertex="1">
           <mxGeometry height="170" width="550" x="130" y="310" as="geometry" />
         </mxCell>
         <mxCell id="ez_s-m6W8uq9Sedmb101-11" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;textDirection=ltr;fontSize=10;" value="specs-definition" vertex="1">
           <mxGeometry height="60" width="120" x="150" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="ez_s-m6W8uq9Sedmb101-13" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;flipV=0;fontSize=10;" value="sys-requirements" vertex="1">
+        <mxCell id="ez_s-m6W8uq9Sedmb101-13" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;flipV=0;fontSize=10;" value="requirements" vertex="1">
           <mxGeometry height="60" width="120" x="180" y="140" as="geometry" />
         </mxCell>
         <mxCell id="ez_s-m6W8uq9Sedmb101-14" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;direction=east;rotation=0;flipH=1;legacyAnchorPoints=0;fontSize=10;" value="sys-architecture" vertex="1">
@@ -37,7 +37,7 @@
         <mxCell id="ez_s-m6W8uq9Sedmb101-19" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=10;" value="sys-integration-test" vertex="1">
           <mxGeometry height="60" width="120" x="480" y="230" as="geometry" />
         </mxCell>
-        <mxCell id="ez_s-m6W8uq9Sedmb101-20" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=10;" value="sys-qualification-test" vertex="1">
+        <mxCell id="ez_s-m6W8uq9Sedmb101-20" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=10;" value="qualification-test" vertex="1">
           <mxGeometry height="60" width="120" x="510" y="140" as="geometry" />
         </mxCell>
       </root>

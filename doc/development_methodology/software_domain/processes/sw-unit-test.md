@@ -27,9 +27,9 @@ Define and implement software unit tests against software detailed design to val
 
 ### Software unit test work product
 
-The software unit test work product shall follow the [Software test definition](../resources/software_test_definition.md).
+The software unit test work product shall follow the [Embedded C test definition](../../resources/embedded_c_test_definition.md).
 
-In addition to the [Software test definition](../resources/software_test_definition.md), the software unit tests shall:
+In addition to the [Embedded C test definition](../../resources/embedded_c_test_definition.md), the software unit tests shall:
 - Be derived exclusively from the software detailed design content to validate that the software implementation correctly realizes it.
 - Use the software implementation only as the element under test.
 - Be defined only for software detailed design functions whose logic or algorithmic behavior justifies isolated validation for early error detection.

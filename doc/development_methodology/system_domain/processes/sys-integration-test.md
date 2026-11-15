@@ -28,9 +28,9 @@ Define and implement system integration tests against system architecture to val
 
 ### System integration test work product
 
-The system integration test work product shall follow the [System test definition](../resources/system_test_definition.md).
+The system integration test work product shall follow the [Python test definition](../../resources/python_test_definition.md).
 
-In addition to the [System test definition](../resources/system_test_definition.md), the system integration tests shall:
+In addition to the [Python test definition](../../resources/python_test_definition.md), the system integration tests shall:
 - Be derived from the system architecture to validate that the system implementation correctly realizes it.
 - Use the system implementation as complementary input only to understand system interactions and to support test implementation.
 - Use the system implementation only as the element under test.

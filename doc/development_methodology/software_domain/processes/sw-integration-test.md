@@ -28,9 +28,9 @@ Define and implement software integration tests against software architecture to
 
 ### Software integration test work product
 
-The software integration test work product shall follow the [Software test definition](../resources/software_test_definition.md).
+The software integration test work product shall follow the [Embedded C test definition](../../resources/embedded_c_test_definition.md).
 
-In addition to the [Software test definition](../resources/software_test_definition.md), the software integration tests shall:
+In addition to the [Embedded C test definition](../../resources/embedded_c_test_definition.md), the software integration tests shall:
 - Be derived from the software architecture to validate that the software detailed design and software implementation correctly realizes it.
 - Use the software detailed design as complementary input only to understand how software interacts and to support test implementation.
 - Use the software implementation only as the element under test.

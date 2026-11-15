@@ -23,5 +23,5 @@ description: >
 ## Resources
 
 - [development_methodology_overview.md](../../../doc/development_methodology/development_methodology_overview.md)
-- [specifications_overview.md](../../../doc/development_methodology/specifications/specifications_overview.md)
-- [specs-definition.md](../../../doc/development_methodology/specifications/processes/specs-definition.md)
+- [product_definition_and_validation_overview.md](../../../doc/development_methodology/product_definition_and_validation/product_definition_and_validation_overview.md)
+- [specs-definition.md](../../../doc/development_methodology/product_definition_and_validation/processes/specs-definition.md)
