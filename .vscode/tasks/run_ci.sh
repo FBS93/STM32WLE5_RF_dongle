@@ -80,7 +80,7 @@ step=1
 
 print_section "Formatting"
 echo "[${step}/${total_steps}] Checking formatting..."
-./.vscode/tasks/format.sh "${workspace_root}/sw" "${workspace_root}" --check
+./.vscode/tasks/format.sh "${workspace_root}" "${workspace_root}" --check
 
 step=$((step + 1))
 print_section "Lint and build"

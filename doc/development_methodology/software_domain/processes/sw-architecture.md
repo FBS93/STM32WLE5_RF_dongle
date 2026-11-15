@@ -2,11 +2,13 @@
 
 ## Purpose
 
-Define software architecture from software requirements.
+Define software architecture from requirements, system architecture and hardware-software interface.
 
 ## Input work products
 
-- Software requirements
+- Requirements
+- System architecture
+- Hardware-software interface
 
 ## Output work products
 
@@ -14,10 +16,10 @@ Define software architecture from software requirements.
 
 ## Steps
 
-1. Review the software requirements.
-2. Identify the software architecture elements required to address the software requirements.
+1. Review the requirements, system architecture and hardware-software interface.
+2. Identify the software architecture elements required to address the requirements, system architecture and hardware-software interface.
 3. Define the software architecture based on the identified software architecture elements.
-4. Define traceability between software architecture elements and software requirements.
+4. Define traceability from software architecture elements to requirements, system architecture and hardware-software interface.
 5. Check the software architecture for completeness, consistency and correctness.
 
 ## Guidelines
@@ -25,6 +27,8 @@ Define software architecture from software requirements.
 ### Software architecture work product
 
 The software architecture work product shall follow the [Architecture definition](../../resources/architecture_definition.md).
+
+Requirements that do not include `sw` in their domain attribute and system architecture elements not traced to such requirements shall not be considered as input for software architecture definition.
 
 #### Architecture model
 
@@ -91,7 +95,7 @@ The software architecture shall define the platform as a software design.
 
 The platform software design shall define the platform-specific architectural decisions and default configurations.
 
-All platform characteristics required to define the software architecture shall be provided by upstream elements. If relevant platform characteristics are not defined by upstream elements and no valid default option is available, the software architecture process shall not be completed until the missing information is defined upstream.
+Platform constraints shall be provided by upstream elements. If required platform information is missing and no valid default option is available, the software architecture process shall not be completed until the missing information is defined upstream.
 
 The platform software design shall contain:
 - Toolchains:

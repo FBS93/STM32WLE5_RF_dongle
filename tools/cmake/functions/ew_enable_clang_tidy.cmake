@@ -7,7 +7,7 @@
 #
 #   The configured clang-tidy command will:
 #     - Use the repository .clang-tidy configuration file.
-#     - Restrict header diagnostics to files under the sw/ directory.
+#     - Restrict header diagnostics to files under the workspace directory.
 #     - Add the compiler target triple when available.
 #     - Add the compiler sysroot when available and valid.
 #
@@ -17,7 +17,7 @@
 function(ew_enable_clang_tidy)
   # Define the clang-tidy configuration inputs.
   set(ew_clang_tidy_config "${CMAKE_SOURCE_DIR}/.clang-tidy")
-  set(ew_clang_tidy_header_filter "^${CMAKE_SOURCE_DIR}/sw/.*")
+  set(ew_clang_tidy_header_filter "^${CMAKE_SOURCE_DIR}/.*")
 
   # Ensure the repository clang-tidy configuration exists.
   if(NOT EXISTS "${ew_clang_tidy_config}")
