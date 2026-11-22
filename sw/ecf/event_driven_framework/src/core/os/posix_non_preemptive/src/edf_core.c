@@ -205,7 +205,7 @@ int EDF_run(void)
 
   EDF_onShutdown();  // User-specific shutdown callback.
 
-  return 0;  // Return success
+  return 0;  // Return success.
 }
 
 void EDF_stop(void)
@@ -227,7 +227,7 @@ void EDF_activeObject_start(EDF_activeObject_t* me,
   EAF_ASSERT(me != NULL);
 
   me->prio = (uint8_t)(prio & 0xFFU);  // Base priority.
-  me->pthre = (uint8_t)(prio >> 8U);   // preemption-threshold
+  me->pthre = (uint8_t)(prio >> 8U);   // preemption-threshold.
 
   EDF_activeObject_register(me);
   EDF_eventQueue_init(&me->e_queue, q_storage, q_len);

@@ -104,9 +104,21 @@ ETF_TEST_SUITE(test_emf_bitmask)
     ETF_VERIFY(EMF_bitmask_findMax(bitmask, 2U) == 16U);
 
     EMF_bitmask_setBit(bitmask, 1U);
-    ETF_VERIFY(EMF_bitmask_findMax(bitmask, 2U) == 1U);
+    ETF_VERIFY(EMF_bitmask_findMax(bitmask, 2U) == 16U);
 
     EMF_bitmask_clearBit(bitmask, 16U);
     ETF_VERIFY(EMF_bitmask_findMax(bitmask, 2U) == 1U);
+  }
+
+  ETF_TEST(find_max_returns_highest_position_within_and_across_bytes)
+  {
+    uint8_t bitmask[2U] = {0U, 0U};
+
+    EMF_bitmask_setBit(bitmask, 1U);
+    EMF_bitmask_setBit(bitmask, 9U);
+    ETF_VERIFY(EMF_bitmask_findMax(bitmask, 2U) == 9U);
+
+    EMF_bitmask_setBit(bitmask, 16U);
+    ETF_VERIFY(EMF_bitmask_findMax(bitmask, 2U) == 16U);
   }
 }

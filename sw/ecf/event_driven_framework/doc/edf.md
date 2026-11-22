@@ -11,7 +11,7 @@ EDF is a lightweight, multi-platform event-driven framework designed to run on b
 All configuration options for this library are documented in the "EDF default configuration" section of [CMakeLists.txt](../../../../CMakeLists.txt).
 
 Core-specific notes currently documented:
-- [ARM Cortex-M EDF core](../src/core/baremetal/arm_cortex_m/doc/edf_core.md)
+- [ARM Cortex-M EDF core](../src/core/baremetal/preemptive/arm_cortex_m/doc/edf_core.md)
 
 This framework is a derivative work based on:
 - QP/C (c) Quantum Leaps, LLC.
