@@ -95,7 +95,7 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_C_FLAGS_RELEASE": "-O2 -g2",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
-        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M_PREEMPTIVE",
         "ECF_TARGET_PLATFORM": "stm32f103c8tx",
         "U_TEST": "OFF",
         "I_TEST": "OFF"
@@ -110,7 +110,7 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_FLAGS_DEBUG": "-O0 -g3",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
-        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M_PREEMPTIVE",
         "ECF_TARGET_PLATFORM": "stm32f103c8tx",
         "U_TEST": "OFF",
         "I_TEST": "OFF"
@@ -125,7 +125,7 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -save-temps=obj -P",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
-        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M_PREEMPTIVE",
         "ECF_TARGET_PLATFORM": "stm32f103c8tx",
         "U_TEST": "OFF",
         "I_TEST": "OFF"
@@ -140,7 +140,7 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_C_FLAGS_RELEASE": "-O2 -g2",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
-        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M_PREEMPTIVE",
         "ECF_TARGET_PLATFORM": "stm32wle5c8u6_platform"
       }
     },
@@ -153,7 +153,7 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_FLAGS_DEBUG": "-O0 -g3",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
-        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M_PREEMPTIVE",
         "ECF_TARGET_PLATFORM": "stm32wle5c8u6_platform"
       }
     },
@@ -166,7 +166,7 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -save-temps=obj -P",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
-        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
+        "EBF_PORT": "EBF_PORT_ARM_CORTEX_M_PREEMPTIVE",
         "ECF_TARGET_PLATFORM": "stm32wle5c8u6_platform"
       }
     }
