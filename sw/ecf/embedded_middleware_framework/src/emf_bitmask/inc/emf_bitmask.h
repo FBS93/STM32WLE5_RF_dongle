@@ -2,9 +2,12 @@
  * @brief Bitmask utility for managing and querying bit-level flags.
  *
  * This module is priority-based:
- * - Lower bit index means higher priority.
- * - bit0 is the highest priority bit.
+ * - Higher bit position means higher priority.
+ * - The most significant set bit has the highest priority.
  * - Public API bit positions use 1-based indexing (bit0 <-> bit_pos = 1).
+ *
+ * Bitmasks support up to 255 bits, numbered from 1 to 255.
+ * Unused bits shall remain zero.
  *
  * @copyright
  * Copyright (c) 2026 FBS93.
