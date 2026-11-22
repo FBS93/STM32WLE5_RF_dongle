@@ -25,7 +25,13 @@ MEMORY
 
 _estack = ORIGIN(RAM) + LENGTH(RAM);
 _min_heap_size = 0x0;
-_min_stack_size = 0x400;
+_min_stack_size = 0x1000;
+_stack_top = _estack;
+_stack_bottom = _stack_top - _min_stack_size;
+
+ASSERT(_min_stack_size > 0, "Stack capacity must be positive")
+ASSERT((_min_stack_size % 8) == 0, "Stack capacity must be 8-byte aligned")
+ASSERT(_stack_bottom >= ORIGIN(RAM), "Stack exceeds RAM")
 
 SECTIONS
 {
@@ -124,6 +130,14 @@ SECTIONS
     PROVIDE(end = .);
     PROVIDE(_end = .);
     . = . + _min_heap_size;
+    _heap_reserved_end = .;
+  } >RAM
+
+  .stack _stack_bottom (NOLOAD) :
+  {
     . = . + _min_stack_size;
   } >RAM
+
+  ASSERT(_heap_reserved_end <= _stack_bottom,
+         "Data/BSS/reserved heap overlaps fixed stack region")
 }
