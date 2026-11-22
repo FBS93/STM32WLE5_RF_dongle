@@ -96,7 +96,8 @@ void EDF_onStartup(void);
  */
 void EDF_onShutdown(void);
 
-#if (EBF_CORE == EBF_CORE_BAREMETAL)
+#if ((EBF_CORE == EBF_CORE_BAREMETAL) && \
+     (EBF_PORT == EBF_PORT_ARM_CORTEX_M_PREEMPTIVE))
 /**
  * @brief Framework ISR exit handler.
  *
@@ -105,7 +106,8 @@ void EDF_onShutdown(void);
  * context switch if required.
  */
 void EDF_ISRExit(void);
-#endif  //(EBF_CORE == EBF_CORE_BAREMETAL)
+#endif  //(EBF_CORE == EBF_CORE_BAREMETAL) &&
+        //(EBF_PORT == EBF_PORT_ARM_CORTEX_M_PREEMPTIVE)
 
 #if ((EBF_CORE == EBF_CORE_BAREMETAL) ||            \
      (EBF_PORT == EBF_PORT_POSIX_NON_PREEMPTIVE) || \

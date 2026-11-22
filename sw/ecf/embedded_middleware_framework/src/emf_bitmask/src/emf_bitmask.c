@@ -170,6 +170,7 @@ uint8_t EMF_bitmask_findMax(const uint8_t* bitmask, uint8_t len)
     if (bitmask[len] != 0U)
     {
       max = (uint8_t)(EBF_utils_log2(bitmask[len]) + (len * 8U));
+      break;
     }
   }
 
