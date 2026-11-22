@@ -23,6 +23,6 @@ target_link_libraries(
   PRIVATE eaf ebf emf
 )
 
-if(ECF_TEST)
+if(ECF_TEST AND U_TEST)
   add_subdirectory(u_test)
 endif()

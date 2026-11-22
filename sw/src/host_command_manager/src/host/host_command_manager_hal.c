@@ -46,17 +46,14 @@ void hostCommandManagerHal_init(void)
 {
 }
 
-uint32_t hostCommandManagerHal_getAvailableBytes(void)
-{
-  return 0U;
-}
-
-void hostCommandManagerHal_read(uint8_t* data, uint32_t length)
+uint32_t hostCommandManagerHal_read(uint8_t* data, uint32_t capacity)
 {
   EAF_ASSERT_BLOCK_BEGIN();
   EAF_ASSERT_IN_BLOCK(data != NULL);
-  EAF_ASSERT_IN_BLOCK(length > 0U);
+  EAF_ASSERT_IN_BLOCK(capacity > 0U);
   EAF_ASSERT_BLOCK_END();
+
+  return 0U;
 }
 
 void hostCommandManagerHal_write(const uint8_t* data, uint32_t length)

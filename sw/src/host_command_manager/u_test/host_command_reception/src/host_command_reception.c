@@ -105,18 +105,13 @@ DEFINE_EFF_GLOBALS;
  * -------------------------------------------------------------------------- */
 
 /**
- * @brief Returns bytes remaining in the real input FIFO.
- * @return Available bytes.
- */
-static uint32_t getAvailableBytes(void);
-
-/**
  * @brief Adapts the EFF HAL read callback to the real EMF FIFO.
  *
  * @param[out] data Destination for received bytes.
- * @param[in] length Number of bytes to consume.
+ * @param[in] capacity Maximum number of bytes to consume.
+ * @return Number of bytes consumed, or zero when empty.
  */
-static void readBytes(uint8_t* data, uint32_t length);
+static uint32_t readBytes(uint8_t* data, uint32_t capacity);
 
 /**
  * @brief Supplies a distinct typed slot initialized from allocator arguments.
@@ -138,14 +133,21 @@ static void capturePublication(const EDF_event_t* event);
  * Private function definitions
  * -------------------------------------------------------------------------- */
 
-static uint32_t getAvailableBytes(void)
+static uint32_t readBytes(uint8_t* data, uint32_t capacity)
 {
-  return EMF_byteFifo_getUsed(&rxFifo);
-}
+  uint32_t count;
 
-static void readBytes(uint8_t* data, uint32_t length)
-{
-  EMF_byteFifo_pop(&rxFifo, data, length);
+  count = EMF_byteFifo_getUsed(&rxFifo);
+  if (count > capacity)
+  {
+    count = capacity;
+  }
+  if (count > 0U)
+  {
+    EMF_byteFifo_pop(&rxFifo, data, count);
+  }
+
+  return count;
 }
 
 static EDF_event_t* allocateEvent(uint_fast16_t event_size, int signal)
@@ -185,13 +187,9 @@ static void capturePublication(const EDF_event_t* event)
  ******************************************************************************/
 
 /**
- * @brief EFF replacement for the HAL available-byte query.
- */
-FAKE_VALUE_FUNC(uint32_t, hostCommandManagerHal_getAvailableBytes);
-/**
  * @brief EFF replacement for consuming received HAL bytes.
  */
-FAKE_VOID_FUNC(hostCommandManagerHal_read, uint8_t*, uint32_t);
+FAKE_VALUE_FUNC(uint32_t, hostCommandManagerHal_read, uint8_t*, uint32_t);
 /**
  * @brief EFF observer for unexpected host responses.
  */
@@ -231,7 +229,6 @@ void ETF_setUp(void)
   size_t slot_index;
   size_t byte_index;
 
-  RESET_FAKE(hostCommandManagerHal_getAvailableBytes);
   RESET_FAKE(hostCommandManagerHal_read);
   RESET_FAKE(hostCommandManagerHal_write);
   RESET_FAKE(EDF_event_initMutable);
@@ -254,7 +251,6 @@ void ETF_setUp(void)
   allocationIndex = 0U;
   publicationCount = 0U;
 
-  hostCommandManagerHal_getAvailableBytes_fake.custom_fake = getAvailableBytes;
   hostCommandManagerHal_read_fake.custom_fake = readBytes;
   EDF_event_initMutable_fake.custom_fake = allocateEvent;
   EDF_activeObject_publish_fake.custom_fake = capturePublication;
@@ -461,7 +457,7 @@ ETF_TEST_SUITE(host_command_reception)
     events_hostDataAvailable_t data_available = {
       .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
 
-    // SYS_REQ_PARAMETER_40 permits up to 255 TX packet bytes.
+    // REQ_PARAMETER_40 permits up to 255 TX packet bytes.
     uint8_t payload[255U];
     uint8_t decoded[sizeof(payload) + 6U];
     uint8_t encoded[EMF_COBS_ENCODED_SIZE(sizeof(decoded))];

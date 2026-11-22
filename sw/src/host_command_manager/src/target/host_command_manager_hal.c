@@ -174,6 +174,8 @@ static const events_hostDataAvailable_t hostDataAvailableEvent = {
   .super = EDF_EVENT_IMMUTABLE_INIT(EVENTS_HOST_DATA_AVAILABLE)};
 /** @brief True after the target HAL has been initialized. */
 static bool initialized;
+/** @brief Notification queued or being serviced; guarded with the RX FIFO. */
+static bool rxNotificationPending;
 
 /*******************************************************************************
  * PUBLIC VARIABLES
@@ -226,31 +228,34 @@ void hostCommandManagerHal_init(void)
   NVIC_ISER1 = NVIC_ISER1_USART2;
 }
 
-uint32_t hostCommandManagerHal_getAvailableBytes(void)
+uint32_t hostCommandManagerHal_read(uint8_t* data, uint32_t capacity)
 {
-  uint32_t available;
+  uint32_t count;
 
-  EAF_ASSERT(initialized);
-
-  EBF_CRITICAL_SECTION_ENTRY();
-  available = EMF_byteFifo_getUsed(&rxFifo);
-  EBF_CRITICAL_SECTION_EXIT();
-
-  return available;
-}
-
-void hostCommandManagerHal_read(uint8_t* data, uint32_t length)
-{
   EAF_ASSERT_BLOCK_BEGIN();
   EAF_ASSERT_IN_BLOCK(initialized);
   EAF_ASSERT_IN_BLOCK(data != NULL);
-  EAF_ASSERT_IN_BLOCK(length > 0U);
+  EAF_ASSERT_IN_BLOCK(capacity > 0U);
   EAF_ASSERT_BLOCK_END();
 
   EBF_CRITICAL_SECTION_ENTRY();
-  EAF_ASSERT_IN_CRITICAL_SECTION(length <= EMF_byteFifo_getUsed(&rxFifo));
-  EMF_byteFifo_pop(&rxFifo, data, length);
+  count = EMF_byteFifo_getUsed(&rxFifo);
+  if (count > 0U)
+  {
+    if (count > capacity)
+    {
+      count = capacity;
+    }
+    EMF_byteFifo_pop(&rxFifo, data, count);
+  }
+  else
+  {
+    // Rearm only when the consumer finishes draining, not on each byte pop.
+    rxNotificationPending = false;
+  }
   EBF_CRITICAL_SECTION_EXIT();
+
+  return count;
 }
 
 void hostCommandManagerHal_write(const uint8_t* data, uint32_t length)
@@ -295,13 +300,14 @@ void USART2_IRQHandler(void)
 
   if ((status & USART_ISR_RXNE) != 0U)
   {
-    // Reading RDR consumes the byte; notify only on empty-to-non-empty.
+    // Keep one notification pending throughout the consumer's drain loop.
     byte = (uint8_t)USART2_RDR;
     EAF_ASSERT(!EMF_byteFifo_isFull(&rxFifo));
-    notify = EMF_byteFifo_isEmpty(&rxFifo);
+    notify = !rxNotificationPending;
     EMF_byteFifo_push(&rxFifo, &byte, 1U);
     if (notify)
     {
+      rxNotificationPending = true;
       EDF_activeObject_publish(&hostDataAvailableEvent.super);
     }
   }

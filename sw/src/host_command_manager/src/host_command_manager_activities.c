@@ -1059,9 +1059,8 @@ void hostCommandManagerActivities_handleHostDataAvailable(
   EAF_ASSERT_IN_BLOCK(e != NULL);
   EAF_ASSERT_BLOCK_END();
 
-  while (hostCommandManagerHal_getAvailableBytes() > 0U)
+  while (hostCommandManagerHal_read(&byte, 1U) > 0U)
   {
-    hostCommandManagerHal_read(&byte, 1U);
     if (me->rx_frame_length < HOST_COMMAND_MANAGER_RX_FRAME_CAPACITY)
     {
       me->rx_frame[me->rx_frame_length++] = byte;

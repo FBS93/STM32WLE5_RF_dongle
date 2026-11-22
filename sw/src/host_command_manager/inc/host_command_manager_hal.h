@@ -58,20 +58,16 @@
 void hostCommandManagerHal_init(void);
 
 /**
- * @brief Gets the number of host bytes available to read.
+ * @brief Reads available host bytes without blocking, up to @c capacity.
  *
- * @return Number of available bytes.
- */
-uint32_t hostCommandManagerHal_getAvailableBytes(void);
-
-/**
- * @brief Reads and consumes exactly the requested number of bytes received
- * from the host.
+ * Read until zero is returned. Observing an already empty RX FIFO atomically
+ * rearms the target ISR notification; consuming the last byte does not.
  *
- * @param[out] data Pointer to a destination buffer of at least @c length bytes.
- * @param[in] length Number of bytes to read.
+ * @param[out] data Destination buffer of at least @c capacity bytes.
+ * @param[in] capacity Maximum number of bytes to read; greater than zero.
+ * @return Number of bytes consumed, or zero when the RX FIFO was empty.
  */
-void hostCommandManagerHal_read(uint8_t* data, uint32_t length);
+uint32_t hostCommandManagerHal_read(uint8_t* data, uint32_t capacity);
 
 /**
  * @brief Writes bytes to the host.

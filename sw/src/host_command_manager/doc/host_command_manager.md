@@ -7,7 +7,7 @@
 The internal `host_command_manager_hal`:
 - Has mutually exclusive target and host implementations selected by the software-unit build. The target implementation abstracts USART2; the host implementation minimally realizes the same functional interface.
 - Have a RX FIFO capacity of 264 bytes, and a TX FIFO capacity of 267 bytes.
-- Publishes `HOST_DATA_AVAILABLE` from its RX ISR only when data arrives while the RX FIFO is empty.
+- Publishes `HOST_DATA_AVAILABLE` from its RX ISR only when no notification is pending; rearmed when the consumer reads an empty RX FIFO.
 - `hostCommandManagerHal_write()` enqueues the data and, if the TX FIFO was empty, enables the TX interrupt; the USART2 ISR drains the FIFO while the hardware accepts data and disables the TX interrupt when the FIFO becomes empty.
 
 The active object implementation:
