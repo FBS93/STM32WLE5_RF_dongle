@@ -7,3 +7,7 @@ add_subdirectory(packet_timeouts)
 add_subdirectory(rx_duty_cycle)
 add_subdirectory(cad_exits)
 add_subdirectory(tx_continuous)
+
+if(ECF_TARGET_PLATFORM STREQUAL "stm32wle5c8u6_platform")
+  add_subdirectory(stack_watermark)
+endif()

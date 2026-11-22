@@ -7,7 +7,7 @@ Name: swi_hostUsbControl
 Interface inherited from upstream definition.
 
 Upstream traceability:
-- [SW_REQ_INTERFACE_1](../req/sw_interfaces.md#sw_req_interface_1)
+- [SYS_ARCH_INTERFACE_1](../../sys/arch/sys_interfaces.md#sys_arch_interface_1)
 
 Status: approved
 
@@ -18,7 +18,7 @@ Name: swi_rfInputOutput
 Interface inherited from upstream definition.
 
 Upstream traceability:
-- [SW_REQ_INTERFACE_2](../req/sw_interfaces.md#sw_req_interface_2)
+- [SYS_ARCH_INTERFACE_2](../../sys/arch/sys_interfaces.md#sys_arch_interface_2)
 
 Status: approved
 
@@ -49,8 +49,14 @@ Subscribed events:
 - HOST_DATA_AVAILABLE
 
 Upstream traceability:
-- [SW_REQ_CONTROLLER_1](../req/sw_controller.md#sw_req_controller_1)
-- [SW_REQ_INTERFACE_1](../req/sw_interfaces.md#sw_req_interface_1)
+- [SYS_ARCH_COMPONENT_1](../../sys/arch/sys_components.md#sys_arch_component_1)
+- [SYS_ARCH_COMPONENT_2](../../sys/arch/sys_components.md#sys_arch_component_2)
+- [SYS_ARCH_INTERFACE_1](../../sys/arch/sys_interfaces.md#sys_arch_interface_1)
+- [SYS_ARCH_INTERFACE_2](../../sys/arch/sys_interfaces.md#sys_arch_interface_2)
+- [SYS_ARCH_DESIGN_1](../../sys/arch/sys_designs.md#sys_arch_design_1)
+- [HW_SW_INTERFACE_7](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_7)
+- [REQ_PRODUCT_1](../../pdv/req/req_product.md#req_product_1)
+- [REQ_INTERFACE_1](../../pdv/req/req_interfaces.md#req_interface_1)
 
 Status: approved
 
@@ -81,7 +87,14 @@ Subscribed events:
 - OPERATION_COMPLETE
 
 Upstream traceability:
-- [SW_REQ_CONTROLLER_1](../req/sw_controller.md#sw_req_controller_1)
-- [SW_REQ_INTERFACE_2](../req/sw_interfaces.md#sw_req_interface_2)
+- [SYS_ARCH_COMPONENT_1](../../sys/arch/sys_components.md#sys_arch_component_1)
+- [SYS_ARCH_INTERFACE_1](../../sys/arch/sys_interfaces.md#sys_arch_interface_1)
+- [SYS_ARCH_INTERFACE_2](../../sys/arch/sys_interfaces.md#sys_arch_interface_2)
+- [SYS_ARCH_DESIGN_1](../../sys/arch/sys_designs.md#sys_arch_design_1)
+- [HW_SW_INTERFACE_9](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_9)
+- [HW_SW_INTERFACE_10](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_10)
+- [HW_SW_INTERFACE_12](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_12)
+- [REQ_PRODUCT_1](../../pdv/req/req_product.md#req_product_1)
+- [REQ_INTERFACE_2](../../pdv/req/req_interfaces.md#req_interface_2)
 
 Status: approved

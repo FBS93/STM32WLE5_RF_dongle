@@ -20,7 +20,7 @@ Status: approved
 
 ## Use case
 
-With idle confirmed and a complete LoRa single-RX configuration applied, the host starts reception. One received packet is reported and the operation ends, as required by the [single-RX contract](../../../../../sys/req/sys_interfaces.md#rx-operation).
+With idle confirmed and a complete LoRa single-RX configuration applied, the host starts reception. One received packet is reported and the operation ends, as required by the [single-RX contract](../../../../../pdv/req/req_interfaces.md#rx-operation).
 
 ## Verification scope
 

@@ -18,56 +18,71 @@ EDF resource decisions:
 
 Events:
 - `GET_CONFIG_REQUEST`
-  - Description: Represents the [GET_CONFIG_REQUEST](../../sys/req/sys_interfaces.md#get-config-request) command.
+  - Description: Represents the [GET_CONFIG_REQUEST](../../pdv/req/req_interfaces.md#get-config-request) command.
 - `SET_CONFIG`
-  - Description: Represents the [SET_CONFIG](../../sys/req/sys_interfaces.md#set-config-request) command.
+  - Description: Represents the [SET_CONFIG](../../pdv/req/req_interfaces.md#set-config-request) command.
   - Parameters:
-    - `configuration_payload`: [Configuration payload](../../sys/req/sys_interfaces.md#configuration-payload).
+    - `configuration_payload`: [Configuration payload](../../pdv/req/req_interfaces.md#configuration-payload).
 - `CALIBRATE`
-  - Description: Represents the [CALIBRATE](../../sys/req/sys_interfaces.md#calibrate-request) command.
+  - Description: Represents the [CALIBRATE](../../pdv/req/req_interfaces.md#calibrate-request) command.
   - Parameters:
-    - `calibration_payload`: [Calibration payload](../../sys/req/sys_interfaces.md#calibration-payload).
+    - `calibration_payload`: [Calibration payload](../../pdv/req/req_interfaces.md#calibration-payload).
 - `TX_PACKET`
-  - Description: Represents the [TX_PACKET](../../sys/req/sys_interfaces.md#tx-packet-request) command.
+  - Description: Represents the [TX_PACKET](../../pdv/req/req_interfaces.md#tx-packet-request) command.
   - Parameters:
-    - `tx_packet_payload`: [TX Packet payload](../../sys/req/sys_interfaces.md#tx-packet-payload).
-    - `payload_length`: [TX packet payload length](../../sys/req/sys_interfaces.md#tx-packet-payload).
+    - `tx_packet_payload`: [TX Packet payload](../../pdv/req/req_interfaces.md#tx-packet-payload).
+    - `payload_length`: [TX packet payload length](../../pdv/req/req_interfaces.md#tx-packet-payload).
 - `RX_START`
-  - Description: Represents the [RX_START](../../sys/req/sys_interfaces.md#rx-start-request) command.
+  - Description: Represents the [RX_START](../../pdv/req/req_interfaces.md#rx-start-request) command.
 - `CAD_START`
-  - Description: Represents the [CAD_START](../../sys/req/sys_interfaces.md#cad-start-request) command.
+  - Description: Represents the [CAD_START](../../pdv/req/req_interfaces.md#cad-start-request) command.
 - `TX_CONTINUOUS_WAVE`
-  - Description: Represents the [TX_CONTINUOUS_WAVE](../../sys/req/sys_interfaces.md#tx-continuous-wave-request) command.
+  - Description: Represents the [TX_CONTINUOUS_WAVE](../../pdv/req/req_interfaces.md#tx-continuous-wave-request) command.
 - `TX_CONTINUOUS_PREAMBLE`
-  - Description: Represents the [TX_CONTINUOUS_PREAMBLE](../../sys/req/sys_interfaces.md#tx-continuous-preamble-request) command.
+  - Description: Represents the [TX_CONTINUOUS_PREAMBLE](../../pdv/req/req_interfaces.md#tx-continuous-preamble-request) command.
 - `STOP`
-  - Description: Represents the [STOP](../../sys/req/sys_interfaces.md#stop-request) command.
+  - Description: Represents the [STOP](../../pdv/req/req_interfaces.md#stop-request) command.
 - `GET_DIAGNOSTICS_REQUEST`
-  - Description: Represents the [GET_DIAGNOSTICS_REQUEST](../../sys/req/sys_interfaces.md#get-diagnostics-request) command.
+  - Description: Represents the [GET_DIAGNOSTICS_REQUEST](../../pdv/req/req_interfaces.md#get-diagnostics-request) command.
 - `GET_CONFIG_RESPONSE`
-  - Description: Represents the [GET_CONFIG_RESPONSE](../../sys/req/sys_interfaces.md#get-config-response) command.
+  - Description: Represents the [GET_CONFIG_RESPONSE](../../pdv/req/req_interfaces.md#get-config-response) command.
   - Parameters:
-    - `configuration_payload`: [Configuration payload](../../sys/req/sys_interfaces.md#configuration-payload).
+    - `configuration_payload`: [Configuration payload](../../pdv/req/req_interfaces.md#configuration-payload).
 - `GET_DIAGNOSTICS_RESPONSE`
-  - Description: Represents the [GET_DIAGNOSTICS_RESPONSE](../../sys/req/sys_interfaces.md#get-diagnostics-response) command.
+  - Description: Represents the [GET_DIAGNOSTICS_RESPONSE](../../pdv/req/req_interfaces.md#get-diagnostics-response) command.
   - Parameters:
-    - `diagnostics_payload`: [Diagnostics payload](../../sys/req/sys_interfaces.md#diagnostics-payload).
+    - `diagnostics_payload`: [Diagnostics payload](../../pdv/req/req_interfaces.md#diagnostics-payload).
 - `RX_PACKET`
-  - Description: Represents the [RX_PACKET](../../sys/req/sys_interfaces.md#rx-packet) command.
+  - Description: Represents the [RX_PACKET](../../pdv/req/req_interfaces.md#rx-packet) command.
   - Parameters:
-    - `rx_packet_payload`: [RX packet payload](../../sys/req/sys_interfaces.md#rx-packet-payload).
+    - `rx_packet_payload`: [RX packet payload](../../pdv/req/req_interfaces.md#rx-packet-payload).
 - `CAD_DETECTED`
-  - Description: Represents the [CAD_DETECTED](../../sys/req/sys_interfaces.md#cad-detected) command.
+  - Description: Represents the [CAD_DETECTED](../../pdv/req/req_interfaces.md#cad-detected) command.
 - `OPERATION_COMPLETE`
   - Description: Indicates that the active RF operation has completed.
 - `HOST_DATA_AVAILABLE`
   - Description: Indicates that data received from the host is available for processing.
 
 Upstream traceability:
-- [SW_REQ_CLI_1](../req/sw_cli.md#sw_req_cli_1)
-- [SW_REQ_CONTROLLER_1](../req/sw_controller.md#sw_req_controller_1)
-- [SW_REQ_INTERFACE_1](../req/sw_interfaces.md#sw_req_interface_1)
-- [SW_REQ_INTERFACE_2](../req/sw_interfaces.md#sw_req_interface_2)
+- [SYS_ARCH_COMPONENT_1](../../sys/arch/sys_components.md#sys_arch_component_1)
+- [SYS_ARCH_COMPONENT_2](../../sys/arch/sys_components.md#sys_arch_component_2)
+- [SYS_ARCH_INTERFACE_1](../../sys/arch/sys_interfaces.md#sys_arch_interface_1)
+- [SYS_ARCH_INTERFACE_2](../../sys/arch/sys_interfaces.md#sys_arch_interface_2)
+- [SYS_ARCH_DESIGN_1](../../sys/arch/sys_designs.md#sys_arch_design_1)
+- [HW_SW_INTERFACE_7](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_7)
+- [HW_SW_INTERFACE_9](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_9)
+- [HW_SW_INTERFACE_10](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_10)
+- [HW_SW_INTERFACE_12](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_12)
+- [REQ_CLI_1](../../pdv/req/req_cli.md#req_cli_1)
+- [REQ_CLI_2](../../pdv/req/req_cli.md#req_cli_2)
+- [REQ_CLI_3](../../pdv/req/req_cli.md#req_cli_3)
+- [REQ_CLI_4](../../pdv/req/req_cli.md#req_cli_4)
+- [REQ_CLI_5](../../pdv/req/req_cli.md#req_cli_5)
+- [REQ_CLI_6](../../pdv/req/req_cli.md#req_cli_6)
+- [REQ_CLI_7](../../pdv/req/req_cli.md#req_cli_7)
+- [REQ_PRODUCT_1](../../pdv/req/req_product.md#req_product_1)
+- [REQ_INTERFACE_1](../../pdv/req/req_interfaces.md#req_interface_1)
+- [REQ_INTERFACE_2](../../pdv/req/req_interfaces.md#req_interface_2)
 
 Status: approved
 
@@ -106,7 +121,9 @@ Interrupts that publish EDF events shall finish with `EDF_ISRExit()`. All event-
 RAM layout:
 | Name | Description | Start address | End address |
 |---|---|---|---|
-| target_sram2 | STM32WLE5C8U6 SRAM2. The C8 density provides 20 Kbytes; RM0461 maps SRAM2 from 0x2000 8000. | 0x2000 8000 | 0x2000 CFFF |
+| target_static_ram | 16 KiB available for data/BSS and unused space; section sizes are determined at link time. | 0x2000 8000 | 0x2000 BFFF |
+| target_heap_none | No dynamic heap; 0 bytes reserved. | N/A | N/A |
+| target_msp_stack | Fixed 4096-byte MSP stack reservation. | 0x2000 C000 | 0x2000 CFFF |
 
 ROM layout:
 | Name | Description | Start address | End address |
@@ -126,13 +143,22 @@ Embedded C Framework (ECF) integration:
 - Target ECF stdin is not supported.
 
 Upstream traceability:
-- [SW_REQ_PLATFORM_1](../req/sw_platform.md#sw_req_platform_1)
-- [SW_REQ_PLATFORM_2](../req/sw_platform.md#sw_req_platform_2)
-- [SW_REQ_PLATFORM_3](../req/sw_platform.md#sw_req_platform_3)
-- [SW_REQ_PLATFORM_4](../req/sw_platform.md#sw_req_platform_4)
-- [SW_REQ_PLATFORM_5](../req/sw_platform.md#sw_req_platform_5)
-- [SW_REQ_PLATFORM_6](../req/sw_platform.md#sw_req_platform_6)
-- [SW_REQ_PLATFORM_7](../req/sw_platform.md#sw_req_platform_7)
+- [SYS_ARCH_COMPONENT_1](../../sys/arch/sys_components.md#sys_arch_component_1)
+- [SYS_ARCH_INTERFACE_1](../../sys/arch/sys_interfaces.md#sys_arch_interface_1)
+- [SYS_ARCH_INTERFACE_2](../../sys/arch/sys_interfaces.md#sys_arch_interface_2)
+- [REQ_PRODUCT_1](../../pdv/req/req_product.md#req_product_1)
+- [REQ_INTERFACE_1](../../pdv/req/req_interfaces.md#req_interface_1)
+- [REQ_INTERFACE_2](../../pdv/req/req_interfaces.md#req_interface_2)
+- [REQ_PARAMETER_35](../../pdv/req/req_parameters.md#req_parameter_35)
+- [HW_SW_INTERFACE_1](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_1)
+- [HW_SW_INTERFACE_3](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_3)
+- [HW_SW_INTERFACE_4](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_4)
+- [HW_SW_INTERFACE_6](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_6)
+- [HW_SW_INTERFACE_7](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_7)
+- [HW_SW_INTERFACE_8](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_8)
+- [HW_SW_INTERFACE_9](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_9)
+- [HW_SW_INTERFACE_10](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_10)
+- [HW_SW_INTERFACE_12](../../hw/cross_domain_interfaces/hw_sw_interface.md#hw_sw_interface_12)
 
 Status: approved
 
@@ -143,6 +169,14 @@ Name: swd_hostCliScope
 The [swc_hostCli](sw_components.md#sw_arch_component_1) shall be implemented as a Python 3 application for POSIX. It is defined up to software architecture only; downstream software-domain processes do not apply. The [swc_hostCli](sw_components.md#sw_arch_component_1) remains subject to system integration and qualification testing.
 
 Upstream traceability:
-- [SW_REQ_CLI_1](../req/sw_cli.md#sw_req_cli_1)
+- [SYS_ARCH_COMPONENT_2](../../sys/arch/sys_components.md#sys_arch_component_2)
+- [SYS_ARCH_INTERFACE_1](../../sys/arch/sys_interfaces.md#sys_arch_interface_1)
+- [REQ_CLI_1](../../pdv/req/req_cli.md#req_cli_1)
+- [REQ_CLI_2](../../pdv/req/req_cli.md#req_cli_2)
+- [REQ_CLI_3](../../pdv/req/req_cli.md#req_cli_3)
+- [REQ_CLI_4](../../pdv/req/req_cli.md#req_cli_4)
+- [REQ_CLI_5](../../pdv/req/req_cli.md#req_cli_5)
+- [REQ_CLI_6](../../pdv/req/req_cli.md#req_cli_6)
+- [REQ_CLI_7](../../pdv/req/req_cli.md#req_cli_7)
 
 Status: approved

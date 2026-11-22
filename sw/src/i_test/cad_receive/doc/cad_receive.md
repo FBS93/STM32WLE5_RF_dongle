@@ -19,7 +19,7 @@ Status: approved
 
 ## Use case
 
-From confirmed idle, the host configures LoRa receive-on-detection CAD. A clear scan, subsequent detection and received packet exercise the [persistent CAD contract](../../../../../sys/req/sys_interfaces.md#cad-operation); detection and packet delivery are reported while the functional operation remains CAD.
+From confirmed idle, the host configures LoRa receive-on-detection CAD. A clear scan, subsequent detection and received packet exercise the [persistent CAD contract](../../../../../pdv/req/req_interfaces.md#cad-operation); detection and packet delivery are reported while the functional operation remains CAD.
 
 ## Verification scope
 

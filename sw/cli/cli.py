@@ -69,7 +69,7 @@ COMMANDS = {
   "get-diagnostics": (0x0009, 0x8002),
 }
 
-# Enumeration tables preserve the semantic values of SYS_REQ_PARAMETER_*.
+# Enumeration tables preserve the semantic values of REQ_PARAMETER_*.
 PACKET_TYPES = {0: "fsk", 1: "lora", 2: "bpsk", 3: "msk"}
 ENABLED = {0: "disabled", 1: "enabled"}
 PULSE_SHAPES = {

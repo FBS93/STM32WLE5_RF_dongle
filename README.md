@@ -28,7 +28,7 @@ The STM32WLE5 RF dongle has two usage methods:
 ## Documentation
 
 - [Embedded Workbench overview](doc/ew.md) - template, environment, and development entry point.
-- [Project specifications](spec/).
-- [System requirements](sys/req/) and [system architecture](sys/arch/).
+- [Project specifications](pdv/spec/) and [requirements](pdv/req/).
+- [System architecture](sys/arch/).
 - [Hardware design](hw/).
-- [Software requirements](sw/req/), [software architecture](sw/arch/) and [software detailed design and implementation](sw/src/).
+- [Software architecture](sw/arch/) and [software detailed design and implementation](sw/src/).

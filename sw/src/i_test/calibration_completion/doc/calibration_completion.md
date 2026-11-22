@@ -19,7 +19,7 @@ Status: approved
 
 ## Use case
 
-From confirmed idle without prior RF configuration, the host requests calibration over a valid image-calibration interval using the [defined encoding](../../../../../sys/req/sys_interfaces.md#calibration-payload). Normal synchronous HAL return leads to completion and idle without a host completion message.
+From confirmed idle without prior RF configuration, the host requests calibration over a valid image-calibration interval using the [defined encoding](../../../../../pdv/req/req_interfaces.md#calibration-payload). Normal synchronous HAL return leads to completion and idle without a host completion message.
 
 ## Verification scope
 

@@ -19,7 +19,7 @@ Status: approved
 
 ## Use case
 
-From confirmed idle and a complete continuous-RX configuration, reception persists through configuration/diagnostic queries and packet delivery. A packet-TX command replaces RX directly; STOP terminates that replacement, following the [command-processing contract](../../../../../sys/req/sys_interfaces.md#command-processing).
+From confirmed idle and a complete continuous-RX configuration, reception persists through configuration/diagnostic queries and packet delivery. A packet-TX command replaces RX directly; STOP terminates that replacement, following the [command-processing contract](../../../../../pdv/req/req_interfaces.md#command-processing).
 
 ## Verification scope
 

@@ -15,7 +15,7 @@ Status: approved
 
 ## Use case
 
-From confirmed idle and a complete LoRa configuration, continuous-wave TX persists across diagnostic queries. An infinite-preamble request replaces it directly and remains active until STOP, exercising the [replacement contract](../../../../../sys/req/sys_interfaces.md#command-processing) without a radio completion indication.
+From confirmed idle and a complete LoRa configuration, continuous-wave TX persists across diagnostic queries. An infinite-preamble request replaces it directly and remains active until STOP, exercising the [replacement contract](../../../../../pdv/req/req_interfaces.md#command-processing) without a radio completion indication.
 
 ## Verification scope
 

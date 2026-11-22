@@ -55,7 +55,7 @@ spec.loader.exec_module(cli)
 # CONSTANTS
 # ==============================================================================
 
-# Independent wire fixtures in SYS_REQ_INTERFACE_1 field order.
+# Independent wire fixtures in REQ_INTERFACE_1 field order.
 COMMON = bytes.fromhex("000000403620f7")
 GENERIC_FRAMING = bytes.fromhex(
   "10 123456789abcdef0 00 12 34 02 ffff 2110 01 ff01 02"

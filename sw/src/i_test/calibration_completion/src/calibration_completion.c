@@ -119,16 +119,12 @@ static void sendCommand(hostCommandManager_commandId_t command,
 static const uint8_t* verifyReport(hostCommandManager_commandId_t command,
                                    uint16_t length);
 /**
- * @brief Return unread input size.
- * @return Available bytes.
- */
-static uint32_t getAvailableBytes(void);
-/**
- * @brief Consume input bytes requested by the real parser.
+ * @brief Consume available bytes up to the parser's capacity.
  * @param[out] data Destination.
- * @param[in] length Requested size.
+ * @param[in] capacity Destination capacity.
+ * @return Number of bytes consumed, or zero when empty.
  */
-static void readBytes(uint8_t* data, uint32_t length);
+static uint32_t readBytes(uint8_t* data, uint32_t capacity);
 /**
  * @brief Decode actual transient output.
  * @param[in] data Report bytes.
@@ -142,10 +138,8 @@ static void captureReport(const uint8_t* data, uint32_t length);
 
 /** @brief Observe host initialization. */
 FAKE_VOID_FUNC(hostCommandManagerHal_init);
-/** @brief Supply input availability. */
-FAKE_VALUE_FUNC(uint32_t, hostCommandManagerHal_getAvailableBytes);
 /** @brief Supply parser input. */
-FAKE_VOID_FUNC(hostCommandManagerHal_read, uint8_t*, uint32_t);
+FAKE_VALUE_FUNC(uint32_t, hostCommandManagerHal_read, uint8_t*, uint32_t);
 /** @brief Capture actual reports. */
 FAKE_VOID_FUNC(hostCommandManagerHal_write, const uint8_t*, uint32_t);
 /** @brief Retain callback/context values; EFF sizeof(pointer) is intentional.
@@ -232,22 +226,25 @@ static const uint8_t* verifyReport(hostCommandManager_commandId_t command,
   return &report[4];
 }
 
-static uint32_t getAvailableBytes(void)
-{
-  return (uint32_t)inputLength - inputOffset;
-}
-
-static void readBytes(uint8_t* data, uint32_t length)
+static uint32_t readBytes(uint8_t* data, uint32_t capacity)
 {
   uint32_t index;
+  uint32_t count;
 
   EDF_TEST_VERIFY(data != NULL);
-  EDF_TEST_VERIFY(length <= getAvailableBytes());
-  for (index = 0U; index < length; ++index)
+  EDF_TEST_VERIFY(capacity > 0U);
+  count = (uint32_t)inputLength - inputOffset;
+  if (count > capacity)
+  {
+    count = capacity;
+  }
+  for (index = 0U; index < count; ++index)
   {
     data[index] = input[inputOffset + index];
   }
-  inputOffset = (uint16_t)(inputOffset + length);
+  inputOffset = (uint16_t)(inputOffset + count);
+
+  return count;
 }
 
 static void captureReport(const uint8_t* data, uint32_t length)
@@ -281,7 +278,6 @@ void EAF_onError(const char* file, int line, int id)
 void EDFTest_onInit(void)
 {
   RESET_FAKE(hostCommandManagerHal_init);
-  RESET_FAKE(hostCommandManagerHal_getAvailableBytes);
   RESET_FAKE(hostCommandManagerHal_read);
   RESET_FAKE(hostCommandManagerHal_write);
   RESET_FAKE(rfManagerHal_init);
@@ -296,7 +292,6 @@ void EDFTest_onInit(void)
   RESET_FAKE(rfManagerHal_startContinuousWave);
   RESET_FAKE(rfManagerHal_startContinuousPreamble);
   eff = (eff_globals_t){0};
-  hostCommandManagerHal_getAvailableBytes_fake.custom_fake = getAvailableBytes;
   hostCommandManagerHal_read_fake.custom_fake = readBytes;
   hostCommandManagerHal_write_fake.custom_fake = captureReport;
 

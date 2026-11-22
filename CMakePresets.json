@@ -8,6 +8,8 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "ECF_TEST": "ON",
+        "U_TEST": "ON",
+        "I_TEST": "ON",
         "EW_ENABLE_CLANG_TIDY": "OFF",
         "CMAKE_C_FLAGS": "-Wall -Wextra -Wconversion -Werror",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
@@ -60,6 +62,8 @@
         "CMAKE_C_FLAGS_DEBUG": "-O0 -g3",
         "EDF_EXAMPLE_FUZZ": "ON",
         "ECF_TEST": "OFF",
+        "U_TEST": "OFF",
+        "I_TEST": "OFF",
         "EBF_CORE": "EBF_CORE_OS",
         "EBF_PORT": "EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ"
       }
@@ -76,6 +80,8 @@
         "CMAKE_EXE_LINKER_FLAGS": "-fprofile-instr-generate -fcoverage-mapping",
         "EDF_EXAMPLE_FUZZ": "ON",
         "ECF_TEST": "OFF",
+        "U_TEST": "OFF",
+        "I_TEST": "OFF",
         "EBF_CORE": "EBF_CORE_OS",
         "EBF_PORT": "EBF_PORT_POSIX_NON_PREEMPTIVE_FUZZ"
       }
@@ -90,7 +96,9 @@
         "CMAKE_C_FLAGS_RELEASE": "-O2 -g2",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
         "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
-        "ECF_TARGET_PLATFORM": "stm32f103c8tx"
+        "ECF_TARGET_PLATFORM": "stm32f103c8tx",
+        "U_TEST": "OFF",
+        "I_TEST": "OFF"
       }
     },
     {
@@ -103,7 +111,9 @@
         "CMAKE_C_FLAGS_DEBUG": "-O0 -g3",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
         "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
-        "ECF_TARGET_PLATFORM": "stm32f103c8tx"
+        "ECF_TARGET_PLATFORM": "stm32f103c8tx",
+        "U_TEST": "OFF",
+        "I_TEST": "OFF"
       }
     },
     {
@@ -116,7 +126,9 @@
         "CMAKE_C_FLAGS_DEBUG": "-O0 -g3 -save-temps=obj -P",
         "EBF_CORE": "EBF_CORE_BAREMETAL",
         "EBF_PORT": "EBF_PORT_ARM_CORTEX_M",
-        "ECF_TARGET_PLATFORM": "stm32f103c8tx"
+        "ECF_TARGET_PLATFORM": "stm32f103c8tx",
+        "U_TEST": "OFF",
+        "I_TEST": "OFF"
       }
     },
     {

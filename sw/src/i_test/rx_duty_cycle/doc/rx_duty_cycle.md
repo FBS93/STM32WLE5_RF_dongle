@@ -15,7 +15,7 @@ Status: approved
 
 ## Use case
 
-From confirmed idle and a complete LoRa duty-cycle configuration, reception delivers packets despite intervening timeout and rejection indications, until explicitly stopped. The scenario combines [RX persistence](../../../../../sys/req/sys_interfaces.md#rx-operation) with [duty-cycle semantics](../../../../../sys/req/sys_parameters.md#sys_req_parameter_32).
+From confirmed idle and a complete LoRa duty-cycle configuration, reception delivers packets despite intervening timeout and rejection indications, until explicitly stopped. The scenario combines [RX persistence](../../../../../pdv/req/req_interfaces.md#rx-operation) with [duty-cycle semantics](../../../../../pdv/req/req_parameters.md#req_parameter_32).
 
 ## Verification scope
 

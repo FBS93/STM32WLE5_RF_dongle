@@ -6,9 +6,9 @@ Encoding convention: Physical value = encoded value × Factor + Offset.
 
 `Encoded value type` defines how the serialized field is interpreted.
 
-# SYS_REQ_PARAMETER_1
+# REQ_PARAMETER_1
 
-Name: sysp_packetType
+Name: reqp_packetType
 
 Defines RF packet type.
 
@@ -26,15 +26,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
 
 Status: approved
 
-# SYS_REQ_PARAMETER_2
+# REQ_PARAMETER_2
 
-Name: sysp_rfFrequencyHz
+Name: reqp_rfFrequencyHz
 
 Defines RF operating frequency.
 
@@ -54,15 +54,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.3.5, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.5
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.3.5, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.5
 
 Status: approved
 
-# SYS_REQ_PARAMETER_3
+# REQ_PARAMETER_3
 
-Name: sysp_payloadLengthBytes
+Name: reqp_payloadLengthBytes
 
 Defines configured RX packet length.
 
@@ -82,20 +82,20 @@ Dependencies and constraints:
 - This parameter applies only to RX and is unused for LoRa explicit-header RX and packet types that support TX only.
 - For LoRa implicit-header RX and fixed-length generic FSK/GFSK RX, the value shall be the exact expected RX packet length.
 - For variable-length generic FSK/GFSK RX, the value shall be the maximum RX packet length expected.
-- For generic framing with [sysp_genericAddressFiltering](#sys_req_parameter_22) set to `node` or `node_and_broadcast`, [sysp_payloadLengthBytes](#sys_req_parameter_3) ≤ 254 bytes.
+- For generic framing with [reqp_genericAddressFiltering](#req_parameter_22) set to `node` or `node_and_broadcast`, [reqp_payloadLengthBytes](#req_parameter_3) ≤ 254 bytes.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.5.5, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.5.5, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_4
+# REQ_PARAMETER_4
 
-Name: sysp_loraSpreadingFactor
+Name: reqp_loraSpreadingFactor
 
 Defines LoRa spreading factor.
 
@@ -117,15 +117,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
 
 Status: approved
 
-# SYS_REQ_PARAMETER_5
+# REQ_PARAMETER_5
 
-Name: sysp_loraBandwidthKHz
+Name: reqp_loraBandwidthKHz
 
 Defines LoRa bandwidth.
 
@@ -146,21 +146,21 @@ Allowed values:
 - 500 kHz (`0x06`)
 
 Dependencies and constraints:
-- When [sysp_rfFrequencyHz](#sys_req_parameter_2) < 400 MHz, 250 and 500 kHz are not supported.
+- When [reqp_rfFrequencyHz](#req_parameter_2) < 400 MHz, 250 and 500 kHz are not supported.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1, Chapter 5.3.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1, Chapter 5.3.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_6
+# REQ_PARAMETER_6
 
-Name: sysp_loraCodingRate
+Name: reqp_loraCodingRate
 
 Defines LoRa coding rate.
 
@@ -179,15 +179,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
 
 Status: approved
 
-# SYS_REQ_PARAMETER_7
+# REQ_PARAMETER_7
 
-Name: sysp_loraLowDataRateOptimize
+Name: reqp_loraLowDataRateOptimize
 
 Defines whether LoRa low-data-rate optimization is enabled.
 
@@ -203,15 +203,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
 
 Status: approved
 
-# SYS_REQ_PARAMETER_8
+# REQ_PARAMETER_8
 
-Name: sysp_genericBitRateBps
+Name: reqp_genericBitRateBps
 
 Defines generic FSK/GFSK RX/TX or MSK/GMSK TX bit rate.
 
@@ -235,15 +235,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.1, Chapter 4.5.3, Chapter 4.5.4, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1, Chapter 5.3.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.1, Chapter 4.5.3, Chapter 4.5.4, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1, Chapter 5.3.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_9
+# REQ_PARAMETER_9
 
-Name: sysp_genericFrequencyDeviationHz
+Name: reqp_genericFrequencyDeviationHz
 
 Defines FSK/GFSK frequency deviation.
 
@@ -260,23 +260,23 @@ Encoded range: [0x000276, 0x033333].
 Physical range: [600.8148193359375, 199999.80926513671875] Hz.
 
 Dependencies and constraints:
-- [sysp_genericFrequencyDeviationHz](#sys_req_parameter_9) + ([sysp_genericBitRateBps](#sys_req_parameter_8) / 2) ≤ 250000 Hz.
-- When [sysp_fskReceiveBandwidthKHz](#sys_req_parameter_11) applies, [sysp_genericFrequencyDeviationHz](#sys_req_parameter_9) + ([sysp_genericBitRateBps](#sys_req_parameter_8) / 2) < [sysp_fskReceiveBandwidthKHz](#sys_req_parameter_11) expressed in Hz.
-- For GMSK configured through [sysp_packetType](#sys_req_parameter_1) set to `fsk`, [sysp_genericFrequencyDeviationHz](#sys_req_parameter_9) = ([sysp_genericBitRateBps](#sys_req_parameter_8) / 4).
+- [reqp_genericFrequencyDeviationHz](#req_parameter_9) + ([reqp_genericBitRateBps](#req_parameter_8) / 2) ≤ 250000 Hz.
+- When [reqp_fskReceiveBandwidthKHz](#req_parameter_11) applies, [reqp_genericFrequencyDeviationHz](#req_parameter_9) + ([reqp_genericBitRateBps](#req_parameter_8) / 2) < [reqp_fskReceiveBandwidthKHz](#req_parameter_11) expressed in Hz.
+- For GMSK configured through [reqp_packetType](#req_parameter_1) set to `fsk`, [reqp_genericFrequencyDeviationHz](#req_parameter_9) = ([reqp_genericBitRateBps](#req_parameter_8) / 4).
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.3, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 5.3.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.3, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 5.3.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_10
+# REQ_PARAMETER_10
 
-Name: sysp_genericPulseShape
+Name: reqp_genericPulseShape
 
 Defines generic FSK/GFSK or MSK/GMSK TX pulse shape.
 
@@ -295,15 +295,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.3, Chapter 4.5.4, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.3, Chapter 4.5.4, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_11
+# REQ_PARAMETER_11
 
-Name: sysp_fskReceiveBandwidthKHz
+Name: reqp_fskReceiveBandwidthKHz
 
 Defines FSK/GFSK RX bandwidth.
 
@@ -335,7 +335,7 @@ Allowed values:
 - 467.0 kHz (`0x09`)
 
 Dependencies and constraints:
-- [sysp_fskReceiveBandwidthKHz](#sys_req_parameter_11) expressed in Hz > ([sysp_genericBitRateBps](#sys_req_parameter_8) + (2 × [sysp_genericFrequencyDeviationHz](#sys_req_parameter_9)) + the frequency-error term).
+- [reqp_fskReceiveBandwidthKHz](#req_parameter_11) expressed in Hz > ([reqp_genericBitRateBps](#req_parameter_8) + (2 × [reqp_genericFrequencyDeviationHz](#req_parameter_9)) + the frequency-error term).
 - The frequency-error term = (2 × the HSE32 frequency error), with both expressed in Hz.
 - The HSE32 frequency error is the maximum absolute deviation, expressed in Hz, of the implemented HSE32 frequency from 32000000 Hz over the applicable operating conditions.
 
@@ -344,15 +344,15 @@ Domain:
 - hw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.3, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.3, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
 
 Status: approved
 
-# SYS_REQ_PARAMETER_12
+# REQ_PARAMETER_12
 
-Name: sysp_bpskBitRateBps
+Name: reqp_bpskBitRateBps
 
 Defines BPSK TX bit rate.
 
@@ -368,15 +368,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.6, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.6, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.1
 
 Status: approved
 
-# SYS_REQ_PARAMETER_13
+# REQ_PARAMETER_13
 
-Name: sysp_preambleLength
+Name: reqp_preambleLength
 
 Defines LoRa or generic FSK/GFSK or MSK/GMSK packet preamble length.
 
@@ -403,20 +403,20 @@ Physical range:
 - Generic MSK/GMSK: [8, 65535] bits.
 
 Dependencies and constraints:
-- For LoRa [sysp_loraSpreadingFactor](#sys_req_parameter_4) values 5 and 6, [sysp_preambleLength](#sys_req_parameter_13) ≥ 12 symbols.
+- For LoRa [reqp_loraSpreadingFactor](#req_parameter_4) values 5 and 6, [reqp_preambleLength](#req_parameter_13) ≥ 12 symbols.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.5.2, Chapter 4.5.5, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.1, Chapter 4.5.2, Chapter 4.5.5, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_14
+# REQ_PARAMETER_14
 
-Name: sysp_loraHeaderMode
+Name: reqp_loraHeaderMode
 
 Defines LoRa header mode.
 
@@ -430,20 +430,20 @@ Allowed values:
 
 Dependencies and constraints:
 - `explicit` shall use a variable packet length.
-- `implicit` shall use a fixed packet length without a header, and [sysp_payloadLengthBytes](#sys_req_parameter_3), [sysp_loraCodingRate](#sys_req_parameter_6), and [sysp_loraPayloadCrcEnabled](#sys_req_parameter_15) shall agree at both ends of the radio link.
+- `implicit` shall use a fixed packet length without a header, and [reqp_payloadLengthBytes](#req_parameter_3), [reqp_loraCodingRate](#req_parameter_6), and [reqp_loraPayloadCrcEnabled](#req_parameter_15) shall agree at both ends of the radio link.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_15
+# REQ_PARAMETER_15
 
-Name: sysp_loraPayloadCrcEnabled
+Name: reqp_loraPayloadCrcEnabled
 
 Defines whether LoRa packet CRC is enabled.
 
@@ -459,14 +459,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_16
+# REQ_PARAMETER_16
 
-Name: sysp_loraInvertIq
+Name: reqp_loraInvertIq
 
 Defines whether LoRa IQ setting is standard or inverted.
 
@@ -482,14 +482,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_17
+# REQ_PARAMETER_17
 
-Name: sysp_loraSynchronizationWord
+Name: reqp_loraSynchronizationWord
 
 Defines the LoRa synchronization word and network type.
 
@@ -507,14 +507,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.10.33, Chapter 4.10.34
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.10.33, Chapter 4.10.34
 
 Status: approved
 
-# SYS_REQ_PARAMETER_18
+# REQ_PARAMETER_18
 
-Name: sysp_genericPayloadLengthMode
+Name: reqp_genericPayloadLengthMode
 
 Defines generic FSK/GFSK or MSK/GMSK packet-length mode.
 
@@ -530,14 +530,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_19
+# REQ_PARAMETER_19
 
-Name: sysp_genericPreambleDetectionLengthBits
+Name: reqp_genericPreambleDetectionLengthBits
 
 Defines generic FSK/GFSK RX preamble-detection length.
 
@@ -556,14 +556,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_20
+# REQ_PARAMETER_20
 
-Name: sysp_genericSyncWordLengthBits
+Name: reqp_genericSyncWordLengthBits
 
 Defines generic FSK/GFSK or MSK/GMSK synchronization-word length.
 
@@ -583,14 +583,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_21
+# REQ_PARAMETER_21
 
-Name: sysp_genericSyncWord
+Name: reqp_genericSyncWord
 
 Defines the 8-byte generic FSK/GFSK or MSK/GMSK synchronization word.
 
@@ -599,20 +599,20 @@ Value size: 8 bytes.
 Value type: byte array.
 
 Dependencies and constraints:
-- The number of synchronization-word bits used shall equal [sysp_genericSyncWordLengthBits](#sys_req_parameter_20).
+- The number of synchronization-word bits used shall equal [reqp_genericSyncWordLengthBits](#req_parameter_20).
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.18–4.10.25
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.18–4.10.25
 
 Status: approved
 
-# SYS_REQ_PARAMETER_22
+# REQ_PARAMETER_22
 
-Name: sysp_genericAddressFiltering
+Name: reqp_genericAddressFiltering
 
 Defines generic FSK/GFSK or MSK/GMSK address-filtering mode.
 
@@ -629,14 +629,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_23
+# REQ_PARAMETER_23
 
-Name: sysp_genericNodeAddress
+Name: reqp_genericNodeAddress
 
 Defines the generic FSK/GFSK or MSK/GMSK node address.
 
@@ -653,20 +653,20 @@ Encoded range: [0x00, 0xFF].
 Physical range: [0, 255].
 
 Dependencies and constraints:
-- This parameter applies only when [sysp_genericAddressFiltering](#sys_req_parameter_22) is `node` or `node_and_broadcast`.
+- This parameter applies only when [reqp_genericAddressFiltering](#req_parameter_22) is `node` or `node_and_broadcast`.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.26
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.26
 
 Status: approved
 
-# SYS_REQ_PARAMETER_24
+# REQ_PARAMETER_24
 
-Name: sysp_genericBroadcastAddress
+Name: reqp_genericBroadcastAddress
 
 Defines the generic FSK/GFSK or MSK/GMSK broadcast address.
 
@@ -683,20 +683,20 @@ Encoded range: [0x00, 0xFF].
 Physical range: [0, 255].
 
 Dependencies and constraints:
-- This parameter applies only when [sysp_genericAddressFiltering](#sys_req_parameter_22) is `node_and_broadcast`.
+- This parameter applies only when [reqp_genericAddressFiltering](#req_parameter_22) is `node_and_broadcast`.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.27
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.27
 
 Status: approved
 
-# SYS_REQ_PARAMETER_25
+# REQ_PARAMETER_25
 
-Name: sysp_genericCrcType
+Name: reqp_genericCrcType
 
 Defines generic FSK/GFSK or MSK/GMSK CRC type.
 
@@ -715,14 +715,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_26
+# REQ_PARAMETER_26
 
-Name: sysp_genericCrcInitialValue
+Name: reqp_genericCrcInitialValue
 
 Defines generic FSK/GFSK or MSK/GMSK CRC initial value.
 
@@ -739,20 +739,20 @@ Encoded range: [0x0000, 0xFFFF].
 Physical range: [0, 65535].
 
 Dependencies and constraints:
-- This parameter applies only when [sysp_genericCrcType](#sys_req_parameter_25) is not `none`.
+- This parameter applies only when [reqp_genericCrcType](#req_parameter_25) is not `none`.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.14–4.10.15
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.14–4.10.15
 
 Status: approved
 
-# SYS_REQ_PARAMETER_27
+# REQ_PARAMETER_27
 
-Name: sysp_genericCrcPolynomial
+Name: reqp_genericCrcPolynomial
 
 Defines generic FSK/GFSK or MSK/GMSK CRC polynomial.
 
@@ -769,20 +769,20 @@ Encoded range: [0x0000, 0xFFFF].
 Physical range: [0, 65535].
 
 Dependencies and constraints:
-- This parameter applies only when [sysp_genericCrcType](#sys_req_parameter_25) is not `none`.
+- This parameter applies only when [reqp_genericCrcType](#req_parameter_25) is not `none`.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.16–4.10.17
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.16–4.10.17
 
 Status: approved
 
-# SYS_REQ_PARAMETER_28
+# REQ_PARAMETER_28
 
-Name: sysp_genericWhiteningEnabled
+Name: reqp_genericWhiteningEnabled
 
 Defines whether generic FSK/GFSK or MSK/GMSK whitening is enabled.
 
@@ -798,14 +798,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_29
+# REQ_PARAMETER_29
 
-Name: sysp_genericWhiteningInitialValue
+Name: reqp_genericWhiteningInitialValue
 
 Defines generic FSK/GFSK or MSK/GMSK whitening initial value.
 
@@ -822,20 +822,20 @@ Encoded range: [0x0000, 0x01FF].
 Physical range: [0, 511].
 
 Dependencies and constraints:
-- This parameter applies only when [sysp_genericWhiteningEnabled](#sys_req_parameter_28) is `enabled`.
+- This parameter applies only when [reqp_genericWhiteningEnabled](#req_parameter_28) is `enabled`.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.11–4.10.12
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.5, Chapter 4.8.4, Chapter 4.10.11–4.10.12
 
 Status: approved
 
-# SYS_REQ_PARAMETER_30
+# REQ_PARAMETER_30
 
-Name: sysp_rxMode
+Name: reqp_rxMode
 
 Selects functional LoRa or generic FSK/GFSK receive behavior.
 
@@ -854,15 +854,15 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [SPEC_5](../../spec/specs.md#spec_5)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [SPEC_5](../../pdv/spec/specs.md#spec_5)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_31
+# REQ_PARAMETER_31
 
-Name: sysp_rxTimeoutControl
+Name: reqp_rxTimeoutControl
 
 Defines the timeout of a `single` LoRa or generic FSK/GFSK RX operation.
 
@@ -885,20 +885,20 @@ Physical range:
 - Finite timeouts: [0.000015625, 262.14396875] s. `no_timeout` is outside the finite-timeout domain.
 
 Dependencies and constraints:
-- This parameter applies only when [sysp_rxMode](#sys_req_parameter_30) is `single`.
+- This parameter applies only when [reqp_rxMode](#req_parameter_30) is `single`.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_32
+# REQ_PARAMETER_32
 
-Name: sysp_rxDutyCycle
+Name: reqp_rxDutyCycle
 
 Defines LoRa or generic FSK/GFSK RX duty-cycle listening periods.
 
@@ -930,7 +930,7 @@ Sleep period:
 - Physical range: [0, 262.143984375] s.
 
 Dependencies and constraints:
-- This parameter applies only when [sysp_rxMode](#sys_req_parameter_30) is `duty_cycle`.
+- This parameter applies only when [reqp_rxMode](#req_parameter_30) is `duty_cycle`.
 - For generic FSK/GFSK, (preamble duration + synchronization-word duration) < ((2 × RX period) + sleep period).
 - For LoRa, (preamble duration + header duration) < ((2 × RX period) + sleep period).
 
@@ -938,14 +938,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_33
+# REQ_PARAMETER_33
 
-Name: sysp_loraSymbolTimeout
+Name: reqp_loraSymbolTimeout
 
 Defines LoRa RX end-of-preamble detection timeout.
 
@@ -968,14 +968,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_34
+# REQ_PARAMETER_34
 
-Name: sysp_cad
+Name: reqp_cad
 
 Defines LoRa channel-activity-detection settings.
 
@@ -1034,14 +1034,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.8.3, Chapter 4.8.4
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.2, Chapter 4.8.3, Chapter 4.8.4
 
 Status: approved
 
-# SYS_REQ_PARAMETER_35
+# REQ_PARAMETER_35
 
-Name: sysp_txOutputPowerDbm
+Name: reqp_txOutputPowerDbm
 
 Defines requested TX output-power setting.
 
@@ -1058,22 +1058,22 @@ Encoded range: [0xF7, 0xFF] and [0x00, 0x16] (signed values [-9, -1] and [0, 22]
 Physical range: [-9, 22] dBm.
 
 Dependencies and constraints:
-- The software shall derive the correct configuration from this requested power, [sysp_rfFrequencyHz](#sys_req_parameter_2), and the implemented RF hardware.
+- The software shall derive the correct configuration from this requested power, [reqp_rfFrequencyHz](#req_parameter_2), and the implemented RF hardware.
 
 Domain:
 - sw
 - hw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.3.3, Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.3, Chapter 5.3.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.3.3, Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.3, Chapter 5.3.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_36
+# REQ_PARAMETER_36
 
-Name: sysp_txRampTimeUs
+Name: reqp_txRampTimeUs
 
 Defines FSK/GFSK, MSK/GMSK or LoRa TX PA ramp-up time.
 
@@ -1096,15 +1096,15 @@ Domain:
 - hw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.3
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.4
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_37
+# REQ_PARAMETER_37
 
-Name: sysp_operationTimeout
+Name: reqp_operationTimeout
 
 Defines packet TX operation timeout.
 
@@ -1130,14 +1130,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_5](../../spec/specs.md#spec_5)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.3
+- [SPEC_5](../../pdv/spec/specs.md#spec_5)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.3
 
 Status: approved
 
-# SYS_REQ_PARAMETER_38
+# REQ_PARAMETER_38
 
-Name: sysp_imageCalibrationLowerFrequencyHz
+Name: reqp_imageCalibrationLowerFrequencyHz
 
 Defines lower image-calibration frequency.
 
@@ -1154,22 +1154,22 @@ Encoded range: [0x26, 0xF0].
 Physical range: [152000000, 960000000] Hz.
 
 Dependencies and constraints:
-- [sysp_imageCalibrationLowerFrequencyHz](#sys_req_parameter_38) ≤ [sysp_imageCalibrationUpperFrequencyHz](#sys_req_parameter_39).
+- [reqp_imageCalibrationLowerFrequencyHz](#req_parameter_38) ≤ [reqp_imageCalibrationUpperFrequencyHz](#req_parameter_39).
 
 Domain:
 - sw
 - hw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.7
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.4, Chapter 3.8.5
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.7
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.4, Chapter 3.8.5
 
 Status: approved
 
-# SYS_REQ_PARAMETER_39
+# REQ_PARAMETER_39
 
-Name: sysp_imageCalibrationUpperFrequencyHz
+Name: reqp_imageCalibrationUpperFrequencyHz
 
 Defines upper image-calibration frequency.
 
@@ -1186,22 +1186,22 @@ Encoded range: [0x26, 0xF0].
 Physical range: [152000000, 960000000] Hz.
 
 Dependencies and constraints:
-- [sysp_imageCalibrationUpperFrequencyHz](#sys_req_parameter_39) ≥ [sysp_imageCalibrationLowerFrequencyHz](#sys_req_parameter_38).
+- [reqp_imageCalibrationUpperFrequencyHz](#req_parameter_39) ≥ [reqp_imageCalibrationLowerFrequencyHz](#req_parameter_38).
 
 Domain:
 - sw
 - hw
 
 Upstream traceability:
-- [SPEC_4](../../spec/specs.md#spec_4)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.7
-- [EHW_DOC_2](../../spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.4, Chapter 3.8.5
+- [SPEC_4](../../pdv/spec/specs.md#spec_4)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.7
+- [EHW_DOC_2](../../pdv/spec/external_hw_docs.md#ehw_doc_2), Chapter 3.8.4, Chapter 3.8.5
 
 Status: approved
 
-# SYS_REQ_PARAMETER_40
+# REQ_PARAMETER_40
 
-Name: sysp_txPacketData
+Name: reqp_txPacketData
 
 Defines TX packet content.
 
@@ -1210,20 +1210,20 @@ Value size: [0, 255] bytes.
 Value type: byte array.
 
 Dependencies and constraints:
-- For BPSK, [sysp_txPacketData](#sys_req_parameter_40) shall contain the complete frame, including preamble, synchronization word, device ID, and CRC.
+- For BPSK, [reqp_txPacketData](#req_parameter_40) shall contain the complete frame, including preamble, synchronization word, device ID, and CRC.
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_5](../../spec/specs.md#spec_5)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.7, Chapter 4.6, Chapter 4.8.2
+- [SPEC_5](../../pdv/spec/specs.md#spec_5)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.5.7, Chapter 4.6, Chapter 4.8.2
 
 Status: approved
 
-# SYS_REQ_PARAMETER_41
+# REQ_PARAMETER_41
 
-Name: sysp_receivedPacketLengthBytes
+Name: reqp_receivedPacketLengthBytes
 
 Reports RX packet length.
 
@@ -1240,21 +1240,21 @@ Encoded range: [0x00, 0xFF].
 Physical range: [0, 255] bytes.
 
 Dependencies and constraints:
-- [sysp_receivedPacketLengthBytes](#sys_req_parameter_41) shall equal the length of [sysp_rxPacketData](#sys_req_parameter_42).
+- [reqp_receivedPacketLengthBytes](#req_parameter_41) shall equal the length of [reqp_rxPacketData](#req_parameter_42).
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_5](../../spec/specs.md#spec_5)
-- [SPEC_6](../../spec/specs.md#spec_6)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.5
+- [SPEC_5](../../pdv/spec/specs.md#spec_5)
+- [SPEC_6](../../pdv/spec/specs.md#spec_6)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.5
 
 Status: approved
 
-# SYS_REQ_PARAMETER_42
+# REQ_PARAMETER_42
 
-Name: sysp_rxPacketData
+Name: reqp_rxPacketData
 
 Reports packet content for received packets.
 
@@ -1263,20 +1263,20 @@ Value size: [0, 255] bytes.
 Value type: byte array.
 
 Dependencies and constraints:
-- The packet data length shall equal [sysp_receivedPacketLengthBytes](#sys_req_parameter_41).
+- The packet data length shall equal [reqp_receivedPacketLengthBytes](#req_parameter_41).
 
 Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_5](../../spec/specs.md#spec_5)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.6, Chapter 4.8.5
+- [SPEC_5](../../pdv/spec/specs.md#spec_5)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.6, Chapter 4.8.5
 
 Status: approved
 
-# SYS_REQ_PARAMETER_43
+# REQ_PARAMETER_43
 
-Name: sysp_receivedPacketRssiDbm
+Name: reqp_receivedPacketRssiDbm
 
 Reports average RX packet RSSI for LoRa or FSK/GFSK.
 
@@ -1296,14 +1296,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_6](../../spec/specs.md#spec_6)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.5
+- [SPEC_6](../../pdv/spec/specs.md#spec_6)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.5
 
 Status: approved
 
-# SYS_REQ_PARAMETER_44
+# REQ_PARAMETER_44
 
-Name: sysp_receivedPacketSnrDb
+Name: reqp_receivedPacketSnrDb
 
 Reports RX packet SNR exclusively for LoRa.
 
@@ -1323,14 +1323,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_6](../../spec/specs.md#spec_6)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.5
+- [SPEC_6](../../pdv/spec/specs.md#spec_6)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.5
 
 Status: approved
 
-# SYS_REQ_PARAMETER_45
+# REQ_PARAMETER_45
 
-Name: sysp_receivedPacketStatus
+Name: reqp_receivedPacketStatus
 
 Reports RX packet status exclusively for FSK/GFSK.
 
@@ -1355,14 +1355,14 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_6](../../spec/specs.md#spec_6)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.5
+- [SPEC_6](../../pdv/spec/specs.md#spec_6)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.5
 
 Status: approved
 
-# SYS_REQ_PARAMETER_46
+# REQ_PARAMETER_46
 
-Name: sysp_activeRfOperation
+Name: reqp_activeRfOperation
 
 Reports the current host-visible RF operation without exposing MCU radio states.
 
@@ -1383,12 +1383,13 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_6](../../spec/specs.md#spec_6)
+- [SPEC_6](../../pdv/spec/specs.md#spec_6)
 
 Status: approved
-# SYS_REQ_PARAMETER_47
 
-Name: sysp_radioErrors
+# REQ_PARAMETER_47
+
+Name: reqp_radioErrors
 
 Reports recorded radio operational errors.
 
@@ -1415,7 +1416,7 @@ Domain:
 - sw
 
 Upstream traceability:
-- [SPEC_6](../../spec/specs.md#spec_6)
-- [EHW_DOC_1](../../spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.7
+- [SPEC_6](../../pdv/spec/specs.md#spec_6)
+- [EHW_DOC_1](../../pdv/spec/external_hw_docs.md#ehw_doc_1), Chapter 4.8.7
 
 Status: approved

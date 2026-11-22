@@ -17,8 +17,8 @@ Status: approved
 
 Each scenario establishes confirmed idle and its own complete LoRa configuration with finite timeouts:
 
-- Single RX ends on a simulated receive timeout, without delivering a packet, as required by the [single-RX contract](../../../../../sys/req/sys_interfaces.md#rx-operation).
-- Packet TX ends on a simulated transmit timeout rather than a successful completion indication, following [TX timeout semantics](../../../../../sys/req/sys_parameters.md#sys_req_parameter_37).
+- Single RX ends on a simulated receive timeout, without delivering a packet, as required by the [single-RX contract](../../../../../pdv/req/req_interfaces.md#rx-operation).
+- Packet TX ends on a simulated transmit timeout rather than a successful completion indication, following [TX timeout semantics](../../../../../pdv/req/req_parameters.md#req_parameter_37).
 
 ## Verification scope
 

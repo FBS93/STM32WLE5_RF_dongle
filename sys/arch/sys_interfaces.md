@@ -7,7 +7,7 @@ Name: sysi_usbExternal
 Interface inherited from upstream definition.
 
 Upstream traceability:
-- [SYS_REQ_INTERFACE_1](../req/sys_interfaces.md#sys_req_interface_1)
+- [REQ_INTERFACE_1](../../pdv/req/req_interfaces.md#req_interface_1)
 
 Status: approved
 
@@ -18,6 +18,6 @@ Name: sysi_rfExternal
 Interface inherited from upstream definition.
 
 Upstream traceability:
-- [SYS_REQ_INTERFACE_2](../req/sys_interfaces.md#sys_req_interface_2)
+- [REQ_INTERFACE_2](../../pdv/req/req_interfaces.md#req_interface_2)
 
 Status: approved

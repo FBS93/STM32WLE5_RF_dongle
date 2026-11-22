@@ -7,9 +7,9 @@ Name: sysc_controller
 `Controller` is the indivisible system abstraction of the MCU hardware together with the software executing on it. It owns the product-side host-control endpoint, applies the RF configuration and semantic parameter set, executes the requested RF operations, emits the defined responses, and exposes the host-visible operation state and radio errors. MCU implementation details and any RF-front-end partitioning are intentionally below this system-architecture level.
 
 Upstream traceability:
-- [SYS_REQ_PRODUCT_1](../req/sys_product.md#sys_req_product_1)
-- [SYS_REQ_INTERFACE_1](../req/sys_interfaces.md#sys_req_interface_1)
-- [SYS_REQ_INTERFACE_2](../req/sys_interfaces.md#sys_req_interface_2)
+- [REQ_PRODUCT_1](../../pdv/req/req_product.md#req_product_1)
+- [REQ_INTERFACE_1](../../pdv/req/req_interfaces.md#req_interface_1)
+- [REQ_INTERFACE_2](../../pdv/req/req_interfaces.md#req_interface_2)
 
 References:
 - [SYS_ARCH_INTERFACE_1](sys_interfaces.md#sys_arch_interface_1)
@@ -72,13 +72,13 @@ Name: sysc_hostCli
 Software component executing on the host that provides the CLI and uses `sysi_usbExternal` to communicate with `sysc_controller`.
 
 Upstream traceability:
-- [SYS_REQ_CLI_1](../req/sys_cli.md#sys_req_cli_1)
-- [SYS_REQ_CLI_2](../req/sys_cli.md#sys_req_cli_2)
-- [SYS_REQ_CLI_3](../req/sys_cli.md#sys_req_cli_3)
-- [SYS_REQ_CLI_4](../req/sys_cli.md#sys_req_cli_4)
-- [SYS_REQ_CLI_5](../req/sys_cli.md#sys_req_cli_5)
-- [SYS_REQ_CLI_6](../req/sys_cli.md#sys_req_cli_6)
-- [SYS_REQ_CLI_7](../req/sys_cli.md#sys_req_cli_7)
+- [REQ_CLI_1](../../pdv/req/req_cli.md#req_cli_1)
+- [REQ_CLI_2](../../pdv/req/req_cli.md#req_cli_2)
+- [REQ_CLI_3](../../pdv/req/req_cli.md#req_cli_3)
+- [REQ_CLI_4](../../pdv/req/req_cli.md#req_cli_4)
+- [REQ_CLI_5](../../pdv/req/req_cli.md#req_cli_5)
+- [REQ_CLI_6](../../pdv/req/req_cli.md#req_cli_6)
+- [REQ_CLI_7](../../pdv/req/req_cli.md#req_cli_7)
 
 References:
 - [SYS_ARCH_INTERFACE_1](sys_interfaces.md#sys_arch_interface_1)

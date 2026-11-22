@@ -19,7 +19,7 @@ Status: approved
 
 ## Use case
 
-From confirmed idle and a complete LoRa configuration, the host requests one packet transmission. The operation remains active until a simulated radio completion indication ends it, without a host completion message, consistent with the [host protocol](../../../../../sys/req/sys_interfaces.md#tx-packet-request).
+From confirmed idle and a complete LoRa configuration, the host requests one packet transmission. The operation remains active until a simulated radio completion indication ends it, without a host completion message, consistent with the [host protocol](../../../../../pdv/req/req_interfaces.md#tx-packet-request).
 
 ## Verification scope
 
